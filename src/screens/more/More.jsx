@@ -5,7 +5,6 @@ import { Group, Row, Icon, Num } from '../../ui'
 import { summary } from '../../data/record.js'
 import { attendanceSummary } from '../../data/attendance.js'
 import { student } from '../../data/student.js'
-import TutorIdea from './TutorIdea.jsx'
 import './more.css'
 
 export default function More() {
@@ -36,7 +35,6 @@ export default function More() {
         <Group label="Sign out">
           <Row to="/sign-in" className="row--destructive" title="Sign out" />
         </Group>
-        <TutorIdea placement="more" />
         <p className="more-foot">Axcel One, version 2.0</p>
       </div>
     </Screen>

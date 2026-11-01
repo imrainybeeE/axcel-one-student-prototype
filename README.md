@@ -6,10 +6,6 @@ An interactive concept for the student side of Axcel One. This is a static demon
 
 The public preview is published with GitHub Pages: https://imrainybeee.github.io/axcel-one-student-prototype/
 
-## Future ideas
-
-See [ideas.md](./ideas.md) for the Axcel AI tutor and mascot concept.
-
 ## Draft 2 film
 
 <video controls width="100%" src="https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4">

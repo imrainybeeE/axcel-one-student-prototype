@@ -6,7 +6,6 @@ import { useScrolledDown } from './hooks.js'
 import { haptic } from '../ui/haptic.js'
 import { Icon } from '../ui/Icon.jsx'
 import { Badge } from '../ui/Tag.jsx'
-import TutorIdea from '../screens/more/TutorIdea.jsx'
 
 function useUnreadCount() {
   const n = useUnreadThreads().size
@@ -179,7 +178,6 @@ export function Sidebar() {
           })}
         </ul>
       ))}
-      <TutorIdea placement="sidebar" />
     </nav>
   )
 }

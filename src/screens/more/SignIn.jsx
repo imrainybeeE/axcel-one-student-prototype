@@ -31,7 +31,7 @@ export default function SignIn() {
     <div className="signin">
       <img src={assetPath('brand/logo-horizontal.png')} alt="Axcel One" width="192" height="40" className="signin-logo" />
       <h1 className="t-title-l signin-title">Sign in</h1>
-      <p className="t-soft">Prototype only. Use made-up details; do not enter your real school password.</p>
+      <p className="t-soft">Prototype only. Do not enter your Axcel One password.</p>
       <form onSubmit={submit} noValidate className="signin-form">
         <div className="signin-card card">
           <div className={`signin-row${err.email ? ' is-error' : ''}`}>

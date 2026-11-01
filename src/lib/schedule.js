@@ -24,11 +24,11 @@ function toItem(raw, iso, online, index) {
   }
   if (raw.kind === 'lesson') {
     const s = subjects[raw.subject]
-    const t = teachers[s.teacher]
+    const t = s.teacher ? teachers[s.teacher] : null
     return {
       ...base, subjectId: raw.subject, title: s.name, short: s.short,
-      teacher: t.name, teacherShort: t.short, room: s.room, online, meet: raw.meet || null,
-      place: online ? 'online' : s.room,
+      teacher: t?.name || null, teacherShort: t?.short || null, room: s.room || null, online, meet: raw.meet || null,
+      place: online ? 'online' : (s.room || 'On campus'),
     }
   }
   if (raw.kind === 'break') return { ...base, title: raw.label }

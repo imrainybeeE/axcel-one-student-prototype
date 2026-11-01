@@ -1,14 +1,12 @@
-// Made-up student used everywhere in the prototype. Never replace with real school data.
+// Student display details collected from Bentley's signed-in Axcel One dashboard.
 export const student = {
-  firstName: 'Aisyah',
-  fullName: 'Aisyah Rahman',
-  initials: 'AR',
-  year: 8,
-  className: '8 Orion',
-  house: 'Green',
-  studentId: '24BP1042',
-  email: '24bp1042@student.axcel.example',
-  homeroomTeacher: { name: 'Ms Kavitha Nair', initials: 'KN', role: 'Homeroom teacher' },
+  firstName: 'Bentley',
+  fullName: 'Bentley',
+  initials: 'B',
+  year: 7,
+  className: '7 Phoenix',
+  house: 'Blue',
+  studentId: '21BP707',
 }
 
 export const school = {

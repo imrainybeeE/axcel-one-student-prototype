@@ -345,7 +345,7 @@ export default function Thread({ params }) {
       <Sheet open={shield} onClose={() => setShield(false)} title="Who can see this chat">
         <div className="record-sheet">
           <p className="t-title-s">{MONITOR}</p>
-          <p className="t-soft">{thread.kind === 'class' ? 'Everyone in 8 Orion and your class teachers can see this group.' : `Only you and ${thread.title} are in this chat.`}</p>
+          <p className="t-soft">{thread.kind === 'class' ? 'Everyone in your class and your class teachers can see this group.' : `Only you and ${thread.title} are in this chat.`}</p>
           <p className="t-soft">If a message worries you, tap it and choose Report. The safeguarding team will help.</p>
           <Button variant="secondary" full onClick={() => { setShield(false); navigate('/messages/kavitha') }}>Talk to your class teacher</Button>
         </div>

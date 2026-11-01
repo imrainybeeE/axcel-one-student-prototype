@@ -1,7 +1,7 @@
-// The prototype's clock. Defaults to Wednesday 21 October 2026, 10.40 (an online class day).
+// The prototype's clock. Defaults to Monday 2 November 2026, the next school day.
 // Override with ?t=HH.MM (e.g. ?t=8.15, ?t=13.05) and ?d=YYYY-MM-DD to show other moments.
-const DEFAULT_DATE = '2026-10-21'
-const DEFAULT_TIME = '10.40'
+const DEFAULT_DATE = '2026-11-02'
+const DEFAULT_TIME = '8.15'
 
 export function getNow(search = typeof window !== 'undefined' ? window.location.search : '') {
   const params = new URLSearchParams(search)

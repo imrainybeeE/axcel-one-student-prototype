@@ -29,7 +29,7 @@ function joinWait(item, nowMs, offline) {
 
 function place(item) {
   if (item.kind === 'event') return 'School activity'
-  return item.online ? `${item.teacher}, online` : `${item.teacher}, ${item.room}`
+  return item.online ? `${item.teacher}, online` : [item.teacher, item.room].filter(Boolean).join(', ')
 }
 
 function statusOf(item, iso, today, nowMs) {
@@ -190,7 +190,7 @@ function LessonSheet({ item, onClose, nowMs, offline, joinProps }) {
           <p className="tt-sheet-day">{formatLongDate(item.startsAt)}</p>
           <ul className="list" role="list">
             <Row lead={<Icon name="user" />} leadKind="icon" title={item.teacher} meta="Teacher" />
-            <Row lead={<Icon name={item.online ? 'video' : 'pin'} />} leadKind="icon" title={item.online ? 'Online, Google Meet' : item.room} meta={item.online ? 'Join from here' : 'Room'} />
+            <Row lead={<Icon name={item.online ? 'video' : 'pin'} />} leadKind="icon" title={item.online ? 'Online, Google Meet' : (item.room || 'On campus')} meta={item.online ? 'Join from here' : (item.room ? 'Room' : 'Location')} />
           </ul>
           {item.meet && (
             <Button

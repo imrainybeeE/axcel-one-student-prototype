@@ -1,15 +1,12 @@
-// Record: progress to the next award first, then where points come from, the award ladder and every entry.
-// Demerits are plain facts with a minus sign; no ranking, no streaks.
-// Demo: ?award=silver shows the moment a student reaches Silver.
+// Record: personal account totals, category breakdown and current award level.
 import { useState } from 'react'
-import { Screen, useDemo, useRoute, useLaptop, SAVED_AT, Link } from '../../app'
+import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
   Segmented, Rail, RailItem, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
-import { entries, summary, awards, areas } from '../../data/record.js'
+import { entries, summary, areas } from '../../data/record.js'
 import { formatLongDate, isoToMs } from '../../lib/time.js'
-import { student } from '../../data/student.js'
 import './record.css'
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -19,26 +16,24 @@ const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Se
  * The lead, as Fitness: one big figure with its unit, what it means in a coloured line, and a thin line filling towards
  * the next award with the two ends marked. Reaching an award turns the line silver and says so.
  */
-function Lead({ s, celebrate, onHow }) {
+function Lead({ s, onHow }) {
   const next = s.nextAward
   const prev = s.currentAward
   const points = s.points
   const from = prev ? prev.points : 0
   const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 1
   return (
-    <section className={`record-hero card${celebrate ? ' is-won' : ''}`} aria-labelledby="record-lead-title" data-tone="award">
+    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award">
       <h2 id="record-lead-title" className="record-hero-status">
-        {celebrate ? 'You reached Silver' : next ? <><Num>{next.points - points}</Num> more for {next.name}</> : 'Every award reached'}
+        {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : `${prev?.name || 'Current'} Award level`}
       </h2>
       <p className="record-hero-fig"><Num wide className="record-hero-n">{points}</Num><span className="record-hero-unit">points</span></p>
       <span className="record-hero-bar" style={{ '--p': p }} aria-hidden="true"><i /></span>
       <span className="record-hero-ends" aria-hidden="true">
-        <span>{prev && <>{prev.name} <Num>{from}</Num></>}</span>
-        {next && <span>{next.name} <Num>{next.points}</Num></span>}
+        <span>{prev && <>{prev.name} level · <Num>{points}</Num> points</>}</span>
       </span>
       <p className="record-hero-note">
-        {celebrate ? <>Well done, {student.firstName}. Gold is <Num>{next.points - points}</Num> points away.</>
-          : <><Num>{s.merits}</Num> from merits, minus <Num>{s.demerits}</Num> from demerits.</>}
+        <Num>{s.merits}</Num> from merits, minus <Num>{s.demerits}</Num> from demerits.
         {' '}<button type="button" className="text-link record-how" onClick={onHow} aria-haspopup="dialog">How points work</button>
       </p>
     </section>
@@ -67,24 +62,11 @@ function Measures({ s }) {
 }
 
 function Ladder({ s }) {
-  const stops = [...awards.map((a) => ({ ...a, kind: 'award' })), { name: 'You', points: s.points, kind: 'you' }].sort((a, b) => a.points - b.points)
   return (
     <section aria-labelledby="record-awards" className="record-awards">
-      <h2 id="record-awards" className="t-title-s">Awards</h2>
-      <Rail label="Awards">
-        {stops.map((st, i) => (
-          <RailItem
-            key={st.name}
-            kind="marker"
-            status={st.kind === 'you' ? 'now' : st.points <= s.points ? 'done' : 'later'}
-            points={st.points}
-            title={st.kind === 'you' ? 'You' : st.name}
-            titleTag={st.kind === 'award' && st === s.nextAward ? 'Next award' : null}
-            meta={st.kind === 'you' ? 'Your points this year' : st.points <= s.points ? 'Reached' : <><Num>{st.points - s.points}</Num> points to go</>}
-            first={i === 0}
-            last={i === stops.length - 1}
-          />
-        ))}
+      <h2 id="record-awards" className="t-title-s">Current award</h2>
+      <Rail label="Current award">
+        <RailItem kind="marker" status="now" points={s.points} title={`${s.currentAward.name} Award`} meta="Current award level" first last />
       </Rail>
     </section>
   )
@@ -123,9 +105,7 @@ function HowSheet({ open, onClose }) {
       <div className="record-sheet">
         <p>Teachers give merits for good work and good behaviour. Each merit counts towards Attitude, Skills or Knowledge.</p>
         <p>Demerits take points away. Your points are your merits minus your demerits.</p>
-        <ul className="list" role="list">
-          {awards.map((a) => <Row key={a.name} lead={<Icon name="award" />} leadKind="icon" title={a.name} meta={<><Num>{a.points}</Num> points</>} />)}
-        </ul>
+        <p>Your current account shows Silver Award level. Individual RISE entries and award thresholds are not included in this public demo.</p>
         <p>Points start again each school year.</p>
       </div>
     </Sheet>
@@ -134,18 +114,12 @@ function HowSheet({ open, onClose }) {
 
 export default function Record() {
   const { state, offline, retry, retrying, reconnect, reconnecting } = useDemo()
-  const { query } = useRoute()
   const laptop = useLaptop()
   const [filter, setFilter] = useState('all')
   const [open, setOpen] = useState(null)
   const [how, setHow] = useState(false)
   const [showAll, setShowAll] = useState(false)
-  const celebrate = query.get('award') === 'silver'
-  // ?award=silver: the moment the student reaches Silver (302 points), the same figure everywhere on the screen
-  const real = summary()
-  const s = celebrate
-    ? { ...real, points: 302, merits: real.merits + 21, toNext: 98, nextAward: awards.find((a) => a.name === 'Gold'), currentAward: awards.find((a) => a.name === 'Silver') }
-    : real
+  const s = summary()
 
   if (state === 'loading') {
     return (
@@ -174,7 +148,7 @@ export default function Record() {
 
   const summaryCol = (
     <>
-      <Lead s={s} celebrate={celebrate} onHow={() => setHow(true)} />
+      <Lead s={s} onHow={() => setHow(true)} />
       <Measures s={s} />
       <Ladder s={s} />
     </>
@@ -215,6 +189,7 @@ export default function Record() {
       {!showAll && byMonth.length > 2 && (
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
+      {!entries.length && <EmptyState title="Individual RISE entries are hidden in this public demo.">The totals above match your account.</EmptyState>}
     </section>
   )
 

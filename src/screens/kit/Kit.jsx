@@ -15,18 +15,18 @@ import './kit.css'
 
 const at = (iso, t) => schoolInstant(iso, t)
 const MODELS = [
-  ['Before school (7.40)', nowModel(at('2026-10-21', '7.40'))],
-  ['In lesson (10.40)', nowModel(at('2026-10-21', '10.40'))],
-  ['Last minute (10.59)', nowModel(at('2026-10-21', '10.59'))],
-  ['Break (10.10)', nowModel(at('2026-10-21', '10.10'))],
-  ['Lunch (12.00)', nowModel(at('2026-10-21', 12 * 60))],
-  ['After school (2.30)', nowModel(at('2026-10-21', 14 * 60 + 30))],
-  ['Campus day (Thursday 10.20)', nowModel(at('2026-10-22', '10.20'))],
-  ['Weekend (Saturday 10.00)', nowModel(at('2026-10-24', '10.00'))],
-  ['Holiday (Monday 26 October)', nowModel(at('2026-10-26', '9.00'))],
+  ['Before school (7.40)', nowModel(at('2026-11-02', '7.40'))],
+  ['In lesson (8.50)', nowModel(at('2026-11-02', '8.50'))],
+  ['Last minute (9.24)', nowModel(at('2026-11-02', '9.24'))],
+  ['Break (10.15)', nowModel(at('2026-11-02', '10.15'))],
+  ['Lunch (12.15)', nowModel(at('2026-11-02', 12 * 60 + 15))],
+  ['After school (4.20)', nowModel(at('2026-11-02', 16 * 60 + 20))],
+  ['Campus day (Thursday 10.20)', nowModel(at('2026-11-05', '10.20'))],
+  ['Weekend (Saturday 10.00)', nowModel(at('2026-11-07', '10.00'))],
+  ['Holiday (Friday 6 November)', nowModel(at('2026-11-06', '9.00'))],
 ]
 // Between lessons never happens in the seed timetable (lessons run back to back), so build it from 10.40.
-const base = nowModel(at('2026-10-21', '10.40'))
+const base = nowModel(at('2026-11-02', '8.50'))
 const BETWEEN = { ...base, state: 'between', item: base.next, minutes: 5, join: { open: true, opensAt: '10.55' } }
 
 function Section({ title, children }) {
@@ -51,8 +51,8 @@ function Specimen({ label, children, tone }) {
 export default function Kit() {
   const toast = useToast()
   const [seg, setSeg] = useState('all')
-  const [day, setDay] = useState('wed')
-  const [email, setEmail] = useState('24bp1042@student.axcel.example')
+  const [day, setDay] = useState('mon')
+  const [email, setEmail] = useState('')
   const [sw, setSw] = useState({ messages: true, timetable: true, notices: false })
   const [checks, setChecks] = useState({ school: true, cls: true, mine: false })
   const [theme, setTheme] = useState('auto')
@@ -61,22 +61,22 @@ export default function Kit() {
   const [note, setNote] = useState('')
   const [joining, setJoining] = useState(null)
   const firstField = useRef(null)
-  const online = getDay('2026-10-21')
+  const online = getDay('2026-11-02')
 
   const fakeJoin = (item) => { setJoining(item.id); setTimeout(() => setJoining(null), 1200) }
 
   return (
     <Screen title="Components" width="narrow">
-      <p className="kit-intro">Every part of the Axcel One kit, in every state, using the made-up seed data. Not in the navigation.</p>
+      <p className="kit-intro">Every part of the Axcel One kit, in every state, using Bentley’s 7 Phoenix timetable and current account totals. Private chats and daily record details are not shown. Not in the navigation.</p>
 
       <Section title="Type and numerals">
         <p className="t-countdown"><Num wide>20</Num></p>
         <p className="t-title-l">Large title 32</p>
         <p className="t-title-now">Now block subject 28</p>
-        <p className="t-title-m">19 points to Silver</p>
-        <p className="t-time-l"><Num wide>281</Num> points</p>
+        <p className="t-title-m">Silver Award level</p>
+        <p className="t-time-l"><Num wide>353</Num> points</p>
         <p className="t-title-s">Section and row title 18</p>
-        <p>Body 16. Lessons run online today. <Time value="10.30" /> to <Time value="11.00" />, <Num>96%</Num> this term.</p>
+        <p>Body 16. Lessons are on campus today. <Time value="8.15" /> to <Time value="4.15" />, <Num>96.8%</Num> this term.</p>
       </Section>
 
       <Section title="Buttons">
@@ -85,7 +85,7 @@ export default function Kit() {
           <Button>Show all</Button>
         </div>
         <div className="kit-row">
-          <Button variant="destructive">Block Lee Jun Hao</Button>
+          <Button variant="destructive">Block a classmate</Button>
           <Button variant="plain">Cancel</Button>
         </div>
         <div className="kit-row">
@@ -121,8 +121,8 @@ export default function Kit() {
 
       <Section title="Notices">
         <div className="kit-stack">
-          <Notice>Final exams start on Monday 9 November. Your exam timetable is in Calendar.</Notice>
-          <Notice tone="warn">Your reading log is due before Friday.</Notice>
+          <Notice>Deepavali break runs from 6 to 10 November. Term 2 ends on 20 November.</Notice>
+          <Notice tone="warn">Individual messages are not included in this public demo.</Notice>
           <ErrorState onRetry={() => {}}>Your messages did not load. Check that you are online, then try again.</ErrorState>
           <OfflineNotice what="messages" savedAt="10.12" />
         </div>
@@ -130,20 +130,17 @@ export default function Kit() {
 
       <Section title="Rows and groups">
         <Group title="Coming up" action={<TextLink to="/calendar" aria-label="Open Calendar">Calendar</TextLink>}>
-          <Row to="/calendar?event=e4" leadKind="date" lead={<DateLead day={24} label="Sat" />} title="Fun Run" meta="Whole school, 7.30 to 11.00" />
-          <Row to="/calendar?event=e5" leadKind="date" lead={<DateLead day={26} label="Mon" />} title="Deepavali replacement holiday" meta="Public holiday, no school" />
+          <Row to="/calendar?event=e3" leadKind="date" lead={<DateLead day={6} label="Fri" />} title="Deepavali break" meta="Whole school, 6–10 November" />
+          <Row to="/calendar?event=e7" leadKind="date" lead={<DateLead day={20} label="Fri" />} title="Term 2 ends" meta="Whole school" />
         </Group>
         <ul className="list kit-gap" role="list" aria-label="Next lesson">
-          <Row lead={<TimeLead time="11.00" tag="Next" />} title="Bahasa Melayu" meta="Puan Nurul Huda, online"
-            trailing={<Button size="compact" unavailable="Opens at 10.55" aria-label="Join Bahasa Melayu">Join</Button>} trailingAction />
+          <Row lead={<TimeLead time="8.40" tag="Next" />} title="Mathematics" meta="Farah" />
         </ul>
         <Group title="Messages">
-          <Row to="/messages/kavitha" className="msg-row is-unread" leadKind="avatar" lead={<Avatar initials="KN" />} title="Ms Kavitha Nair" titleExtra={<span className="vh">, new message</span>} meta="Please upload your reading log before Friday." clamp />
-          <Row to="/messages/orion" leadKind="avatar" lead={<Avatar kind="group" />} title="8 Orion" meta="Mr Daniel Tan: Quiz moved to Thursday, same time." clamp />
-          <Row to="/messages/office" leadKind="avatar" lead={<Avatar kind="announcement" />} title="Secondary Office" meta="Fun Run this Saturday, wear your house shirt." clamp />
+          <Row title="Private conversations hidden" meta="This public demo does not show messages from real students or staff." />
         </Group>
         <Group title="You">
-          <Row to="/record" leadKind="icon" lead={<span className="tile tile--award"><Icon name="award" filled size={18} /></span>} title="Record" trailing={<span><Num>19</Num> to Silver</span>} chevron />
+          <Row to="/record" leadKind="icon" lead={<span className="tile tile--award"><Icon name="award" filled size={18} /></span>} title="Record" trailing={<span>Silver Award</span>} chevron />
           <Row to="/attendance" leadKind="icon" lead={<span className="tile tile--attendance"><Icon name="check-circle" filled size={18} /></span>} title="Attendance" trailing={<Num>96%</Num>} chevron />
         </Group>
       </Section>
@@ -151,7 +148,7 @@ export default function Kit() {
       <Section title="Shelves, tiles and bubbles">
         <h3 className="shelf-head"><Link to="/timetable">Later today<Icon name="chevron-right" size={19} className="shelf-chev" /></Link></h3>
         <ul className="shelf-row" role="list" data-scroll-x="">
-          {[['gp', '1.00', 'in 2 h 10 min', 'GP', 'Mr Arjun'], ['ict', '1.30', 'in 2 h 40 min', 'ICT', 'Ms Chloe']].map(([subj, t, sub, title, who]) => (
+          {[['bm', '12.45', 'Bahasa Melayu', 'BM', 'Aliah'], ['tutorial', '1.30', 'Tutorial', 'Tutorial', 'Alena']].map(([subj, t, sub, title, who]) => (
             <li key={subj} className="shelf-item">
               <Link to="/timetable" className="cover-link card-link">
                 <span className="cover" data-subject={subj}><Time value={t} className="cover-time" /><span className="cover-sub">{sub}</span></span>
@@ -164,9 +161,9 @@ export default function Kit() {
         <div className="stat-pair kit-gap">
           <Link to="/record" className="stat-tile card-link" data-tone="award">
             <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>
-            <span className="stat-fig"><Num wide className="stat-n">281</Num><span className="stat-unit">points</span></span>
+            <span className="stat-fig"><Num wide className="stat-n">353</Num><span className="stat-unit">points</span></span>
             <span className="stat-bar" style={{ '--p': 0.94 }} aria-hidden="true"><i /></span>
-            <span className="stat-sub"><Num>19</Num> more for Silver</span>
+            <span className="stat-sub">Silver Award level</span>
           </Link>
           <Link to="/attendance" className="stat-tile card-link" data-tone="good">
             <span className="stat-title">Attendance<Icon name="chevron-right" size={16} className="stat-chev" /></span>
@@ -174,10 +171,9 @@ export default function Kit() {
             <span className="stat-sub">This term</span>
           </Link>
         </div>
-        <div className="thread-log kit-gap" aria-label="Bubbles">
-          <p className="thread-sep"><strong>Today</strong> <Num>9.05</Num></p>
-          <div className="msg is-first is-last"><div className="msg-col"><span className="msg-bubble">Quiz moved to Thursday, same time.</span></div></div>
-          <div className="msg msg--mine is-first is-last"><div className="msg-col"><span className="msg-bubble">Okay, thank you!</span></div></div>
+        <div className="thread-log kit-gap" aria-label="Messages">
+          <p className="thread-sep"><strong>Messages</strong></p>
+          <EmptyState title="Private conversations are hidden in this public demo." />
         </div>
       </Section>
 
@@ -207,7 +203,7 @@ export default function Kit() {
       </Section>
 
       <Section title="Rail">
-        <Rail label="Wednesday 21 October">
+        <Rail label="Wednesday 4 November">
           {online.items.map((it, i) => {
             const status = it.endMin <= 630 ? 'done' : it.startMin === 630 ? 'now' : 'later'
             return (
@@ -237,11 +233,11 @@ export default function Kit() {
             { value: 'all', label: 'All' }, { value: 'unread', label: 'Unread', count: 1 }, { value: 'groups', label: 'Groups' }, { value: 'school', label: 'School' },
           ]} />
           <Segmented legend="Day" size="tall" value={day} onChange={setDay} options={[
-            { value: 'mon', label: 'Mon', sub: '19', ariaLabel: 'Monday 19 October' },
-            { value: 'tue', label: 'Tue', sub: '20', ariaLabel: 'Tuesday 20 October' },
-            { value: 'wed', label: 'Today', sub: '21', ariaLabel: 'Wednesday 21 October, today' },
-            { value: 'thu', label: 'Thu', sub: '22', ariaLabel: 'Thursday 22 October' },
-            { value: 'fri', label: 'Fri', sub: '23', ariaLabel: 'Friday 23 October' },
+            { value: 'mon', label: 'Mon', sub: '2', ariaLabel: 'Monday 2 November' },
+            { value: 'tue', label: 'Tue', sub: '3', ariaLabel: 'Tuesday 3 November' },
+            { value: 'wed', label: 'Wed', sub: '4', ariaLabel: 'Wednesday 4 November' },
+            { value: 'thu', label: 'Thu', sub: '5', ariaLabel: 'Thursday 5 November' },
+            { value: 'fri', label: 'Today', sub: '6', ariaLabel: 'Friday 6 November, today' },
           ]} />
         </div>
       </Section>
@@ -276,7 +272,7 @@ export default function Kit() {
           <Button onClick={() => setSheet('medium')}>Open a sheet</Button>
           <Button onClick={() => setSheet('compose')}>Open a large sheet</Button>
           <Button onClick={() => setSheet('actions')}>Open an action sheet</Button>
-          <Button variant="destructive" id="kit-open-confirm" onClick={() => setSheet('confirm')}>Block Lee Jun Hao</Button>
+          <Button variant="destructive" id="kit-open-confirm" onClick={() => setSheet('confirm')}>Block a classmate</Button>
         </div>
       </Section>
 
@@ -292,14 +288,14 @@ export default function Kit() {
 
       <Section title="Avatars, merits, progress">
         <div className="kit-row">
-          <Avatar initials="KN" /><Avatar initials="LJ" /><Avatar kind="group" /><Avatar kind="announcement" />
+          <Avatar initials="SH" /><Avatar initials="B" /><Avatar kind="group" /><Avatar kind="announcement" />
         </div>
         <div className="kit-row">
           <MeritLabel area="attitude" /><MeritLabel area="skills" /><MeritLabel area="knowledge" />
         </div>
         <div className="kit-gap">
-          <p className="t-title-m">19 points to Silver</p>
-          <ProgressBar value={281} max={300} label="Points towards Silver" valueText="281 of 300 points" />
+          <p className="t-title-m">Silver Award level</p>
+          <ProgressBar value={353} max={400} label="Current RISE points" valueText="353 points" />
         </div>
         <div className="kit-gap">
           <Disclosure summary="How absences are counted">
@@ -320,11 +316,10 @@ export default function Kit() {
         </ul>
       </Section>
 
-      <Sheet open={sheet === 'medium'} onClose={() => setSheet(null)} title="Fun Run" detents={['medium', 'large']}>
-        <p className="t-title-m">Fun Run</p>
-        <p className="kit-gap"><Time value="7.30" wide className="t-time-l" /> to <Time value="11.00" wide className="t-time-l" /></p>
-        <p>Saturday 24 October, Main field. Whole school.</p>
-        <p className="kit-gap">Wear your house shirt. Gates open at 7.15.</p>
+      <Sheet open={sheet === 'medium'} onClose={() => setSheet(null)} title="Deepavali break" detents={['medium', 'large']}>
+        <p className="t-title-m">Deepavali break</p>
+        <p className="kit-gap">Friday 6 to Tuesday 10 November. Whole school.</p>
+        <p>No school during the holiday.</p>
         <div className="kit-gap"><Button full>Remind me</Button></div>
       </Sheet>
       <Sheet
@@ -343,7 +338,7 @@ export default function Kit() {
       <ActionSheet
         open={sheet === 'actions'}
         onClose={() => setSheet(null)}
-        title="Ms Kavitha Nair"
+        title="Shalini"
         actions={[
           { label: 'Mute for 1 hour', onSelect: () => setSheet(null) },
           { label: 'Mark as unread', onSelect: () => setSheet(null) },
@@ -352,9 +347,9 @@ export default function Kit() {
       <ConfirmSheet
         open={sheet === 'confirm'}
         onClose={() => setSheet(null)}
-        title="Block Lee Jun Hao?"
-        message="You will not get messages from Lee Jun Hao. Your teachers can still see the chat."
-        confirmLabel="Block Lee Jun Hao"
+        title="Block a classmate?"
+        message="You will not get messages from this person. Your teachers can still see class groups."
+        confirmLabel="Block a classmate"
         cancelLabel="Keep chatting"
         onConfirm={() => setSheet(null)}
       />

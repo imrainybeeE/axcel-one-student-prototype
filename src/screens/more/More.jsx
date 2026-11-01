@@ -17,7 +17,7 @@ export default function More() {
           <span className="more-me-avatar" aria-hidden="true">{student.initials}</span>
           <span className="more-me-text">
             <span className="more-me-name">{student.fullName}</span>
-            <span className="more-me-sub">{student.className}, {student.house} House</span>
+            <span className="more-me-sub">{student.className}, {student.house} House · {student.studentId}</span>
           </span>
         </section>
         <Group title="Your school year">

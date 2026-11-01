@@ -14,7 +14,7 @@ export function useMediaQuery(query) {
 export const useLaptop = () => useMediaQuery('(min-width: 1024px)')
 
 /**
- * Join an online lesson. The prototype never opens the made-up Meet links: it shows "Joining"
+ * Join an online lesson. The prototype does not open external Meet links: it shows "Joining"
  * for about 800 ms, then says "Physics opened in Google Meet." and returns to "Join Physics".
  * Returns { joiningId, join(item) } where item has { id, title }.
  */

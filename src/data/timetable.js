@@ -1,60 +1,55 @@
-// 8 Orion's timetable. Times are written school-style ("1.30" means 1.30 pm); use toMinutes() from clock.js.
-// Online days use the same lessons with Google Meet links instead of rooms.
-
+// Bentley's 7 Phoenix timetable from Axcel One. Times use the school's 12-hour format.
 export const teachers = {
-  kavitha: { name: 'Ms Kavitha Nair', short: 'Ms Kavitha', initials: 'KN' },
-  tan: { name: 'Mr Daniel Tan', short: 'Mr Tan', initials: 'DT' },
-  wong: { name: 'Dr Wong Mei Ling', short: 'Dr Wong', initials: 'WM' },
-  nurul: { name: 'Puan Nurul Huda', short: 'Puan Nurul', initials: 'NH' },
-  arjun: { name: 'Mr Arjun Pillai', short: 'Mr Arjun', initials: 'AP' },
-  chloe: { name: 'Ms Chloe Lim', short: 'Ms Chloe', initials: 'CL' },
-  lee: { name: 'Mr Lee Wei Jie', short: 'Mr Lee', initials: 'LW' },
-  farid: { name: 'Encik Farid Hassan', short: 'Encik Farid', initials: 'FH' },
-  sarah: { name: 'Mrs Sarah Thompson', short: 'Mrs Thompson', initials: 'ST' },
+  shalini: { name: 'Shalini', short: 'Shalini', initials: 'SH' },
+  farah: { name: 'Farah', short: 'Farah', initials: 'FA' },
+  tanJm: { name: 'Tan JM', short: 'Tan JM', initials: 'TJ' },
+  teo: { name: 'Teo', short: 'Teo', initials: 'TE' },
+  fifi: { name: 'Fifi', short: 'Fifi', initials: 'FI' },
+  alena: { name: 'Alena', short: 'Alena', initials: 'AL' },
+  aliah: { name: 'Aliah', short: 'Aliah', initials: 'AH' },
+  farzana: { name: 'Farzana', short: 'Farzana', initials: 'FZ' },
+  nurin: { name: 'Nurin', short: 'Nurin', initials: 'NU' },
+  shwaarna: { name: 'Shwaarna', short: 'Shwaarna', initials: 'SW' },
+  raudah: { name: 'Raudah', short: 'Raudah', initials: 'RA' },
+  yap: { name: 'Yap YT', short: 'Yap YT', initials: 'YT' },
+  hazilla: { name: 'Hazilla', short: 'Hazilla', initials: 'HZ' },
+  tan: { name: 'Tan', short: 'Tan', initials: 'TA' },
+  peTeam: { name: 'Aliah, Farzana, Nurin', short: 'PE team', initials: 'AF' },
 }
 
 export const subjects = {
-  esl: { name: 'English as a Second Language', short: 'English', teacher: 'kavitha', room: 'B2-04' },
-  maths: { name: 'Mathematics', short: 'Maths', teacher: 'tan', room: 'B2-07' },
-  physics: { name: 'Physics', short: 'Physics', teacher: 'wong', room: 'Lab 2' },
-  chemistry: { name: 'Chemistry', short: 'Chemistry', teacher: 'wong', room: 'Lab 1' },
-  biology: { name: 'Biology', short: 'Biology', teacher: 'sarah', room: 'Lab 3' },
-  bm: { name: 'Bahasa Melayu', short: 'BM', teacher: 'nurul', room: 'B1-02' },
-  mandarin: { name: 'Mandarin', short: 'Mandarin', teacher: 'lee', room: 'B1-05' },
-  gp: { name: 'Global Perspectives', short: 'GP', teacher: 'arjun', room: 'B2-01' },
-  ict: { name: 'ICT', short: 'ICT', teacher: 'chloe', room: 'Computer Lab' },
-  pe: { name: 'Physical Education', short: 'PE', teacher: 'farid', room: 'Sports hall' },
-  art: { name: 'Art and Design', short: 'Art', teacher: 'sarah', room: 'Art room' },
+  homeroom: { name: 'Homeroom', short: 'Homeroom', teacher: 'shalini' },
+  maths: { name: 'Mathematics', short: 'Maths', teacher: 'farah' },
+  mandarin: { name: 'Mandarin', short: 'Mandarin', teacher: 'tanJm' },
+  physics: { name: 'Physics', short: 'Physics', teacher: 'teo' },
+  english: { name: 'English', short: 'English', teacher: 'fifi' },
+  gp: { name: 'Global Perspectives', short: 'GP', teacher: 'shalini' },
+  tutorial: { name: 'Tutorial', short: 'Tutorial', teacher: 'alena' },
+  pe: { name: 'Physical Education', short: 'PE', teacher: 'peTeam' },
+  esl: { name: 'ESL', short: 'ESL', teacher: 'shwaarna' },
+  ict: { name: 'ICT', short: 'ICT', teacher: 'raudah' },
+  bm: { name: 'Bahasa Melayu', short: 'Bahasa Melayu', teacher: 'aliah' },
+  chemistry: { name: 'Chemistry', short: 'Chemistry', teacher: 'hazilla' },
+  biology: { name: 'Biology', short: 'Biology', teacher: 'tan' },
+  program: { name: 'Axcel Program', short: 'Axcel Program' },
+  rt: { name: 'RT', short: 'RT' },
 }
 
 const L = (start, end, subject) => ({ kind: 'lesson', start, end, subject })
 const B = (start, end, label) => ({ kind: 'break', start, end, label })
 
-// Normal (on-campus) week. Wednesday is today's template too.
+// Monday to Friday, as shown in the signed-in 7 Phoenix weekly timetable.
 export const week = {
-  1: [L('8.15', '9.00', 'maths'), L('9.00', '9.45', 'esl'), B('9.45', '10.05', 'Break'), L('10.05', '10.50', 'chemistry'), L('10.50', '11.35', 'mandarin'), L('11.35', '12.20', 'gp'), B('12.20', '1.00', 'Lunch'), L('1.00', '1.45', 'pe'), L('1.45', '2.30', 'pe'), L('2.30', '3.15', 'bm')],
-  2: [L('8.15', '9.00', 'esl'), L('9.00', '9.45', 'biology'), B('9.45', '10.05', 'Break'), L('10.05', '10.50', 'maths'), L('10.50', '11.35', 'ict'), L('11.35', '12.20', 'ict'), B('12.20', '1.00', 'Lunch'), L('1.00', '1.45', 'art'), L('1.45', '2.30', 'art'), L('2.30', '3.15', 'mandarin')],
-  3: [L('8.15', '9.00', 'esl'), L('9.00', '9.45', 'maths'), B('9.45', '10.05', 'Break'), L('10.05', '10.50', 'physics'), L('10.50', '11.35', 'bm'), L('11.35', '12.20', 'gp'), B('12.20', '1.00', 'Lunch'), L('1.00', '1.45', 'ict'), L('1.45', '2.30', 'biology'), L('2.30', '3.15', 'maths')],
-  4: [L('8.15', '9.00', 'chemistry'), L('9.00', '9.45', 'chemistry'), B('9.45', '10.05', 'Break'), L('10.05', '10.50', 'esl'), L('10.50', '11.35', 'maths'), L('11.35', '12.20', 'mandarin'), B('12.20', '1.00', 'Lunch'), L('1.00', '1.45', 'gp'), L('1.45', '2.30', 'physics'), L('2.30', '3.15', 'bm')],
-  5: [L('8.15', '9.00', 'biology'), L('9.00', '9.45', 'esl'), B('9.45', '10.05', 'Break'), L('10.05', '10.50', 'physics'), L('10.50', '11.35', 'maths'), L('11.35', '12.20', 'bm'), B('12.20', '1.00', 'Lunch'), L('1.00', '1.30', 'ict'), { kind: 'event', start: '1.30', end: '3.15', label: 'Clubs and activities' }],
+  1: [L('8.15', '8.40', 'homeroom'), L('8.40', '9.25', 'maths'), L('9.25', '10.10', 'mandarin'), B('10.10', '10.30', 'Break'), L('10.30', '11.15', 'physics'), L('11.15', '12.00', 'physics'), B('12.00', '12.45', 'Lunch'), L('12.45', '1.30', 'english'), L('1.30', '2.15', 'gp'), B('2.15', '2.35', 'Break'), L('2.35', '3.20', 'gp'), L('3.20', '4.05', 'tutorial'), L('4.05', '4.15', 'rt')],
+  2: [L('8.15', '8.40', 'homeroom'), L('8.40', '9.25', 'pe'), L('9.25', '10.10', 'pe'), B('10.10', '10.30', 'Break'), L('10.30', '11.15', 'mandarin'), L('11.15', '12.00', 'english'), B('12.00', '12.45', 'Lunch'), L('12.45', '1.30', 'esl'), L('1.30', '2.15', 'tutorial'), B('2.15', '2.35', 'Break'), L('2.35', '3.20', 'maths'), L('3.20', '4.05', 'maths'), L('4.05', '4.15', 'rt')],
+  3: [L('8.15', '8.40', 'homeroom'), L('8.40', '9.25', 'esl'), L('9.25', '10.10', 'maths'), B('10.10', '10.30', 'Break'), L('10.30', '11.15', 'gp'), L('11.15', '12.00', 'gp'), B('12.00', '12.45', 'Lunch'), L('12.45', '1.30', 'bm'), L('1.30', '2.15', 'tutorial'), B('2.15', '2.35', 'Break'), L('2.35', '3.20', 'program'), L('3.20', '4.05', 'program'), L('4.05', '4.15', 'rt')],
+  4: [L('8.15', '8.40', 'homeroom'), L('8.40', '9.25', 'maths'), L('9.25', '10.10', 'ict'), B('10.10', '10.30', 'Break'), L('10.30', '11.15', 'bm'), L('11.15', '12.00', 'bm'), B('12.00', '12.45', 'Lunch'), L('12.45', '1.30', 'english'), L('1.30', '2.15', 'tutorial'), B('2.15', '2.35', 'Break'), L('2.35', '3.20', 'biology'), L('3.20', '4.05', 'biology'), L('4.05', '4.15', 'rt')],
+  5: [L('8.15', '8.40', 'homeroom'), L('8.40', '9.25', 'english'), L('9.25', '10.10', 'english'), B('10.10', '10.30', 'Break'), L('10.30', '11.15', 'chemistry'), L('11.15', '12.00', 'chemistry'), B('12.00', '12.45', 'Lunch'), L('12.45', '1.30', 'ict'), L('1.30', '2.15', 'tutorial'), B('2.15', '2.35', 'Break'), L('2.35', '3.20', 'program'), L('3.20', '4.05', 'program'), L('4.05', '4.15', 'rt')],
 }
 
-// Online-day timetable: shorter 30-minute lessons, each with a Meet link (made-up codes).
-export const onlineDay = [
-  { ...L('9.00', '9.30', 'esl'), meet: 'https://meet.google.com/abc-defg-hij' },
-  { ...L('9.30', '10.00', 'maths'), meet: 'https://meet.google.com/bcd-efgh-ijk' },
-  B('10.00', '10.30', 'Break'),
-  { ...L('10.30', '11.00', 'physics'), meet: 'https://meet.google.com/cde-fghi-jkl' },
-  { ...L('11.00', '11.30', 'bm'), meet: 'https://meet.google.com/def-ghij-klm' },
-  B('11.30', '1.00', 'Lunch'),
-  { ...L('1.00', '1.30', 'gp'), meet: 'https://meet.google.com/efg-hijk-lmn' },
-  { ...L('1.30', '2.00', 'ict'), meet: 'https://meet.google.com/fgh-ijkl-mno' },
-]
-
-// Days that run the online timetable (Y7-Y10 online learning days).
-export const onlineDates = ['2026-10-20', '2026-10-21']
-
-// Join links open this many minutes before a lesson starts.
+// Axcel One did not show online lessons or join links for this account, so the prototype does not invent any.
+export const onlineDay = []
+export const onlineDates = []
 export const JOIN_OPENS_MINUTES_BEFORE = 5
 
 export function dayPlan(date, isoDateString) {

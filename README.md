@@ -1,6 +1,6 @@
 # Axcel One student redesign prototype
 
-An interactive concept for the student side of Axcel One. This is a static demonstration with fictional sample data; it is not connected to the school's systems and does not provide real sign-in.
+An interactive concept for the student side of Axcel One. This is a static demonstration personalized for Bentley, Year 7 Phoenix. It is not connected to the school's systems and does not provide real sign-in. Private chats and individual attendance/RISE entries are not included.
 
 ## Preview
 

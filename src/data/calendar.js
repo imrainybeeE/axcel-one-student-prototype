@@ -1,6 +1,6 @@
-// Made-up school calendar for October to December 2026.
+// School calendar dates shown in Axcel One in November 2026 and upcoming months.
 // category: 'event' | 'holiday' | 'public-holiday' | 'exam' | 'term' | 'assembly' | 'meeting' | 'class'
-// audience: 'Whole school' | 'Secondary' | '8 Orion' | 'Years 7 to 10'
+// audience: 'Whole school' | 'Secondary' | '7 Phoenix' | 'Years 7 to 10'
 
 export const categories = {
   event: { label: 'School event' },
@@ -14,24 +14,20 @@ export const categories = {
 }
 
 export const events = [
-  { id: 'e1', title: 'Online learning day', category: 'class', audience: 'Years 7 to 10', start: '2026-10-20', allDay: true, note: 'Lessons run online. Join each lesson from your timetable.' },
-  { id: 'e2', title: 'Online learning day', category: 'class', audience: 'Years 7 to 10', start: '2026-10-21', allDay: true, note: 'Lessons run online. Join each lesson from your timetable.' },
-  { id: 'e3', title: 'Algebra quiz', category: 'class', audience: '8 Orion', start: '2026-10-22', time: '10.50', end: '11.35', note: 'Moved from Wednesday. Bring a calculator.' },
-  { id: 'e4', title: 'Fun Run', category: 'event', audience: 'Whole school', start: '2026-10-24', time: '7.30', end: '11.00', place: 'Main field', note: 'Wear your house shirt. Gates open at 7.15.' },
-  { id: 'e5', title: 'Deepavali replacement holiday', category: 'public-holiday', audience: 'Whole school', start: '2026-10-26', allDay: true, note: 'No school.' },
-  { id: 'e6', title: 'School assembly', category: 'assembly', audience: 'Secondary', start: '2026-10-30', time: '8.15', end: '9.00', place: 'Hall' },
-  { id: 'e7', title: 'Reading log due', category: 'class', audience: '8 Orion', start: '2026-10-23', time: '3.15', note: 'Upload in Messages to Ms Kavitha.' },
-  { id: 'e8', title: 'Parent-teacher meeting', category: 'meeting', audience: 'Secondary', start: '2026-11-04', time: '2.00', end: '6.00', place: 'Classrooms', note: 'Lessons end at 12.20.' },
-  { id: 'e9', title: 'Final exams', category: 'exam', audience: 'Secondary', start: '2026-11-09', end: '2026-11-13', allDay: true, note: 'Your exam timetable is below each day.' },
-  { id: 'e10', title: 'Mathematics paper 1', category: 'exam', audience: 'Year 8', start: '2026-11-09', time: '8.30', end: '10.00', place: 'Hall' },
-  { id: 'e11', title: 'Science paper', category: 'exam', audience: 'Year 8', start: '2026-11-10', time: '8.30', end: '10.00', place: 'Hall' },
-  { id: 'e12', title: 'English paper', category: 'exam', audience: 'Year 8', start: '2026-11-11', time: '8.30', end: '10.00', place: 'Hall' },
-  { id: 'e13', title: 'Last day of term', category: 'term', audience: 'Whole school', start: '2026-11-27', allDay: true, note: 'School ends at 12.20.' },
-  { id: 'e14', title: 'Year-end holiday', category: 'holiday', audience: 'Whole school', start: '2026-11-28', end: '2027-01-03', allDay: true },
-  { id: 'e15', title: 'Merdeka Day', category: 'public-holiday', audience: 'Whole school', start: '2026-08-31', allDay: true },
-  { id: 'e16', title: 'Malaysia Day', category: 'public-holiday', audience: 'Whole school', start: '2026-09-16', allDay: true },
-  { id: 'e17', title: 'Sports Day', category: 'event', audience: 'Whole school', start: '2026-10-09', time: '7.30', end: '12.30', place: 'Main field' },
-  { id: 'e18', title: 'Mid-term exams', category: 'exam', audience: 'Secondary', start: '2026-10-12', end: '2026-10-16', allDay: true },
-  { id: 'e19', title: 'Science fair', category: 'event', audience: 'Secondary', start: '2026-11-19', time: '9.00', end: '12.00', place: 'Hall' },
-  { id: 'e20', title: 'Christmas concert', category: 'event', audience: 'Whole school', start: '2026-11-26', time: '6.00', end: '8.00', place: 'Hall', note: 'Families welcome.' },
+  { id: 'e1', title: 'Replacement Holiday for Selangor', category: 'public-holiday', audience: 'Whole school', start: '2026-10-26', allDay: true },
+  { id: 'e2', title: 'School Assembly', category: 'assembly', audience: 'Secondary', start: '2026-10-30', allDay: true },
+  { id: 'e3', title: 'Deepavali break', category: 'holiday', audience: 'Whole school', start: '2026-11-06', end: '2026-11-10', allDay: true },
+  { id: 'e4', title: 'Deepavali 1st day', category: 'public-holiday', audience: 'Whole school', start: '2026-11-08', allDay: true },
+  { id: 'e5', title: 'PTM 2 (Pri, Y7-Y10)', category: 'meeting', audience: 'Whole school', start: '2026-11-14', allDay: true },
+  { id: 'e6', title: 'School Assembly', category: 'assembly', audience: 'Secondary', start: '2026-11-19', allDay: true },
+  { id: 'e7', title: 'Term 2 ends', category: 'term', audience: 'Whole school', start: '2026-11-20', allDay: true },
+  { id: 'e8', title: 'Year end holiday', category: 'holiday', audience: 'Whole school', start: '2026-11-21', end: '2026-12-31', allDay: true },
+  { id: 'e9', title: 'Selangor Sultan', category: 'public-holiday', audience: 'Whole school', start: '2026-12-11', allDay: true },
+  { id: 'e10', title: 'Christmas', category: 'public-holiday', audience: 'Whole school', start: '2026-12-25', allDay: true },
+  { id: 'e11', title: "New Year's Day", category: 'public-holiday', audience: 'Whole school', start: '2027-01-01', allDay: true },
+  { id: 'e12', title: 'Induction Day (new students)', category: 'event', audience: 'Whole school', start: '2027-01-06', allDay: true },
+  { id: 'e13', title: 'Inspark Week', category: 'event', audience: 'Whole school', start: '2027-01-07', end: '2027-01-08', allDay: true },
+  { id: 'e14', title: 'Term 1 starts', category: 'term', audience: 'Whole school', start: '2027-01-07', allDay: true },
+  { id: 'e15', title: 'Thaipusam', category: 'public-holiday', audience: 'Whole school', start: '2027-01-22', allDay: true },
+  { id: 'e16', title: 'Fun Run 10th Anniversary', category: 'event', audience: 'Whole school', start: '2027-01-30', allDay: true },
 ]

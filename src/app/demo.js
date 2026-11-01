@@ -6,8 +6,8 @@ import { useEffect, useState, useSyncExternalStore } from 'react'
 import { useRoute, updateQuery } from './router.js'
 import { schoolInstant, schoolParts } from '../lib/time.js'
 
-const DEFAULT_DATE = '2026-10-21'
-const DEFAULT_TIME = '10.40'
+const DEFAULT_DATE = '2026-11-02'
+const DEFAULT_TIME = '8.15'
 export const STATES = ['loading', 'empty', 'error', 'offline']
 
 // The clock starts at the demo time and then runs in real time, so countdowns tick on the minute.

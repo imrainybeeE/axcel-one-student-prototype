@@ -1,8 +1,8 @@
 // Today: the day strip, the now block, then shelves as Apple Music's Home: Later today, Messages, Coming up, You.
 // Phone: one column. Laptop: the strip across the top, the day on the left (the block, Later today), the shelves on the right.
 import { useEffect, useState } from 'react'
-import { Screen, Link, useDemo, useJoin, useTabRetap, announce, schoolNow, SAVED_AT } from '../../app'
-import { NowBlock, NowBlockSkeleton, Time, Num, Avatar, RollNum, LoadingState, OfflineNotice, haptic } from '../../ui'
+import { Screen, Link, assetPath, useDemo, useJoin, useTabRetap, announce, schoolNow, SAVED_AT } from '../../app'
+import { NowBlock, NowBlockSkeleton, Time, Num, Avatar, RollNum, LoadingState, OfflineNotice, Button, Sheet, haptic } from '../../ui'
 import { nowModel } from '../../lib/schedule.js'
 import { formatLongDate, formatTime } from '../../lib/time.js'
 import { student } from '../../data/student.js'
@@ -13,6 +13,7 @@ import './today.css'
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 // The strip's sweep is a first-view flourish: once per session, not on every return to Today
 const played = { strip: false }
+const tutorMascot = assetPath('/brand/axcel-ai-mascot.svg')
 
 function greeting(model, loading) {
   const hi = `Hi ${student.firstName}.`
@@ -90,10 +91,34 @@ function AccountButton() {
   )
 }
 
+function TutorIdea({ open, onOpen, onClose }) {
+  return (
+    <>
+      <section className="tutor-idea" aria-labelledby="tutor-idea-title">
+        <div className="tutor-idea-copy">
+          <span className="tutor-idea-label">A future idea</span>
+          <h2 id="tutor-idea-title">Your Axcel AI tutor</h2>
+          <p>A friendly mascot for a little help with lessons and revision.</p>
+          <Button variant="primary" size="compact" onClick={onOpen}>See the idea</Button>
+        </div>
+        <img className="tutor-idea-mascot" src={tutorMascot} alt="" />
+      </section>
+      <Sheet open={open} onClose={onClose} title="Axcel AI tutor">
+        <div className="tutor-idea-sheet">
+          <img src={tutorMascot} alt="" />
+          <p>This is a concept for a future Axcel One feature: a friendly tutor button and mascot to help students understand lessons and practise topics.</p>
+          <p>The tutor isn’t active in this prototype yet.</p>
+        </div>
+      </Sheet>
+    </>
+  )
+}
+
 export default function Today() {
   const { state, offline, now, today, retry, retrying } = useDemo()
   const { joiningId, join } = useJoin()
   const [refreshedAt, setRefreshedAt] = useState(null)
+  const [tutorOpen, setTutorOpen] = useState(false)
 
   // Re-tap Today at the top: refresh, roll the time, and say when
   useTabRetap('today', () => {
@@ -136,6 +161,7 @@ export default function Today() {
   return (
     <Screen title="Today" subtitle={formatLongDate(now)} className="screen--today" action={<AccountButton />}>
       <p className="today-greeting">{greeting(model, loading)}</p>
+      <TutorIdea open={tutorOpen} onOpen={() => setTutorOpen(true)} onClose={() => setTutorOpen(false)} />
       {model && !error && model.state !== 'noschool' && <DayStrip model={model} />}
       <div className="today-cols">
         <div className="today-day">{day}</div>

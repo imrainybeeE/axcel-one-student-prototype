@@ -1,0 +1,49 @@
+/* Calendar. */
+/* Each event carries its category as a thin coloured bar before the title, as Calendar marks its calendars */
+.cal-row { --cat: var(--brand-solid); }
+.cal-row[data-cat='event'] { --cat: #2F9E45; }
+.cal-row[data-cat='exam'] { --cat: #E8920C; }
+.cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
+.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #8E8E93; }
+.cal-row[data-cat='meeting'] { --cat: #5856D6; }
+.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 13px; }
+.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 2px; background: var(--cat); }
+/* Today's date is blue, as Calendar marks it */
+.cal-row.is-today .lead-date .num { color: var(--brand); }
+.cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
+.cal-hidden-dot { display: inline-block; width: 8px; height: 8px; margin-left: 6px; border-radius: 50%; background: var(--brand); vertical-align: middle; }
+
+/* Month */
+.cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
+.cal-month-bar { display: flex; align-items: center; justify-content: space-between; }
+.cal-grid { display: flex; flex-direction: column; gap: 2px; }
+.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
+.cal-grid-row > span { display: block; }
+.cal-cell {
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
+  width: 100%; min-height: 56px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+}
+/* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
+.cal-cell .num { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.cal-cell.is-off .num { color: var(--ink-soft); }
+.cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
+.cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
+.cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
+.cal-cell:focus-visible { outline: none; }
+.cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
+.cal-cell.is-blank { min-height: 56px; }
+.cal-dots { display: flex; gap: 3px; height: 6px; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); }
+.cal-cell:active .num { opacity: 0.5; }
+.cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-3) 0; }
+
+/* Laptop: grid left, day list right */
+@media (min-width: 1024px) {
+  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); column-gap: var(--space-8, 40px); align-items: start; }
+  .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
+  .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
+  .cal-laptop .cal-cell { min-height: 84px; }
+}
+
+.cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }

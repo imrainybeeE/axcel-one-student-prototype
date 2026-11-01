@@ -1,0 +1,17 @@
+.kit-intro { color: var(--ink-soft); }
+.kit-section { margin-top: var(--space-8); }
+.kit-h2 { margin-bottom: var(--space-4); }
+.kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.kit-row + .kit-row, .kit-row + .kit-specimen { margin-top: var(--space-3); }
+.kit-stack { display: flex; flex-direction: column; gap: var(--space-4); }
+.kit-gap { margin-top: var(--space-4); }
+.kit-label { color: var(--ink-soft); margin-bottom: var(--space-2); }
+.kit-specimen--now { padding: var(--space-4); border-radius: var(--radius); background: var(--now-bg); }
+.kit-specimen--now .kit-label { color: var(--on-now-soft); }
+.kit-icons { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: var(--space-2) var(--space-4); margin-bottom: var(--space-4); }
+.kit-icons li { display: flex; align-items: center; gap: var(--space-3); min-height: var(--tap); color: var(--ink); }
+.kit-icons span { color: var(--ink-soft); }
+.kit-icons--active li { color: var(--brand); --icon-cut: var(--paper); }
+.kit-specimen--now .btn.is-unavailable { background: rgb(0 0 0 / 0.22); color: #FFFFFF; }
+
+.kit-gap { margin-top: var(--space-4); }

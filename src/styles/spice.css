@@ -1,0 +1,95 @@
+/* Spice: subject colour as personality. Each subject has one flat, deep colour (white text 5.18:1 or more).
+   The current lesson's colour fills the now block and the day strip's marker; it is registered so it tweens
+   when the lesson changes. No gradients. */
+
+:root {
+  --subj-physics: #0062C4;
+  --subj-maths: #00756E;
+  --subj-esl: #C2410C;
+  --subj-bm: #2E7D10;
+  --subj-chemistry: #B4235F;
+  --subj-biology: #1E7A4C;
+  --subj-mandarin: #C0262D;
+  --subj-gp: #6A3DBD;
+  --subj-ict: #3A4A5E;
+  --subj-pe: #A85208;
+  --subj-art: #9C2A8A;
+  --subj-event: #3F3D3D;
+}
+
+/* Registered so a change of subject tweens instead of cutting (the now block and the day strip's marker) */
+@property --subj-a { syntax: "<color>"; inherits: true; initial-value: #0062C4; }
+
+/* Subject accent for any element that names a subject. */
+[data-subject='physics'] { --subj: var(--subj-physics); }
+[data-subject='maths'] { --subj: var(--subj-maths); }
+[data-subject='esl'] { --subj: var(--subj-esl); }
+[data-subject='bm'] { --subj: var(--subj-bm); }
+[data-subject='chemistry'] { --subj: var(--subj-chemistry); }
+[data-subject='biology'] { --subj: var(--subj-biology); }
+[data-subject='mandarin'] { --subj: var(--subj-mandarin); }
+[data-subject='gp'] { --subj: var(--subj-gp); }
+[data-subject='ict'] { --subj: var(--subj-ict); }
+[data-subject='pe'] { --subj: var(--subj-pe); }
+[data-subject='art'] { --subj: var(--subj-art); }
+[data-subject='event'] { --subj: var(--subj-event); }
+/* Small marks (strip segments, rail stops, dots) are about 3:1 on charcoal: in dark they lift a quarter towards white.
+   Fills that carry white text (the now block, covers) keep the true colour. */
+[data-subject] { --subj-mark: var(--subj); }
+[data-theme='dark'] [data-subject] { --subj-mark: color-mix(in srgb, var(--subj) 72%, white); }
+[data-subject='break'] { --subj: #646872; } /* lighter than ICT's slate, so a break never reads as a lesson */
+
+[data-subject] {
+  --subj-a: var(--subj);
+  transition: --subj-a 700ms var(--ease);
+}
+
+/* ---------- The now block wears its subject ---------- */
+.now[data-subject] {
+  --now-bg: var(--subj-a);
+  --on-now-soft: rgb(255 255 255 / 0.94);
+  --now-track: rgb(255 255 255 / 0.28);
+  --now-fill: #FFFFFF;
+  background: var(--subj-a);
+}
+.now--quiet { --now-bg: #3A3D44; background: #3A3D44; }
+
+@media (prefers-reduced-motion: reduce) { [data-subject] { transition: none; } }
+
+/* ---------- Today: the day at a glance ---------- */
+.day-strip {
+  display: block;
+  margin: var(--space-4) 0 var(--space-4);
+  padding: var(--space-2) 0;
+  min-height: 44px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-control);
+}
+.day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 6px; container-type: inline-size; }
+.day-strip-seg {
+  flex: var(--len) 1 0; border-radius: var(--radius-capsule);
+  background: var(--subj-mark, var(--divider));
+  transition: background-color 420ms var(--ease);
+}
+/* A break is a thin link between lessons, never a gap that looks like missing data */
+.day-strip-seg.is-break { align-self: center; height: 2px; background: var(--fill-strong); }
+.day-strip-seg:not(.is-break) { align-self: stretch; }
+.day-strip-seg.is-done { background: var(--fill-strong); }
+/* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */
+.day-strip-seg.is-now { background: linear-gradient(90deg, var(--fill-strong) calc(var(--cut) * 100%), var(--subj-mark) 0); }
+/* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
+.day-strip-now {
+  position: absolute; top: 50%; left: 0;
+  width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: var(--radius-dot);
+  background: var(--subj-mark, var(--ink));
+  box-shadow: 0 0 0 2px var(--paper);
+  /* Segments are sized by minutes with 3px gaps between them, so the dot skips the gaps before its lesson */
+  transform: translateX(calc((100cqw - var(--gn) * 3px) * var(--at) + var(--gi) * 3px));
+  transition: transform 800ms var(--spring-smooth);
+}
+.day-strip-ends { display: flex; justify-content: space-between; align-items: baseline; margin-top: var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.day-strip-count { color: var(--ink-soft); }
+.day-strip { transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
+.day-strip:active { transform: scale(calc(1 - 0.02 * var(--motion))); transition-duration: 100ms; }

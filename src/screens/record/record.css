@@ -1,0 +1,79 @@
+/* Record and Attendance. */
+
+/* Lead (Fitness): the status line in the award colour, one big figure, a thin line to the next award */
+.record-hero { display: flex; flex-direction: column; padding: var(--space-4); }
+.record-hero-status { color: var(--tone); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
+.record-hero-fig { display: flex; align-items: last baseline; gap: 6px; margin-top: var(--space-2); }
+.record-hero-n { font-size: var(--fs-time-xl); line-height: 1; font-weight: var(--fw-time-xl); letter-spacing: -0.02em; }
+.record-hero-unit { color: var(--ink-soft); font-size: var(--fs-body); font-weight: var(--fw-strong); }
+.record-hero-bar { display: block; height: 5px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }
+.record-hero-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tone-solid); transform-origin: left; transform: scaleX(var(--p)); }
+.record-hero-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
+.record-hero-note { margin-top: var(--space-3); color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.record-how { font-size: inherit; }
+/* The Silver moment: the line turns silver and the figure lands with one spring */
+/* The Silver moment keeps the award colour (a grey line would read as switched off); only the figure celebrates */
+@media (prefers-reduced-motion: no-preference) {
+  .record-hero.is-won .record-hero-n { display: inline-block; animation: award-pop var(--dur-spring-bouncy) var(--spring-bouncy) both; }
+  @keyframes award-pop { from { transform: scale(0.7); opacity: 0; } }
+}
+
+/* Where points come from: one bar split by area, then the three rows. */
+.record-split { display: flex; gap: 3px; height: 6px; margin: var(--space-4) var(--space-4) var(--space-1); list-style: none; } /* inset, so the card's corners never clip it */
+.record-split-seg:first-child { border-radius: var(--radius-capsule) 3px 3px var(--radius-capsule); }
+.record-split-seg:last-child { border-radius: 3px var(--radius-capsule) var(--radius-capsule) 3px; }
+.record-split-seg { flex: var(--len) 1 0; border-radius: 3px; }
+.diamond--attitude.record-split-seg { background: var(--merit-attitude); }
+.diamond--skills.record-split-seg { background: var(--merit-skills); }
+.diamond--knowledge.record-split-seg { background: var(--merit-knowledge); }
+.record-num { white-space: nowrap; color: var(--ink-soft); }
+.record-num .num { font-weight: 800; color: var(--ink); font-size: var(--fs-title-s); }
+
+/* Section headings match the kit's (Where your points come from) */
+.record-awards h2, .record-entries > h2, .att-term-head { margin-bottom: var(--space-2); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); }
+.record-entries { display: flex; flex-direction: column; gap: var(--space-4); }
+
+/* Entries */
+.record-meta { display: inline-flex; align-items: center; gap: var(--space-2); }
+/* One right-aligned amount, coloured by sign, as Wallet sets money in and out */
+.record-delta .num-wide { font-size: var(--fs-title-s); font-weight: var(--fw-time); color: var(--good); }
+.record-delta.is-minus .num-wide { color: var(--danger); }
+
+/* Entry sheet */
+.record-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+.record-sheet-points { display: flex; align-items: baseline; gap: var(--space-2); color: var(--ink-soft); }
+.record-sheet-points .num-wide { font-size: 2.5rem; font-weight: 800; color: var(--good); line-height: 1; }
+.record-sheet-points .num-wide.is-minus { color: var(--danger); }
+.record-sheet-note, .record-sheet-help { color: var(--ink-soft); }
+
+/* Laptop: summary left, entries right */
+.record-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-8, 40px); align-items: start; }
+.record-cols > div { display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+
+/* ---------- Attendance ---------- */
+/* The lead matches Record's: what it counts in green above, the figure in ink, this week as five dots */
+.att-week { display: flex; justify-content: space-between; max-width: 15rem; margin-top: var(--space-4); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; }
+.att-week-day { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 20px; }
+.att-week-day i { display: block; width: 12px; height: 12px; border-radius: 50%; background: var(--fill-strong); }
+.att-week-day[data-status='present'] i { background: var(--tone-solid); }
+.att-week-day[data-status='late'] i { background: #E8920C; }
+.att-week-day[data-status='absent'] i { background: #E5483D; }
+.att-week-day[data-status='later'] i { background: none; box-shadow: inset 0 0 0 1.5px var(--fill-strong); }
+.att-week-day[data-today] { color: var(--ink); font-weight: var(--fw-strong); }
+/* One column per school week, Monday to Friday top to bottom, the weekday letters down the left */
+.att-term { display: grid; grid-auto-flow: column; grid-template-rows: repeat(5, auto); grid-template-columns: 14px repeat(var(--weeks), minmax(0, 1fr)); gap: 3px; margin-top: var(--space-3); }
+.att-row-label { display: grid; place-items: center; color: var(--ink-soft); font-size: 0.6875rem; line-height: 1; font-weight: 500; }
+.att-day { min-width: 0; overflow: hidden; display: grid; place-items: center; aspect-ratio: 1; border-radius: 4px; color: #FFFFFF; }
+.att-day.is-present { background: color-mix(in srgb, #2F9E45 70%, var(--paper)); }
+.att-day.is-late { background: #E8920C; }
+/* Absent is a filled red cell with a white cross: colour and shape both say it */
+.att-day.is-absent { background: #E5483D; }
+.att-day.is-off { background: var(--fill); }
+.att-day.is-today { box-shadow: inset 0 0 0 2px var(--ink), inset 0 0 0 3.5px var(--paper); } /* inside its cell, never past the edge */
+.att-day.is-none { background: transparent; }
+.att-key { display: flex; flex-wrap: wrap; gap: var(--space-4); color: var(--ink-soft); margin-top: var(--space-3); }
+.att-key span { display: inline-flex; align-items: center; gap: var(--space-2); }
+.att-key i { width: 14px; height: 14px; }
+.att-status { display: inline-flex; align-items: center; gap: var(--space-2); }
+.att-help { color: var(--ink-soft); }
+.record-how { padding-inline: 0; margin-top: calc(-1 * var(--space-2)); }

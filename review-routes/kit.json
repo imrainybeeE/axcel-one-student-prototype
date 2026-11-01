@@ -1,0 +1,111 @@
+[
+  {
+    "id": "kit-gallery",
+    "label": "Component gallery",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "phoneOnly": true
+  },
+  {
+    "id": "kit-gallery-dark",
+    "label": "Component gallery, dark",
+    "path": "/kit?d=2026-10-21&t=10.40&theme=dark",
+    "phoneOnly": true,
+    "theme": "dark"
+  },
+  {
+    "id": "kit-sheet-medium",
+    "label": "Sheet at the medium detent",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "phoneOnly": true,
+    "actions": [
+      {
+        "click": "text=Open a sheet"
+      },
+      {
+        "wait": 400
+      }
+    ]
+  },
+  {
+    "id": "kit-sheet-large-dirty",
+    "label": "Large sheet with typed text, Escape asks first",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "phoneOnly": true,
+    "actions": [
+      {
+        "click": "text=Open a large sheet"
+      },
+      {
+        "wait": 300
+      },
+      {
+        "fill": [
+          "#kit-report",
+          "The timetable shows the wrong room."
+        ]
+      },
+      {
+        "press": "Escape"
+      },
+      {
+        "wait": 400
+      }
+    ]
+  },
+  {
+    "id": "kit-action-sheet",
+    "label": "Action sheet",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "phoneOnly": true,
+    "actions": [
+      {
+        "click": "text=Open an action sheet"
+      },
+      {
+        "wait": 400
+      }
+    ]
+  },
+  {
+    "id": "kit-confirm-dark",
+    "label": "Confirm sheet, dark",
+    "path": "/kit?d=2026-10-21&t=10.40&theme=dark",
+    "phoneOnly": true,
+    "theme": "dark",
+    "actions": [
+      {
+        "click": "#kit-open-confirm"
+      },
+      {
+        "wait": 400
+      }
+    ]
+  },
+  {
+    "id": "kit-toast",
+    "label": "Undo toast",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "phoneOnly": true,
+    "actions": [
+      {
+        "click": "text=Show the undo toast"
+      },
+      {
+        "wait": 300
+      }
+    ]
+  },
+  {
+    "id": "kit-laptop-sheet",
+    "label": "Sheet as a centred dialog on laptop",
+    "path": "/kit?d=2026-10-21&t=10.40",
+    "actions": [
+      {
+        "click": "text=Open a sheet"
+      },
+      {
+        "wait": 400
+      }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+[
+  { "id": "more-root", "label": "More", "path": "/more" },
+  { "id": "more-root-dark", "label": "More, dark", "path": "/more?theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "more-settings", "label": "Settings", "path": "/settings" },
+  { "id": "more-settings-dark", "label": "Settings, dark", "path": "/settings?theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "more-settings-offline", "label": "Settings, offline", "path": "/settings?state=offline", "phoneOnly": true },
+  { "id": "more-handbook", "label": "Handbook", "path": "/handbook", "phoneOnly": true },
+  { "id": "more-handbook-search", "label": "Handbook search", "path": "/handbook", "phoneOnly": true, "actions": [{ "fill": ["input[type=search]", "phone"] }, { "wait": 400 }] },
+  { "id": "more-handbook-topic", "label": "Handbook topic", "path": "/handbook/phones" },
+  { "id": "more-report", "label": "Report a problem", "path": "/report", "phoneOnly": true },
+  { "id": "more-report-sent", "label": "Report, sent", "path": "/report", "phoneOnly": true, "actions": [{ "fill": [".report-field", "The Join button did nothing"] }, { "click": "button.report-send" }, { "wait": 1400 }] },
+  { "id": "more-signin", "label": "Sign in", "path": "/sign-in" },
+  { "id": "more-signin-error", "label": "Sign in, missing fields", "path": "/sign-in", "phoneOnly": true, "actions": [{ "click": "button[type=submit]" }, { "wait": 300 }] },
+  { "id": "more-signin-offline", "label": "Sign in, offline", "path": "/sign-in?state=offline", "phoneOnly": true }
+]

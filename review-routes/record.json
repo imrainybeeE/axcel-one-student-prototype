@@ -1,0 +1,13 @@
+[
+  { "id": "record-main", "label": "Record", "path": "/record" },
+  { "id": "record-dark", "label": "Record, dark", "path": "/record?theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "record-silver", "label": "Reaching Silver (demo)", "path": "/record?award=silver", "phoneOnly": true },
+  { "id": "record-entry", "label": "Entry sheet", "path": "/record", "phoneOnly": true, "actions": [{ "click": "text=Helped set up the chemistry lab" }, { "wait": 700 }] },
+  { "id": "record-how", "label": "How points work", "path": "/record", "phoneOnly": true, "actions": [{ "click": "text=How points work" }, { "wait": 700 }] },
+  { "id": "record-loading", "label": "Loading", "path": "/record?state=loading", "phoneOnly": true },
+  { "id": "record-error", "label": "Error", "path": "/record?state=error", "phoneOnly": true },
+  { "id": "record-empty", "label": "Empty", "path": "/record?state=empty", "phoneOnly": true },
+  { "id": "record-attendance", "label": "Attendance", "path": "/attendance" },
+  { "id": "record-attendance-dark", "label": "Attendance, dark", "path": "/attendance?theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "record-attendance-offline", "label": "Attendance, offline", "path": "/attendance?state=offline", "phoneOnly": true }
+]

@@ -1,0 +1,17 @@
+[
+  { "id": "messages-inbox", "label": "Inbox", "path": "/messages?t=10.40" },
+  { "id": "messages-inbox-dark", "label": "Inbox, dark", "path": "/messages?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "messages-unread", "label": "Unread filter", "path": "/messages?t=10.40", "phoneOnly": true, "actions": [{ "click": "label.seg-item:has-text('Unread')" }, { "wait": 300 }] },
+  { "id": "messages-compose", "label": "New message sheet", "path": "/messages?t=10.40", "phoneOnly": true, "actions": [{ "click": "button:has-text('New message')" }, { "wait": 700 }] },
+  { "id": "messages-loading", "label": "Loading", "path": "/messages?state=loading", "phoneOnly": true },
+  { "id": "messages-empty", "label": "Empty", "path": "/messages?state=empty", "phoneOnly": true },
+  { "id": "messages-error", "label": "Error", "path": "/messages?t=10.40&state=error", "phoneOnly": true },
+  { "id": "messages-thread", "label": "Thread, Ms Kavitha Nair", "path": "/messages/kavitha?t=10.40" },
+  { "id": "messages-thread-dark", "label": "Thread, dark", "path": "/messages/kavitha?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true },
+  { "id": "messages-group", "label": "Class group 8 Orion", "path": "/messages/orion?t=10.40", "phoneOnly": true },
+  { "id": "messages-announcement", "label": "Announcement, read only", "path": "/messages/office?t=10.40", "phoneOnly": true },
+  { "id": "messages-actions", "label": "Message actions", "path": "/messages/junhao?t=10.40", "phoneOnly": true, "actions": [{ "click": "text=same lol" }, { "wait": 700 }] },
+  { "id": "messages-report", "label": "Report, step 1", "path": "/messages/junhao?t=10.40", "phoneOnly": true, "actions": [{ "click": "text=same lol" }, { "wait": 600 }, { "click": "text=Report this message" }, { "wait": 700 }] },
+  { "id": "messages-failed", "label": "Failed send", "path": "/messages/junhao?t=10.40", "phoneOnly": true, "actions": [{ "fill": ["#composer-field", "this will fail to send"] }, { "click": "button[aria-label='Send message']" }, { "wait": 1400 }] },
+  { "id": "messages-offline", "label": "Offline outbox", "path": "/messages/junhao?t=10.40&state=offline", "phoneOnly": true, "actions": [{ "fill": ["#composer-field", "see you at lunch"] }, { "click": "button[aria-label='Send message']" }, { "wait": 400 }] }
+]

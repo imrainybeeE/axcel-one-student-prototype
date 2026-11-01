@@ -1,0 +1,78 @@
+/* Timetable screen. Shared parts (rail, now block, rows) come from the kit and spice.css. */
+
+/* The week row (Calendar): pinned under the bar; one circle springs between days and carries a white copy of the
+   dates inside it, so the dates underneath never change colour */
+.wk {
+  /* Above the bar's scroll edge, so the blur that dissolves content never smears the weekday names */
+  position: sticky; z-index: calc(var(--z-sticky) + 1); top: calc(var(--header-h) + var(--safe-top));
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); container-type: inline-size;
+  margin-inline: calc(-1 * var(--pad-l)) calc(-1 * var(--pad-r)); padding: 2px var(--pad-r) 6px var(--pad-l); background: var(--paper);
+}
+/* Once pinned, a hairline separates it from the lessons sliding under it, as in Calendar */
+.wk::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 0.5px; background: var(--divider); opacity: 0; }
+@supports (animation-timeline: scroll()) {
+  .wk::after { animation: bar-fade-in linear both; animation-timeline: scroll(root block); animation-range: 40px 64px; }
+}
+.wk-day {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 4px 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.wk-name { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; }
+.wk-num, .wk-dot-nums > span {
+  display: grid; place-items: center; width: 40px; height: 40px;
+  font-size: 1.25rem; font-weight: 400; font-variant-numeric: tabular-nums;
+}
+.wk-day[data-today] .wk-num { color: var(--brand); font-weight: var(--fw-strong); }
+.wk-day[data-off] .wk-num { color: var(--ink-soft); }
+.wk-day[aria-checked='true'] .wk-num { font-weight: var(--fw-strong); }
+.wk-day:active .wk-num { opacity: 0.5; }
+.wk-day:focus-visible { outline: none; }
+.wk-day:focus-visible .wk-num { border-radius: 50%; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--focus-outer, var(--brand)); }
+.wk-dot {
+  --x: calc(var(--i) * 20cqw);
+  position: absolute; z-index: 1; bottom: 10px; left: calc(var(--pad-l) + 10cqw - 20px); width: 40px; height: 40px; border-radius: 50%; overflow: hidden;
+  background: var(--ink); transform: translateX(var(--x)); pointer-events: none;
+  transition: transform var(--dur-spring-lens) var(--spring-lens), background-color var(--dur-2) var(--ease);
+}
+.wk-dot[data-today] { background: var(--brand-solid); }
+/* The copy is a full row of dates, moved the other way by the same spring, so the right date shows through */
+.wk-dot-nums {
+  position: absolute; top: 0; left: calc(20px - 10cqw); display: grid; grid-template-columns: repeat(5, 20cqw); width: 100cqw;
+  color: var(--paper); font-weight: var(--fw-strong); transform: translateX(calc(-1 * var(--x)));
+  transition: transform var(--dur-spring-lens) var(--spring-lens);
+}
+.wk-dot[data-today] .wk-dot-nums { color: #FFFFFF; }
+.wk-dot-nums > span { justify-self: center; font-weight: var(--fw-strong); }
+@media (prefers-reduced-motion: reduce) { .wk-dot, .wk-dot-nums { transition-duration: var(--dur-1); } }
+
+.tt-day-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-2); }
+
+/* A lesson on the rail is one button: title, place, and the quiet "Join opens at" line. */
+.tt-open {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+  flex: 1; min-width: 0;
+}
+.tt-open .rail-title { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-head); }
+.tt-open:active { opacity: 0.6; }
+.rail-item.is-done .tt-open .rail-title { color: var(--ink-soft); }
+.tt-rail .rail-body { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--space-3); }
+.tt-open { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+
+/* Week: phone stacks days; laptop shows five columns. */
+.tt-week { display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.tt-week-head { display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1); }
+.tt-week-off { color: var(--ink-soft); }
+.tt-week-time { display: inline-block; padding-left: var(--space-2); box-shadow: inset 3px 0 0 var(--subj, var(--divider)); font-weight: 700; }
+.tt-week-row.is-done .row-title { color: var(--ink-soft); }
+.tt-week--grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
+.tt-week--grid .tt-week-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); background: var(--paper); padding-block: var(--space-2); z-index: 1; }
+
+/* Lesson sheet */
+.tt-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+.tt-sheet-when { display: flex; align-items: baseline; gap: var(--space-2); }
+.tt-sheet-when .num-wide { color: var(--subj, var(--ink)); }
+.tt-sheet-day { color: var(--ink-soft); margin-top: calc(-1 * var(--space-2)); }
+.tt-week-head { min-height: 2.5rem; }
+.tt-week-head .tag { font-size: var(--fs-body); }

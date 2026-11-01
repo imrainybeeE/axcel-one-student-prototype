@@ -1,0 +1,381 @@
+/* Axcel One tokens: "Bold Glass".
+   iOS grouped surfaces (grey page, white cards), Liquid Glass on the floating layer only,
+   subject colour for personality, SF Pro for words and Archivo wide for numerals.
+   Existing token names are kept where the role matches so every screen keeps resolving.
+   Theme switch: [data-theme="light" | "dark"] on <html>, set before first paint by index.html. */
+
+/* Root size: rem at a 16px root. --dt-scale is the Dynamic Type probe, clamped 1..2.35 */
+:root { --dt-scale: 1; font-size: calc(100% * var(--dt-scale)); }
+
+/* Archivo for titles and numerals: basic Latin at width 100-125, weight 600-800 (21 KB).
+   Built from the OFL variable font with fontTools (instancer + subset, tnum and kern kept).
+   Body text uses the system font. */
+@font-face {
+  font-family: "Archivo";
+  src: url("/fonts/archivo.woff2") format("woff2");
+  font-weight: 600 800;
+  font-stretch: 100% 125%;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00A0, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+2212;
+}
+
+/* ---------- Brand constants (same in every theme) ----------
+   The four logo colours, exactly. Orange and green fail 3:1 on white, so they are
+   markers beside a text label only: never text, borders or the only state cue. */
+:root {
+  --logo-blue: #0079E4;
+  --logo-orange: #FC6C00;
+  --logo-green: #65B915;
+  --logo-charcoal: #3F3D3D;
+
+  /* Merit types take the logo's three squares. One meaning each, nowhere else. */
+  --merit-attitude: var(--logo-blue);
+  --merit-skills: var(--logo-orange);
+  --merit-knowledge: var(--logo-green);
+}
+
+/* ---------- Light (default). genalpha is retired and aliased here so saved preferences still load ---------- */
+:root,
+[data-theme="light"],
+[data-theme="genalpha"] {
+  color-scheme: light;
+
+  /* Surfaces: grouped grey page, white cards. Greys lean very slightly cool to sit with Axcel blue. */
+  --paper: #F2F2F7;          /* page */
+  --page-bg: var(--paper);
+  --card: #FFFFFF;           /* inset groups, the now block's neighbours, message previews */
+  --solid-card: var(--card);
+  --raised: #FFFFFF;         /* sheets, dialogs, popovers */
+  --surface: var(--paper);   /* whatever the current element sits on; cards set it to --card */
+  --fill: rgb(118 118 128 / 0.12);        /* translucent fills adapt to whatever is behind them */
+  --fill-strong: rgb(118 118 128 / 0.2);  /* pressed fill, segmented track */
+  --subtle: var(--fill);     /* recessed: unread row, track, skeletons (old name) */
+  --selected-bg: var(--brand-tint);
+  --th-bg: var(--fill);
+  --input-bg: var(--fill);
+  --btn-bg: var(--fill);
+
+  /* Text. Every level passes 4.5:1 on the page and on cards. */
+  --ink: #111113;            /* 16.9 on page, 18.9 on card */
+  --ink-soft: #5E5E63;       /* 5.78 / 6.45 */
+  --ink-faint: #5E5E63;      /* text has two levels, as iOS: secondary = faint (5.78 / 6.45) */
+  --ink-disabled: rgb(60 60 67 / 0.3);  /* a control that cannot be used yet (iOS tertiary label); exempt from contrast */
+  --ink-tertiary: rgb(60 60 67 / 0.3); /* chevrons and decoration only, never text */
+
+  /* Lines. Hairlines are decorative; anything tappable has a fill instead of an outline. */
+  --hairline: 0.5px;
+  --divider: rgb(60 60 67 / 0.29);
+  --line: var(--divider);
+  --card-border: var(--divider);
+  --input-border: #8A8A90;   /* only where a stroke must carry meaning (switch off track, checkbox) */
+
+  /* Brand blue, split by job */
+  --brand: #006BCB;          /* links and blue text: 4.75 on page, 5.30 on card */
+  --brand-dark: #0059AB;
+  --brand-solid: #006BCB;    /* primary button fill */
+  --brand-solid-hover: #005EB4;
+  --brand-solid-press: #00519C;
+  --on-brand: #FFFFFF;
+  --brand-tint: #E3EEFA;     /* Next / New tags, selected plates */
+  --brand-tint-ink: #0059AB; /* text on --brand-tint: 5.93 */
+  --brand-line: #0079E4;
+  --primary-shadow: none;
+
+  /* The now block (break and quiet states; lessons take the subject colour in spice.css) */
+  --now-bg: #006BCB;
+  --on-now: #FFFFFF;
+  --on-now-soft: rgb(255 255 255 / 0.94);
+  --now-track: rgb(255 255 255 / 0.3);
+  --now-fill: #FFFFFF;
+
+  /* Status: always an icon or a word as well as colour */
+  --good: #247A12;  --good-tint: #E6F4DF;
+  --warn: #8A5A00;  --warn-tint: #FFF2CF;
+  --danger: #C42520; --danger-tint: #FDE8E7;
+  --on-danger: #FFFFFF;
+  --switch-on: #2F9E45;      /* iOS green, darkened so the white thumb edge reads (3.4:1 against card) */
+  --accent: var(--logo-orange);
+  --accent-tint: var(--fill);
+  --note-border: var(--divider);
+
+  /* Focus: two rings so one token works on white, on colour and in dark */
+  --focus-outer: #111113;
+  --focus-inner: #FFFFFF;
+
+  /* Glass (floating layer only). Blur and saturate live in .glass because
+     -webkit-backdrop-filter ignores var(). Opaque fallback below. */
+  --glass-top: rgb(255 255 255 / 0.78);
+  --glass-bottom: rgb(255 255 255 / 0.64);
+  --glass-solid: rgb(250 250 252 / 0.97);
+  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.9), inset 0 -0.5px 0 rgb(255 255 255 / 0.35), inset 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  --glass-shadow: 0 1px 2px rgb(20 20 40 / 0.06), 0 8px 28px rgb(20 20 40 / 0.14);
+  --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 38%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.25));
+  --lens: rgb(118 118 128 / 0.14);       /* the tab bar's moving selection */
+  --lg-tint: rgb(255 255 255 / 0.34);    /* over real refraction (Chromium) */
+  --lg-shadow: 0 1px 2px rgb(20 20 40 / 0.06), 0 8px 24px rgb(20 20 40 / 0.12);
+  --press-glow: rgb(255 255 255 / 0.6);
+
+  /* Floating layers */
+  --toast-bg: var(--glass-top);
+  --toast-glass: rgb(255 255 255 / 0.9); /* text-heavy glass: thicker, as Apple's regular material over busy content */
+  --on-toast: var(--ink);
+  --toast-action: var(--brand);
+  --scrim: rgb(10 10 20 / 0.32);
+
+  /* Elevation: a half-pixel edge plus two very soft layers, tinted cool */
+  --shadow-card: none;
+  --shadow: 0 2px 6px rgb(20 20 40 / 0.08), 0 16px 40px rgb(20 20 40 / 0.16);
+  --shadow-hover: var(--shadow);
+  --shadow-float: var(--glass-shadow);
+
+  /* Subject wash on Today: how much colour reaches the page */
+  --wash-strength: 34%;
+}
+
+/* ---------- Dark: charcoal page, lifted cards, light-blue actions ---------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #16181B;
+  --page-bg: var(--paper);
+  --card: #22252A;
+  --solid-card: var(--card);
+  --raised: #2A2E33;
+  --surface: var(--paper);
+  --fill: rgb(118 118 128 / 0.24);
+  --fill-strong: rgb(118 118 128 / 0.36);
+  --subtle: var(--fill);
+  --selected-bg: var(--brand-tint);
+  --th-bg: var(--fill);
+  --input-bg: var(--fill);
+  --btn-bg: var(--fill);
+
+  --ink: #FFFFFF;            /* 21 / 17.0 */
+  --ink-soft: #B8BCC3;       /* 9.0 on page, 8.1 on card */
+  --ink-faint: #B8BCC3;      /* two text levels: secondary = faint */
+  --ink-disabled: rgb(235 235 245 / 0.3); /* a control that cannot be used yet (iOS tertiary label) */
+  --ink-tertiary: rgb(235 235 245 / 0.3);
+
+  --divider: rgb(84 84 88 / 0.6);
+  --line: var(--divider);
+  --card-border: var(--divider);
+  --input-border: #8E8E93;
+
+  --brand: #4DA3FF;          /* 8.0 on page, 6.48 on card */
+  --brand-dark: #8CC4FF;
+  --brand-solid: #1E74DD;    /* white label 4.57; edge 4.6 on page, 3.7 on card */
+  --brand-solid-hover: #1A6ED8;
+  --brand-solid-press: #1866C8;
+  --on-brand: #FFFFFF;
+  --brand-tint: #0F2A45;
+  --brand-tint-ink: #8CC4FF;
+  --brand-line: #4DA3FF;
+  --primary-shadow: none;
+
+  --now-bg: #1E5FA8;
+  --on-now: #FFFFFF;
+  --on-now-soft: rgb(255 255 255 / 0.94);
+  --now-track: rgb(255 255 255 / 0.28);
+  --now-fill: #FFFFFF;
+
+  --good: #5FD068;  --good-tint: #12291A;
+  --warn: #F2B84B;  --warn-tint: #2E2410;
+  --danger: #FF6B61; --danger-tint: #3A1715;
+  --on-danger: #000000;
+  --switch-on: #30D158;
+  --accent: var(--logo-orange);
+  --accent-tint: var(--fill);
+  --note-border: var(--divider);
+
+  --focus-outer: #FFFFFF;
+  --focus-inner: #000000;
+
+  --glass-top: rgb(62 66 72 / 0.74);
+  --glass-bottom: rgb(52 56 62 / 0.7);
+  --glass-solid: rgb(34 37 42 / 0.97);
+  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.22), inset 0 -0.5px 0 rgb(255 255 255 / 0.06), inset 0 0 0 0.5px rgb(255 255 255 / 0.08);
+  --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 32px rgb(0 0 0 / 0.5);
+  --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.06));
+  --lens: rgb(255 255 255 / 0.12);
+  --lg-tint: rgb(60 64 70 / 0.46);
+  --lg-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.45);
+  --press-glow: rgb(255 255 255 / 0.22);
+
+  --toast-bg: var(--glass-top);
+  --toast-glass: rgb(42 46 51 / 0.94);
+  --on-toast: var(--ink);
+  --toast-action: var(--brand);
+  --scrim: rgb(0 0 0 / 0.5);
+
+  /* Dark: no shadows on cards; the lighter card and a faint ring carry the edge */
+  --shadow-card: none;
+  --shadow: 0 2px 6px rgb(0 0 0 / 0.5), 0 16px 40px rgb(0 0 0 / 0.6);
+  --shadow-hover: var(--shadow);
+  --shadow-float: var(--glass-shadow);
+
+  --wash-strength: 46%;
+}
+
+/* ---------- Type: SF Pro for words (optical sizes and tracking come from the system font),
+   Archivo wide for numerals. iOS text styles; px in comments. ---------- */
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif; /* titles: wide and heavy */
+  --font-num: var(--font-display);
+
+  --fs-time-xl: 3.5rem;    --lh-time-xl: 1;          /* 56, the countdown, Archivo 125 / 800 */
+  --fs-time-l: 1.375rem;   --lh-time-l: 1.75rem;     /* 22/28 rail dates, totals */
+  --fs-time-m: 1.0625rem;  --lh-time-m: 1.375rem;    /* 17/22 rail times, message times */
+  --fs-title-l: 2.125rem;  --lh-title-l: 2.5625rem;  /* 34/41 large title, heavy */
+  --fs-title-l-laptop: 2.125rem; --lh-title-l-laptop: 2.5625rem;
+  --fs-bar-title: 1.0625rem; --lh-bar-title: 1.375rem; /* 17/22 inline bar title, semibold */
+  --fs-title-now: 1.75rem; --lh-title-now: 2.125rem; /* 28/34 subject on the now block */
+  --fs-title-m: 1.375rem;  --lh-title-m: 1.75rem;    /* 22/28 title2: greeting, hero lines */
+  --fs-title-3: 1.25rem;   --lh-title-3: 1.5625rem;  /* 20/25 section headers */
+  --fs-title-s: 1.0625rem; --lh-title-s: 1.375rem;   /* 17/22 headline: row titles */
+  --fs-body: 1.0625rem;    --lh-body: 1.375rem;      /* 17/22 body */
+  --fs-callout: 1rem;      --lh-callout: 1.3125rem;  /* 16/21 */
+  --fs-subhead: 0.9375rem; --lh-subhead: 1.25rem;    /* 15/20 secondary lines in rows */
+  --fs-footnote: 0.8125rem; --lh-footnote: 1.125rem; /* 13/18 non-essential captions only */
+  --fs-tab: min(0.6875rem, 13px); --lh-tab: 0.8125rem; /* 11/13 tab labels under icons, as iOS */
+
+  --fw-body: 400;
+  --fw-strong: 600;
+  --fw-head: 600;
+  --fw-title: 700;
+  --fw-heavy: 800;
+  --fw-time: 700;
+  --fw-time-xl: 800;
+  --fw-tab-active: 600;
+
+  --wdth-words: 100;
+  --wdth-num: 112;
+  --wdth-num-wide: 125;
+
+  --font-size-laptop-title-l: var(--fs-title-l-laptop);
+}
+
+/* The only place numeral width is set: font-stretch, never font-variation-settings. */
+.num      { font-family: var(--font-num); font-stretch: 112%; font-variant-numeric: tabular-nums; font-weight: var(--fw-time); letter-spacing: 0; }
+.num-wide { font-family: var(--font-num); font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: var(--fw-time); letter-spacing: 0; }
+
+/* ---------- Space: 4px base ---------- */
+:root {
+  --space-1: 0.25rem;  /* 4 */
+  --space-2: 0.5rem;   /* 8 */
+  --space-3: 0.75rem;  /* 12 */
+  --space-4: 1rem;     /* 16, phone gutter */
+  --space-5: 1.25rem;  /* 20 */
+  --space-6: 1.5rem;   /* 24, between sections */
+  --space-7: 2rem;     /* 32 */
+  --space-8: 2.5rem;   /* 40 */
+  --space-9: 3.5rem;   /* 56 */
+
+  --gutter: var(--space-4);
+  --tap: 2.75rem;          /* 44 minimum touch target */
+  --header-h: 2.75rem;     /* 44 sticky bar */
+  --thread-header-h: 3.5rem;
+  --tabbar-h: 3.875rem;    /* 62 floating pill */
+  --tabbar-gap: 0.75rem;   /* 12 between the pill and the screen edges */
+  --tabbar-space: calc(var(--tabbar-h) + var(--tabbar-gap) + max(var(--safe-bottom), var(--space-2))); /* what the pill covers */
+  --rail-time: 3.5rem;
+  --rail-track: 1.75rem;
+  --sidebar-w: 16.5rem;    /* 264 floating glass panel incl. its 12px inset */
+  --topbar: 0px;
+  --content-max: 45rem;    /* 720 */
+  --content-wide: 70rem;   /* 1120 */
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --gutter-l: max(var(--space-4), var(--safe-left));
+  --gutter-r: max(var(--space-4), var(--safe-right));
+  --card-pad: var(--space-4); /* inner gutter of inset groups */
+  --tap-gap: 0.75rem;
+  --overlay-h: 0px;        /* set by a ResizeObserver while a toast or composer shows */
+
+  --grabber-w: 36px; --grabber-h: 5px;
+  --bubble-max: 80%; --bubble-gap-in: 2px; --bubble-gap-out: var(--space-3);
+  --composer-h: 3rem; --composer-max-h: 9rem;
+  --cal-cell-h: 3.5rem; --cal-dot: 6px;
+  --row-min: 2.75rem;      /* 44 one-line row inside a card */
+  --row-min-2: 3.75rem;    /* 60 two-line row */
+  --time-col: 4.25rem;
+  --tile: 1.875rem;        /* 30 icon tiles in rows */
+}
+
+/* ---------- Radius: the more it floats or is touched, the rounder. Nested corners are concentric. ---------- */
+:root {
+  --radius-none: 0;
+  --radius-tag: 7px;       /* tags, badges, small tiles */
+  --radius-tile: 8px;      /* 30px icon tiles */
+  --radius-control: 12px;  /* inputs, notices, plates */
+  --radius: 26px;          /* cards, inset groups and the now block: one radius for every card */
+  --radius-hero: 26px;
+  --radius-sheet: 32px;    /* sheets at the medium detent, toasts */
+  --radius-btn: 14px;      /* buttons and fields: rounded rectangles, never pills */
+  --radius-capsule: 999px; /* the floating tab bar and its lens only */
+  --radius-dot: 50%;
+}
+
+/* ---------- Layers ---------- */
+:root {
+  --z-sticky: 10;
+  --z-tabbar: 20;
+  --z-sheet: 30;
+  --z-toast: 40;
+  --z-dialog: 50;
+}
+
+/* ---------- Motion: springs from tools/springs.mjs (Apple's duration + bounce model) ----------
+   Rules: interactions use transitions (they retarget mid-flight), keyframes only for one-off sequences;
+   exits are faster than entries; nothing animates on high-frequency actions; the blur radius never animates. */
+:root {
+  --dur-1: 120ms;          /* press down, hover, reduced-motion fade */
+  --dur-2: 200ms;          /* text morph, bar title, small fades */
+  --dur-3: 280ms;          /* exits */
+  --dur-sheet: 490ms;
+  --dur-toast: 10s;
+  --motion: 1;             /* multiply every translate and scale delta by this */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out-quick: cubic-bezier(0.23, 1, 0.32, 1);  /* exits */
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);      /* sheets and drawers: the curve every app studied uses */
+
+  --spring-smooth: var(--ease-sheet);  /* fallbacks; custom properties do not fall back through the cascade */
+  --spring-snappy: var(--ease-out-quick);
+  --spring-bouncy: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-spring-smooth: 490ms;  /* d 0.4, bounce 0: push and pop, sheets, large moves, content swaps */
+  --dur-spring-snappy: 370ms;  /* d 0.32, bounce 0.15: lens, thumbs, tab bar shrink, press release */
+  --dur-spring-bouncy: 460ms;  /* d 0.4, bounce 0.3: toasts, Join reveal, reactions, award and badge pops */
+  --spring-lens: var(--spring-snappy);
+  --dur-spring-lens: 420ms;    /* d 0.36, bounce 0.28: the tab bar lens lands with a visible overshoot */
+  --ease-spring-smooth: var(--spring-smooth); /* old names */
+  --ease-spring-snappy: var(--spring-snappy);
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --spring-smooth: linear(0, 0.041, 0.135, 0.25, 0.366, 0.475, 0.572, 0.655, 0.725, 0.782, 0.829, 0.866, 0.896, 0.92, 0.938, 0.952, 0.963, 0.972, 0.979, 0.984, 0.988, 0.991, 0.993, 0.995, 1);
+    --spring-snappy: linear(0, 0.037, 0.127, 0.241, 0.362, 0.479, 0.585, 0.678, 0.757, 0.821, 0.871, 0.911, 0.941, 0.963, 0.979, 0.99, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.006, 1.005, 1);
+    --spring-bouncy: linear(0, 0.038, 0.131, 0.254, 0.389, 0.521, 0.642, 0.748, 0.836, 0.905, 0.958, 0.996, 1.021, 1.037, 1.044, 1.046, 1.044, 1.039, 1.034, 1.028, 1.021, 1.016, 1.011, 1.007, 1);
+    --spring-lens: linear(0, 0.039, 0.134, 0.258, 0.392, 0.524, 0.643, 0.747, 0.833, 0.9, 0.951, 0.988, 1.013, 1.028, 1.036, 1.038, 1.037, 1.034, 1.029, 1.024, 1.019, 1.014, 1.01, 1.007, 1);
+  }
+}
+/* Reduced motion: movement becomes a short fade. Never 0ms (transitionend and animation promises must settle). */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0;
+    --dur-2: 120ms; --dur-3: 120ms; --dur-sheet: 150ms;
+    --dur-spring-smooth: 150ms; --dur-spring-snappy: 150ms; --dur-spring-bouncy: 150ms;
+    --spring-smooth: linear; --spring-snappy: linear; --spring-bouncy: linear; --spring-lens: linear; --dur-spring-lens: 150ms;
+  }
+}
+
+/* ---------- Increased contrast ---------- */
+@media (prefers-contrast: more) {
+  :root, [data-theme="light"] { --ink-soft: #48484D; --ink-faint: #56565B; --divider: rgb(60 60 67 / 0.5); --glass-top: var(--glass-solid); --glass-bottom: var(--glass-solid); }
+  [data-theme="dark"] { --ink-soft: #CFCFD4; --ink-faint: #BABABF; --divider: rgb(140 140 146 / 0.7); --glass-top: var(--glass-solid); --glass-bottom: var(--glass-solid); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root, [data-theme] { --glass-top: var(--glass-solid); --glass-bottom: var(--glass-solid); }
+}

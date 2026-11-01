@@ -2,20 +2,6 @@
    subject colours and the day strip live in src/styles/spice.css. */
 
 .today-greeting { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); max-width: 26rem; } /* one quiet block with the date above it */
-.tutor-idea {
-  position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
-  min-height: 9rem; margin-top: var(--space-4); padding: var(--space-4) var(--space-5);
-  overflow: hidden; border-radius: 24px; background: linear-gradient(115deg, #EEF2FF 0%, #F8F3FF 58%, #FFF5EA 100%);
-}
-.tutor-idea-copy { position: relative; z-index: 1; max-width: 22rem; }
-.tutor-idea-label { display: inline-block; margin-bottom: 5px; color: #495DAA; font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
-.tutor-idea h2 { margin: 0; color: var(--ink); font-size: var(--fs-title-m); line-height: var(--lh-title-m); font-weight: var(--fw-heavy); }
-.tutor-idea p { max-width: 18rem; margin: 5px 0 12px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
-.tutor-idea .btn { min-height: 42px; padding-inline: 16px; }
-.tutor-idea-mascot { flex: none; width: clamp(88px, 23vw, 126px); height: clamp(88px, 23vw, 126px); object-fit: contain; filter: drop-shadow(0 8px 12px rgb(30 45 75 / 0.12)); }
-.tutor-idea-sheet { display: grid; justify-items: center; gap: var(--space-3); padding-block: var(--space-2) var(--space-4); text-align: center; }
-.tutor-idea-sheet img { width: 120px; height: 120px; object-fit: contain; }
-.tutor-idea-sheet p { max-width: 34rem; margin: 0; color: var(--ink-soft); font-size: var(--fs-body); line-height: var(--lh-body); }
 .today-cols { margin-top: var(--space-2); }
 .today-day > * + * { margin-top: var(--space-3); }
 /* One rhythm: 24 from the now block to the shelf under it, 32 between every section after that */

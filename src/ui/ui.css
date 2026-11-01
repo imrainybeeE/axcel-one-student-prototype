@@ -37,6 +37,29 @@
 [data-theme='dark'] [data-tone='award'] { --tone: #FFB340; --tone-solid: #FF9F0A; }
 [data-theme='dark'] [data-tone='good'] { --tone: #4ED07A; --tone-solid: #30D158; }
 
+/* Axcel AI tutor concept: a clear, branded destination in the navigation area. */
+.ai-tutor-card {
+  position: relative; display: grid; gap: var(--space-2); overflow: hidden;
+  border-radius: 20px; background: var(--brand-tint); color: var(--ink);
+}
+.ai-tutor-mascot { display: block; width: 64px; height: 64px; object-fit: contain; }
+.ai-tutor-copy { min-width: 0; }
+.ai-tutor-label { color: var(--brand-tint-ink); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
+.ai-tutor-copy h2 { margin: 3px 0 0; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-heavy); }
+.ai-tutor-copy p { margin: 4px 0 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.ai-tutor-card .btn { min-height: 42px; font-size: var(--fs-callout); }
+.ai-tutor-sheet { display: grid; justify-items: center; gap: var(--space-3); padding-block: var(--space-2) var(--space-4); text-align: center; }
+.ai-tutor-sheet img { width: 120px; height: 120px; object-fit: contain; }
+.ai-tutor-sheet p { max-width: 34rem; margin: 0; color: var(--ink-soft); font-size: var(--fs-body); line-height: var(--lh-body); }
+.ai-tutor-card--sidebar { margin-top: auto; padding: var(--space-3); }
+.ai-tutor-card--sidebar .ai-tutor-mascot { justify-self: end; width: 56px; height: 56px; margin-bottom: -2px; }
+.ai-tutor-card--sidebar .btn { margin-top: var(--space-2); }
+.ai-tutor-card--more { grid-template-columns: 84px minmax(0, 1fr); align-items: center; max-width: 38rem; margin-top: var(--space-5); padding: var(--space-3); }
+.ai-tutor-card--more .ai-tutor-mascot { width: 80px; height: 80px; }
+.ai-tutor-card--more .btn { grid-column: 1 / -1; }
+@media (min-width: 1024px) { .ai-tutor-card--more { display: none; } }
+@media (max-width: 1023px) { .ai-tutor-card--sidebar { display: none; } }
+
 /* ============ Press physics (shared) ============ */
 .pressable, .btn, .icon-btn--glass, .card-link {
   transition: transform var(--dur-spring-snappy) var(--spring-snappy), background-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), color var(--dur-2) var(--ease);

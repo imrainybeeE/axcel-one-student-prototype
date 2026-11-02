@@ -155,3 +155,25 @@
 .report-done-icon { color: var(--good); }
 .thread-screen .bar-title { min-width: 0; overflow: hidden; justify-self: stretch; text-align: left; }
 .thread-screen .bar { grid-template-columns: auto minmax(0, 1fr) auto; }
+
+/* Messages on Mac: each column scrolls without moving the other. */
+.messages-detail-pane { display: none; }
+@media (max-width: 1023px) {
+  .messages-split.has-thread > .messages-list-pane { display: none; }
+  .messages-split.has-thread > .messages-detail-pane { display: block; }
+}
+@media (min-width: 1024px) {
+  .messages-split { display: grid; grid-template-columns: 22rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
+  .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+  .messages-list-pane { border-right: 1px solid var(--line); }
+  .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
+  .messages-list-pane .bar-lead { display: none; }
+  .messages-list-pane .large-title--pushed { display: block; }
+  .messages-list-pane .msg-row.is-selected { background: var(--fill); border-radius: 14px; }
+  .messages-detail-pane { display: block; }
+  .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }
+  .messages-detail-pane .thread-screen { min-height: 100%; margin-bottom: 0; }
+  .messages-detail-pane .thread-screen .bar-back { display: none; }
+}
+
+.messages-inbox-heading { display: flex; align-items: center; justify-content: space-between; min-height: 100px; gap: var(--space-2); }

@@ -1,8 +1,8 @@
-import { lazy } from 'react'
+import { lazyRoute } from '../../app/lazyRoute.js'
 
-const Thread = lazy(() => import('./Thread.jsx'))
+const Messages = lazyRoute(() => import('./Messages.jsx'))
 
 export default [
-  { path: '/messages', tab: 'messages', root: true, title: 'Messages', component: lazy(() => import('./Messages.jsx')) },
-  { path: '/messages/:id', tab: 'messages', parent: '/messages', title: 'Message', component: Thread },
+  { path: '/messages', tab: 'messages', root: true, title: 'Messages', component: Messages },
+  { path: '/messages/:id', tab: 'messages', parent: '/messages', title: 'Message', component: Messages },
 ]

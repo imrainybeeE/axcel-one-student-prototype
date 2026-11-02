@@ -22,6 +22,7 @@ export default function Handbook() {
   return (
     <Screen title="Handbook">
       <div className="stack">
+        <p className="t-soft">Example guidance. Check the official handbook or ask a teacher.</p>
         <SearchField label="Search the handbook" placeholder="Search the handbook" onSearch={setQ} />
         {hits.length ? (
           <Group label="Topics">
@@ -41,7 +42,6 @@ export default function Handbook() {
         ) : (
           <EmptyState title={`Nothing in the handbook matches ‘${q}’.`}>Try another word, or ask your class teacher.</EmptyState>
         )}
-        <p className="more-foot">Secondary handbook, 2026</p>
       </div>
     </Screen>
   )

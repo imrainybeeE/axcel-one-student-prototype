@@ -40,6 +40,7 @@
 /* Report (Mail compose): the text in one card, Send in the bar */
 .report-send { font-weight: var(--fw-strong); }
 .report-card { padding: 4px var(--space-4); }
+.report-card:focus-within { outline: 2px solid var(--brand); outline-offset: 2px; }
 .report-field { display: block; width: 100%; min-height: 10rem; padding: 10px 0; border: 0; background: none; color: var(--ink); font: inherit; line-height: var(--lh-body); resize: none; outline: none; }
 .report-field::placeholder { color: var(--ink-soft); }
 /* Sent: one calm mark and a short line; the back button is the way out */
@@ -47,6 +48,7 @@
 .report-done-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #2F9E45; color: #FFFFFF; }
 .report-done-title { margin-top: var(--space-4); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); }
 .report-done-text { margin: var(--space-1) 0 var(--space-5); color: var(--ink-soft); max-width: 18rem; }
+.report-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
 @media (prefers-reduced-motion: no-preference) {
   .report-done-mark { animation: pop-in var(--dur-spring-bouncy) var(--spring-bouncy) both; }
 }
@@ -57,13 +59,17 @@
 /* One grouped card, the labels on the left (Apple Account): two rows split by a hairline */
 .signin-card { overflow: clip; }
 .signin-row { position: relative; display: grid; grid-template-columns: 5.75rem minmax(0, 1fr) auto; align-items: center; min-height: 52px; padding-left: var(--space-4); }
+.signin-row:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+.signin-row:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+.signin-row:focus-within { z-index: 1; box-shadow: inset 0 0 0 2px var(--brand); }
 .signin-row + .signin-row::before { content: ''; position: absolute; top: 0; left: var(--space-4); right: 0; height: 0.5px; background: var(--divider); }
 .signin-row label { font-weight: 500; }
 .signin-row input { min-width: 0; height: 52px; padding: 0 var(--space-4) 0 0; border: 0; background: none; color: var(--ink); font: inherit; outline: none; }
+.signin-row input:focus-visible { outline: none; box-shadow: none; } /* the row draws the ring */
 .signin-row input::placeholder { color: var(--ink-tertiary); }
 .signin-row.is-error label { color: var(--danger); }
 .signin-show { min-height: 44px; padding: 0 var(--space-4); border: 0; background: none; color: var(--brand); font: inherit; font-weight: var(--fw-strong); cursor: pointer; }
-.signin-err { margin-top: calc(-1 * var(--space-2)); padding-inline: var(--space-4); }
+.signin-err { display: flex; align-items: center; gap: 8px; margin-top: calc(-1 * var(--space-2)); padding-inline: var(--space-4); }
 .signin-help { margin-top: auto; }
 
 /* Handbook topic (Tips): the tile, a readable title, short paragraphs with room between lines */
@@ -72,7 +78,7 @@
 .hb-tile .tile .icon { width: 30px; height: 30px; }
 .hb-title { margin-top: var(--space-4); font-size: var(--fs-title-now); line-height: var(--lh-title-now); font-weight: var(--fw-title); }
 .hb-text { margin-top: var(--space-3); font-size: var(--fs-body); line-height: 1.625rem; }
-.hb-ask { margin-top: var(--space-5); color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.hb-note { margin-bottom: var(--space-4); }
 .hb-next { max-width: 36rem; }
 /* On a laptop the screen's large title already names the topic */
 /* Once the bar shows the title, the page's own heading under the bar's blur fades, so the title never shows twice */
@@ -80,4 +86,8 @@
   .hb-title { transition: opacity var(--dur-2) linear; }
   .screen:has(.bar-title[data-shown]) .hb-title { opacity: 0; }
 }
-@media (min-width: 1024px) { .hb-title { display: none; } .hb-tile + .hb-text { margin-top: var(--space-4); } }
+@media (min-width: 1024px) {
+  .hb-title { display: none; }
+  .hb-tile + .hb-text { margin-top: var(--space-4); }
+  .screen-more .screen-body > .stack, .screen-body > .stack:has(.appear-group) { max-width: 46rem; }
+}

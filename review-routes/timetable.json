@@ -1,10 +1,10 @@
 [
-  { "id": "timetable-day", "label": "Day, online day, 10.40", "path": "/timetable?t=10.40" },
+  { "id": "timetable-day", "label": "Day, campus day, 10.40", "path": "/timetable?t=10.40" },
   { "id": "timetable-day-dark", "label": "Day, dark", "path": "/timetable?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "timetable-campus", "label": "Thursday, campus day", "path": "/timetable?t=10.40&day=2026-10-22" },
+  { "id": "timetable-campus", "label": "Thursday, campus day", "path": "/timetable?t=10.40&day=2026-11-05" },
   { "id": "timetable-week", "label": "Week", "path": "/timetable?t=10.40&view=week" },
-  { "id": "timetable-holiday", "label": "Deepavali replacement holiday", "path": "/timetable?t=10.40&day=2026-10-26" },
-  { "id": "timetable-sheet", "label": "Lesson sheet, Bahasa Melayu", "path": "/timetable?t=10.40", "actions": [{ "click": "text=Bahasa Melayu" }, { "wait": 600 }] },
+  { "id": "timetable-holiday", "label": "Deepavali break", "path": "/timetable?t=10.40&day=2026-11-06" },
+  { "id": "timetable-sheet", "label": "Lesson sheet, Bahasa Melayu", "path": "/timetable?t=10.40&day=2026-11-04", "actions": [{ "click": "button.tt-open:has-text('Bahasa Melayu')" }, { "wait": 600 }] },
   { "id": "timetable-loading", "label": "Loading", "path": "/timetable?t=10.40&state=loading", "phoneOnly": true },
   { "id": "timetable-error", "label": "Error, saved day kept", "path": "/timetable?t=10.40&state=error", "phoneOnly": true },
   { "id": "timetable-offline", "label": "Offline", "path": "/timetable?t=10.40&state=offline", "phoneOnly": true }

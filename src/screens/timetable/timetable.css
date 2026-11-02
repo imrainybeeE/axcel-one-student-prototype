@@ -67,7 +67,7 @@
 .tt-week-time { display: inline-block; padding-left: var(--space-2); box-shadow: inset 3px 0 0 var(--subj, var(--divider)); font-weight: 700; }
 .tt-week-row.is-done .row-title { color: var(--ink-soft); }
 .tt-week--grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-4); align-items: start; }
-.tt-week--grid .tt-week-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); background: var(--paper); padding-block: var(--space-2); z-index: 1; }
+.tt-week--grid .tt-week-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); align-self: start; background: var(--paper); padding-block: var(--space-2); z-index: 1; }
 
 /* Lesson sheet */
 .tt-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
@@ -76,3 +76,19 @@
 .tt-sheet-day { color: var(--ink-soft); margin-top: calc(-1 * var(--space-2)); }
 .tt-week-head { min-height: 2.5rem; }
 .tt-week-head .tag { font-size: var(--fs-body); }
+
+/* Keep the current lesson's details separate from Join. */
+.tt-now { width: 100%; min-width: 0; }
+.tt-now .now--rail { margin-bottom: var(--space-2); }
+.tt-now > .btn { min-height: 44px; }
+
+/* The shared grid makes each start time line up across the week. */
+.tt-week-scroll { overflow-x: auto; }
+.tt-week--grid {
+  min-width: calc(5 * 150px + 4 * var(--space-4)); grid-template-columns: repeat(5, minmax(150px, 1fr));
+  grid-template-rows: minmax(calc(var(--header-h) + var(--safe-top) + 2.5rem + 2 * var(--space-2) + var(--space-1)), auto);
+  align-items: stretch;
+}
+.tt-week--grid .tt-week-day, .tt-week--grid .tt-week-day > .list { display: contents; }
+.tt-week--grid .tt-week-row { min-width: 0; }
+.tt-rail, .tt-day-head { max-width: 46rem; }

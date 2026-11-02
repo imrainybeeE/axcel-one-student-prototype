@@ -88,7 +88,11 @@ export function RouterProvider({ routes, children }) {
       if (!edgeNav.pending && e.hasUAVisualTransition && idx < cur.idx) edgeNav.y = scrollByIdx.get(idx) ?? 0
       const type = edgeNav.pending || (e.hasUAVisualTransition && idx < cur.idx) ? 'edge' : idx < cur.idx ? 'pop' : 'push'
       edgeNav.pending = false
-      commit({ path, search: window.location.search, idx, tab, type, key: ++seq.key })
+      const next = { path, search: window.location.search, idx, tab, type, key: ++seq.key }
+      // React renders a transition started inside a popstate event at once and skips its view transition, so the Back
+      // button (history.back) and Forward would land with no slide. Start it one task later, outside the event.
+      if (type === 'edge') commit(next)
+      else setTimeout(() => commit(next), 0)
     }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)

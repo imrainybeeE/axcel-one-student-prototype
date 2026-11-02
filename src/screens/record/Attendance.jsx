@@ -1,6 +1,6 @@
 // Public prototype shows aggregate attendance only; daily dates and absence reasons stay private.
 import { Screen, useDemo, SAVED_AT } from '../../app'
-import { Group, Row, Num, Icon, Disclosure, SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice } from '../../ui'
+import { Group, Row, Num, Icon, Disclosure, SkeletonRows, LoadingState, ErrorState, OfflineNotice } from '../../ui'
 import { attendanceSummary, term } from '../../data/attendance.js'
 import './record.css'
 
@@ -14,7 +14,7 @@ export default function Attendance() {
 
   return (
     <Screen title="Attendance">
-      <div className="stack">
+      <div className="stack att-column">
         {offline && <OfflineNotice what="your attendance" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>Your attendance did not load. Check that you are online, then try again. Your attendance from <Num>{SAVED_AT}</Num> is below.</ErrorState>}
         <section className="record-hero att-hero card" aria-labelledby="att-pc" data-tone="good">
@@ -30,10 +30,7 @@ export default function Attendance() {
         <Disclosure summary="How absences are counted">
           <p>Every day you are not in school counts as absent, including days with a medical certificate or a planned absence. Lates count as present.</p>
         </Disclosure>
-        <EmptyState title="Individual attendance details are hidden in this public demo.">
-          The totals above match your account. Daily dates and absence reasons are not included.
-        </EmptyState>
-        <p className="att-help">Think a mark is wrong? Ask your class teacher.</p>
+        <p className="att-note card">Daily attendance details are hidden in this demo.</p>
       </div>
     </Screen>
   )

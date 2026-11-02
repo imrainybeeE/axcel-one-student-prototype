@@ -36,10 +36,11 @@
 .cal-dots { display: flex; gap: 3px; height: 6px; }
 .cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); }
 .cal-cell:active .num { opacity: 0.5; }
-.cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-3) 0; }
+.cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
+  .cal-stack:not(.cal-laptop) { max-width: 46rem; }
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }

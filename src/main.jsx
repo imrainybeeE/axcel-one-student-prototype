@@ -9,6 +9,7 @@ import './app/theme.js'
 import { startDynamicTypeProbe } from './app/dynamicType.js'
 import App from './app/App.jsx'
 import { startLiquidGlass } from './ui/liquidGlass.js'
+import { preloadRoutes } from './app/lazyRoute.js'
 
 startDynamicTypeProbe()
 // iOS Safari only applies :active (the press states) when a touch listener exists on the page
@@ -22,3 +23,5 @@ createRoot(document.getElementById('root')).render(
 
 // Real refraction on the floating layer where the browser can draw it (Chromium); frosted glass elsewhere
 startLiquidGlass()
+// Every other screen's code, fetched while the student reads the first one
+preloadRoutes()

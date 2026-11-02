@@ -25,10 +25,10 @@ export default function HandbookTopic({ params }) {
   return (
     <Screen title={topic.title} heading={heading}>
       <article className="hb-article" aria-labelledby="hb-title">
+        <p className="t-soft hb-note">Example guidance. Check the official handbook or ask a teacher.</p>
         <span className="hb-tile"><TopicTile topic={topic} size={30} /></span>
         <h2 ref={heading} id="hb-title" className="hb-title">{topic.title}</h2>
         {topic.body.map((p) => <p key={p} className="hb-text">{p}</p>)}
-        <p className="hb-ask">Not sure? Ask your class teacher.</p>
       </article>
       <Group title="Next" className="hb-next">
         <Row to={`/handbook/${next.id}`} leadKind="icon" lead={<TopicTile topic={next} size={18} />} title={next.title} chevron />

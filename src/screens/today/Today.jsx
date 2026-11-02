@@ -91,7 +91,7 @@ function AccountButton() {
 }
 
 export default function Today() {
-  const { state, offline, now, today, retry, retrying } = useDemo()
+  const { state, offline, now, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const { joiningId, join } = useJoin()
   const [refreshedAt, setRefreshedAt] = useState(null)
 
@@ -126,7 +126,7 @@ export default function Today() {
   } else {
     day = (
       <>
-        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} className="today-notice" />}
+        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} className="today-notice" onRetry={reconnect} retrying={reconnecting} />}
         <NowBlock model={model} offline={offline} onJoin={join} joiningId={joiningId} showNext />
         <LessonShelf model={model} nowMs={now} offline={offline} />
       </>

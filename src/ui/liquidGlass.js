@@ -174,7 +174,8 @@ function attach(node) {
 /** Watch the document: every [data-liquid] element gets glass while it exists. Call once at start-up. */
 export function startLiquidGlass() {
   if (!liquidSupported()) return
-  document.documentElement.dataset.liquid = ''
+  // Not data-liquid: that would make the page itself a glass element, rebuilt full-size on every height change
+  document.documentElement.dataset.liquidOn = ''
   const live = new Map()
   const scan = () => {
     for (const n of document.querySelectorAll('[data-liquid]')) if (!live.has(n)) live.set(n, attach(n))

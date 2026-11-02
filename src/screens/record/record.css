@@ -32,6 +32,8 @@
 /* Section headings match the kit's (Where your points come from) */
 .record-awards h2, .record-entries > h2, .att-term-head { margin-bottom: var(--space-2); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); }
 .record-entries { display: flex; flex-direction: column; gap: var(--space-4); }
+.record-empty { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.record-empty .btn { margin-top: var(--space-3); }
 
 /* Entries */
 .record-meta { display: inline-flex; align-items: center; gap: var(--space-2); }
@@ -75,5 +77,6 @@
 .att-key span { display: inline-flex; align-items: center; gap: var(--space-2); }
 .att-key i { width: 14px; height: 14px; }
 .att-status { display: inline-flex; align-items: center; gap: var(--space-2); }
-.att-help { color: var(--ink-soft); }
+.att-column { max-width: 46rem; }
+.att-note { padding: var(--space-4); color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 .record-how { padding-inline: 0; margin-top: calc(-1 * var(--space-2)); }

@@ -2,10 +2,10 @@
 // One Show control replaces the old stack of filters. Category is a word on each row, never a colour.
 // URL: ?view=month, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
 import { useState } from 'react'
-import { Screen, useDemo, useRoute, updateQuery, useLaptop, SAVED_AT } from '../../app'
+import { Screen, useDemo, useRoute, updateQuery, useLaptop, usePref, SAVED_AT } from '../../app'
 import {
   Segmented, Group, Row, Num, Icon, IconButton, Button, Sheet, CheckRow,
-  SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice, useToast,
+  SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
 import { events, categories } from '../../data/calendar.js'
 import { addDays, dayOfWeek, formatLongDate, isoToMs } from '../../lib/time.js'
@@ -24,7 +24,7 @@ const NO_SCHOOL = new Set(['holiday', 'public-holiday'])
 
 function when(e) {
   if (e.allDay) {
-    if (e.end && e.end !== e.start) return `Until ${formatLongDate(isoToMs(e.end)).replace(/^\w+ /, (m) => m)}`
+    if (e.end && e.end !== e.start) return `Until ${formatLongDate(isoToMs(e.end))}`
     return NO_SCHOOL.has(e.category) ? 'No school' : 'All day'
   }
   return e.end && !e.end.includes('-') ? `${e.time} to ${e.end}` : e.time
@@ -32,7 +32,7 @@ function when(e) {
 
 /** The grey line, time first as Calendar: "10.50 to 11.35, 8 Orion", or "Public holiday, no school". */
 function meta(e) {
-  if (NO_SCHOOL.has(e.category)) return `${categories[e.category]?.label}, no school`
+  if (NO_SCHOOL.has(e.category)) return e.end && e.end !== e.start ? `${when(e)}, no school` : `${categories[e.category]?.label}, no school`
   return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean).join(', ')
 }
 
@@ -64,7 +64,7 @@ function EventRow({ e, onOpen, today, noDate = false }) {
 function Upcoming({ list, today, onOpen }) {
   const groups = []
   for (const e of list) {
-    const g = weekLabel(e.start, today)
+    const g = weekLabel(e.start < today ? today : e.start, today)
     const last = groups[groups.length - 1]
     if (last && last.g === g) last.items.push(e)
     else groups.push({ g, items: [e] })
@@ -88,7 +88,9 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
   const selEvents = on(selected)
   const move = (delta) => {
     const dt = new Date(Date.UTC(y, m - 1 + delta, 1))
-    onMonth(`${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}`)
+    const targetMonth = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}`
+    const lastDay = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth() + 1, 0)).getUTCDate()
+    onMonth(`${targetMonth}-${String(Math.min(Number(selected.slice(8)), lastDay)).padStart(2, '0')}`)
   }
   const key = (e, iso) => {
     const steps = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key]
@@ -144,8 +146,7 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
   )
 }
 
-function EventSheet({ e, onClose, offline }) {
-  const toast = useToast()
+function EventSheet({ e, onClose, today }) {
   const [reminded, setReminded] = useState({})
   if (!e) return <Sheet open={false} onClose={onClose} title="Event" />
   const on = reminded[e.id]
@@ -159,21 +160,18 @@ function EventSheet({ e, onClose, offline }) {
           <Row lead={<Icon name="group" />} leadKind="icon" title={e.audience} meta="Who it is for" />
         </ul>
         {e.note && <p className="t-soft">{e.note}</p>}
-        {!NO_SCHOOL.has(e.category) && (
-          <Button
-            variant="secondary"
-            full
-            icon={on ? 'check' : 'bell'}
-            unavailable={offline ? 'Needs the internet' : null}
-            onClick={() => {
-              setReminded((r) => ({ ...r, [e.id]: !on }))
-              toast.show(on
-                ? { message: 'Reminder removed.' }
-                : { message: `You will get a reminder at 8.00 on ${formatLongDate(isoToMs(e.start))}.`, actionLabel: 'Undo', onAction: () => setReminded((r) => ({ ...r, [e.id]: false })) })
-            }}
-          >
-            {on ? 'Reminder on' : 'Remind me'}
-          </Button>
+        {!NO_SCHOOL.has(e.category) && e.start > today && (
+          <>
+            <Button
+              variant="secondary"
+              full
+              icon={on ? 'check' : 'bell'}
+              onClick={() => setReminded((r) => ({ ...r, [e.id]: !on }))}
+            >
+              {on ? 'Reminder on' : 'Remind me'}
+            </Button>
+            <p className="t-soft">Demo only: no notification will be sent.</p>
+          </>
         )}
       </div>
     </Sheet>
@@ -184,7 +182,7 @@ export default function Calendar() {
   const { query } = useRoute()
   const { state, offline, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const laptop = useLaptop()
-  const [show, setShow] = useState({ school: true, class: true })
+  const [show, setShow] = usePref('calendarShow', { school: true, class: true })
   const [showOpen, setShowOpen] = useState(false)
   const view = query.get('view') === 'month' ? 'month' : 'upcoming'
   const selected = query.get('day') || today
@@ -200,7 +198,7 @@ export default function Calendar() {
   let body
   if (state === 'loading') {
     body = <LoadingState label="Getting events" onRetry={retry}><SkeletonRows count={5} lead="date" /></LoadingState>
-  } else if (state === 'empty' || (view === 'upcoming' && !upcoming.length)) {
+  } else if (view === 'upcoming' && (state === 'empty' || !upcoming.length)) {
     body = (
       <EmptyState
         title="Nothing coming up in the next 60 days."
@@ -214,11 +212,11 @@ export default function Calendar() {
   } else if (view === 'month') {
     body = (
       <Month
-        list={visible}
+        list={state === 'empty' ? [] : visible}
         today={today}
         selected={selected}
         month={month}
-        onMonth={setMonth}
+        onMonth={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
         onSelect={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
         onOpen={setOpen}
       />
@@ -236,7 +234,7 @@ export default function Calendar() {
         </Button>
       }
     >
-      <div className={`stack${laptop && view === 'month' ? ' cal-laptop' : ''}`}>
+      <div className={`stack cal-stack${laptop && view === 'month' ? ' cal-laptop' : ''}`}>
         <Segmented
           legend="View"
           value={view}
@@ -247,12 +245,12 @@ export default function Calendar() {
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>New events did not load. Check that you are online, then try again. Events saved at <Num>{SAVED_AT}</Num> are below.</ErrorState>}
         {body}
       </div>
-      <EventSheet e={open} onClose={() => setOpen(null)} offline={offline} />
+      <EventSheet e={open} onClose={() => setOpen(null)} today={today} />
       <Sheet open={showOpen} onClose={() => setShowOpen(false)} title="Show" trailing={<Button variant="plain" size="compact" onClick={() => setShowOpen(false)}>Done</Button>}>
         <div className="cal-sheet">
           <ul className="list" role="list">
-            <CheckRow label="School events and holidays" meta={`${events.filter((e) => scopeOf(e) === 'school').length} events`} checked={show.school} onChange={(v) => setShow((s) => ({ ...s, school: v }))} />
-            <CheckRow label={`${student.className} and Year ${student.year}`} meta={`${events.filter((e) => scopeOf(e) === 'class').length} events`} checked={show.class} onChange={(v) => setShow((s) => ({ ...s, class: v }))} />
+            <CheckRow label="School events and holidays" meta={`${events.filter((e) => scopeOf(e) === 'school').length} events`} checked={show.school} onChange={(v) => setShow({ ...show, school: v })} />
+            <CheckRow label={`${student.className} and Year ${student.year}`} meta={`${events.filter((e) => scopeOf(e) === 'class').length} events`} checked={show.class} onChange={(v) => setShow({ ...show, class: v })} />
           </ul>
           <p className="t-soft">Saved on this phone.</p>
         </div>

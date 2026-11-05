@@ -45,7 +45,7 @@ const paths = {
   // Filled forms for icon tiles (More, Settings), as SF Symbols' .fill variants; cut-outs take the tile's colour
   'award-fill': <><circle cx="12" cy="9" r="6.5" fill="currentColor" /><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8Z" fill="currentColor" /></>,
   'check-circle-fill': <><circle cx="12" cy="12" r="10" fill="currentColor" stroke="none" /><path d="m7.6 12.2 3 3 5.8-6.4" stroke={CUT} strokeWidth="2.2" /></>,
-  'book-fill': <><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5Z" fill="currentColor" /><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20" /></>,
+  'book-fill': <><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5Z" fill="currentColor" /><path d="M8.5 7.5h7M8.5 11h5" stroke={CUT} strokeWidth="1.8" /><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20" /></>,
   'flag-fill': <><path d="M5 21.5V4" /><path d="M5 4.5s1.5-1.5 5-1.5 4.5 2 8 2 2-.5 2-.5v10s-.5.5-2 .5-4.5-2-8-2-5 1.5-5 1.5Z" fill="currentColor" /></>,
   'clock-fill': <><circle cx="12" cy="12" r="9" fill="currentColor" /><path d="M12 7v5l3 2" stroke={CUT} /></>,
   'bell-off-fill': <><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 8 2.5 8h-17S6 15 6 9Z" fill="currentColor" /><path d="M10 20.5a2.2 2.2 0 0 0 4 0" /><path d="M3 3l18 18" stroke={CUT} strokeWidth="4.6" /><path d="M3 3l18 18" /></>,

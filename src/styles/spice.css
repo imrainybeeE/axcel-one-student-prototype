@@ -60,7 +60,7 @@
   background: var(--subj-a);
 }
 .now--quiet { --now-bg: #3A3D44; background: #3A3D44; }
-[data-theme='dark'] .now[data-subject] { background: oklch(from var(--subj-a) calc(l + 0.05) calc(c + 0.03) h); } /* its own hue, lifted and a touch more vivid: present on charcoal, never a hole */
+
 
 @media (prefers-reduced-motion: reduce) { [data-subject] { transition: none; } }
 

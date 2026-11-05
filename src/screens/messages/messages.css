@@ -73,10 +73,13 @@
 .msg + .msg:not(.is-first) { margin-top: -10px; }
 /* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
 .msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 16px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -5px; width: 24px; background: var(--bubble); } /* square: its bottom runs on from the bubble's, so no notch; the cut below shapes the tail */
-.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -7px; width: 7px; background: var(--paper); border-bottom-right-radius: 8px; }
-.msg--mine.is-last .msg-bubble::before { right: -5px; width: 24px; background: var(--bubble); }
-.msg--mine.is-last .msg-bubble::after { right: -7px; width: 7px; background: var(--paper); border-bottom-left-radius: 8px; }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -6px; width: 16px; background: var(--bubble); }
+.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -8px; width: 8px; background: var(--paper); border-bottom-right-radius: 10px; }
+.msg--mine.is-last .msg-bubble::before { right: -6px; width: 16px; background: var(--bubble); } /* square inside (the bubble covers it); only the cut beside it shapes the curl */
+.msg--mine.is-last .msg-bubble::after { right: -8px; width: 8px; background: var(--paper); border-bottom-left-radius: 10px; }
+/* The tail side's bottom corner is tight, so the curl grows out of a straight edge: no notch, no square foot */
+.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 10px; }
+.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 10px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
 .msg.is-failed .msg-bubble { box-shadow: inset 0 0 0 2px var(--danger); }

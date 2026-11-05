@@ -328,7 +328,7 @@
   min-height: var(--tap); cursor: pointer; list-style: none; font-weight: var(--fw-strong); color: var(--brand);
 }
 .disclosure summary::-webkit-details-marker { display: none; }
-.disclosure-chevron { transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
+.disclosure-chevron { stroke-width: 2.6; transition: transform var(--dur-spring-snappy) var(--spring-snappy); } /* the same weight as every row chevron */
 .disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .disclosure-body { padding-bottom: var(--space-4); }
 .disclosure[open] .disclosure-body { animation: rise-in var(--dur-spring-smooth) var(--spring-smooth); }

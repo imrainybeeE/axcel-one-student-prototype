@@ -83,9 +83,9 @@
 }
 .stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--tone); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .stat-chev { color: var(--ink-tertiary); }
-.stat-fig { display: flex; align-items: last baseline; gap: 3px; min-width: 0; margin-top: auto; padding-top: var(--space-4); }
+.stat-fig { display: flex; align-items: last baseline; gap: 4px; min-width: 0; margin-top: auto; padding-top: var(--space-4); }
 .stat-n { font-size: 2.125rem; line-height: 1; font-weight: var(--fw-heavy); letter-spacing: -0.01em; }
-.stat-unit { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
+.stat-unit { color: var(--ink-soft); font-size: var(--fs-footnote); font-weight: 400; }
 .stat-sub { margin-top: 6px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 /* Progress to the next award: the now block's thin line, in the tile's colour */
 .stat-bar { display: block; height: 4px; margin-top: 10px; border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }
@@ -135,7 +135,7 @@
   .now-mini { display: none; }
   .today-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
   .today-side { margin-top: 0; }
-  .today-day { margin-top: 31px; } /* the block's top lines up with the first card beside it */
+  .today-day > .day-strip:first-child { margin-top: 0; }
   /* On a laptop the block is wider than a phone: more room inside, and Join only as wide as it needs */
   .screen--today .now { padding: var(--space-6); }
   .screen--today .now-next { margin-inline: calc(-1 * var(--space-6)); padding-inline: var(--space-6); margin-bottom: calc(-1 * var(--space-4)); }

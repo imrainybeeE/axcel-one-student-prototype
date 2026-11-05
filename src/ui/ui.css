@@ -196,6 +196,7 @@
 .row-hit--partial { grid-column: lead / trail; }
 .row-lead { grid-column: lead; align-self: start; }
 .row:has(.tile) .row-lead { align-self: center; }
+.row:has(.row-lead .tile) { --row-inset: calc(var(--tile) + 0.75rem) !important; } /* dividers start under the text: a 30px tile is wider than a 24px icon */
 /* Time and date leads share the title's first baseline */
 .row:has(.lead-time, .lead-date) .row-hit { align-items: first baseline; }
 .row:has(.lead-time, .lead-date) .row-trail { align-self: center; }
@@ -415,7 +416,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .switch-thumb {
   display: block; width: 27px; height: 27px; margin: 2px; border-radius: var(--radius-capsule);
   background: #FFFFFF;
-  box-shadow: 0 3px 8px rgb(0 0 0 / 0.15), 0 3px 1px rgb(0 0 0 / 0.06), 0 0 0 0.5px rgb(0 0 0 / 0.04);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1), 0 1px 1px rgb(0 0 0 / 0.04), 0 0 0 0.5px rgb(0 0 0 / 0.04);
   transition: transform var(--dur-spring-snappy) var(--spring-snappy), width var(--dur-spring-snappy) var(--spring-snappy);
 }
 .switch input:checked + .switch-track { background: var(--switch-on); }
@@ -709,10 +710,10 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 }
 .now-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); align-items: start; }
 .now-main { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
-.now-main .tag { margin-bottom: var(--space-3); white-space: normal; }
+.now-main .tag { margin-bottom: var(--space-2); white-space: normal; }
 .now-title { overflow-wrap: break-word; hyphens: manual; text-wrap: balance; }
 .now-meta { color: var(--on-now-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; margin-top: 2px; }
-.now-count { display: flex; flex-direction: column; align-items: flex-end; text-align: right; margin-top: 14px; }
+.now-count { display: flex; flex-direction: column; align-items: flex-end; text-align: right; margin-top: 8px; }
 .now-count-line { display: flex; align-items: last baseline; gap: 3px; line-height: var(--lh-time-xl); }
 .now-count-n { font-size: var(--fs-time-xl); line-height: var(--lh-time-xl); font-weight: var(--fw-time-xl); letter-spacing: -0.02em; }
 .now-count-pre, .now-count-unit { font-size: var(--fs-body); line-height: var(--lh-body); font-weight: var(--fw-strong); }
@@ -734,8 +735,8 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 /* The foot: the next lesson on one line under a hairline, Join once it opens */
 .now-next {
   display: flex; align-items: center; gap: var(--space-2); min-height: 44px;
-  margin: var(--space-4) calc(-1 * var(--space-4)) calc(-1 * var(--space-2)); padding: var(--space-2) var(--space-4) 0;
-  border-top: 0.5px solid rgb(255 255 255 / 0.28); font-size: var(--fs-subhead); line-height: var(--lh-subhead);
+  margin: var(--space-3) calc(-1 * var(--space-4)) calc(-1 * var(--space-3)); padding: var(--space-1) var(--space-4) 0;
+  border-top: 0.5px solid rgb(255 255 255 / 0.24); font-size: var(--fs-subhead); line-height: var(--lh-subhead);
 }
 .now-next-label { color: var(--on-now-soft); }
 /* Timetable's block ends on Details, a row under the same hairline as Today's Next line */
@@ -777,13 +778,14 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now--skeleton { background: var(--card); box-shadow: var(--shadow-card); }
 .now--skeleton .now-main .skel { display: block; }
 
-.now--rail { margin-block: var(--space-2); padding: var(--space-4); border-radius: var(--radius); }
+.now--rail { margin-block: var(--space-2); padding: 14px var(--space-4) var(--space-4); border-radius: var(--radius); }
 /* The rail's block: Today's parts at rail width (a smaller countdown beside the label, the same bar and Join) */
-.now-rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+.now-rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.now-rail-name { min-width: 0; }
+.now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-heavy); }
 .now--rail .now-count { margin-top: 0; }
-.now--rail .now-count-n { font-size: 2.5rem; }
-.now--rail .now-title { margin-top: var(--space-1); }
-.now--rail .now-elapsed { margin: var(--space-4) 0 var(--space-4); }
+.now--rail .now-count-n { font-size: 2.25rem; }
+.now--rail .now-elapsed { margin: var(--space-3) 0 var(--space-3); }
 .now--rail .now-elapsed:last-child { margin-bottom: 0; } /* no Join on campus: the card ends on the bar, padding even all round */
 
 /* ============ Rail ============ */

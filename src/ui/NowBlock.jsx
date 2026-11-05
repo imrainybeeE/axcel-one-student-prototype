@@ -217,12 +217,14 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
     return (
       <section className="now now--rail" aria-labelledby={nameId} data-subject={item.subjectId}>
         <span id={nameId} className="vh">{name}</span>
+        {/* One band: the lesson on the left, its countdown on the right (the rail's filled stop already says now) */}
         <div className="now-rail-top">
-          <Tag tone="inverse">Now</Tag>
+          <div className="now-rail-name">
+            <p className="now-title">{shortTitle(item)}</p>
+            <p className="now-meta">{meta(item)}</p>
+          </div>
           <Countdown minutes={model.minutes} mode="left" />
         </div>
-        <p className="now-title t-title-m">{shortTitle(item)}</p>
-        <p className="now-meta">{meta(item)}</p>
         <Elapsed key={item.id} item={item} minutesLeft={model.minutes} progress={model.progress} />
         <JoinButton item={item} join={model.join} offline={offline} joining={joining} onJoin={onJoin} />
         {onDetails && (

@@ -95,8 +95,9 @@ function buildMaps(w, h, r, bezel) {
       const facing = f.nx * lx + f.ny * ly
       // A thin bright line on the lit edge, a fainter one opposite (light caught inside the glass), a soft inner sheen
       const line = Math.max(0, 1 - f.dist / 1.6)
-      const sheen = Math.max(0, 1 - f.dist / (bezel * 0.9)) * 0.22
-      const a = (line * 0.95 + sheen) * (Math.pow(Math.max(0, facing), 1.4) + 0.38 * Math.pow(Math.max(0, -facing), 1.6))
+      const sheen = Math.max(0, 1 - f.dist / (bezel * 0.9)) * 0.08
+      // Quiet: a hairline of light, not a bevel (about 12% peak once the tint is over it)
+      const a = (line * 0.5 + sheen) * (Math.pow(Math.max(0, facing), 1.4) + 0.25 * Math.pow(Math.max(0, -facing), 1.6))
       spec.data[i] = 255; spec.data[i + 1] = 255; spec.data[i + 2] = 255
       spec.data[i + 3] = Math.min(255, a * 255)
     }

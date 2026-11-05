@@ -186,7 +186,7 @@ export default function Thread({ params }) {
       className="thread-screen"
       action={
         <>
-          <IconButton icon="ellipsis" label="More for this chat" onClick={() => setMenu(true)} />
+          <IconButton icon="ellipsis" label="More for this chat" onClick={() => setMenu(true)} data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" />
         </>
       }
     >

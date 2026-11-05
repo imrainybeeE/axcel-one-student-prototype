@@ -34,8 +34,8 @@
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
 .cal-cell.is-blank { min-height: 56px; }
-.cal-dots { display: flex; gap: 3px; height: 6px; }
-.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+.cal-dots { display: flex; gap: 3px; height: 5px; }
+.cal-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
 

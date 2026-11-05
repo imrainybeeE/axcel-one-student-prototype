@@ -6,8 +6,11 @@
 .msg-row-name { flex: 1; min-width: 0; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 400; white-space: nowrap; }
 .msg-row-chev { flex: none; align-self: center; color: var(--ink-tertiary); margin-right: -4px; }
+.msg-list .msg-row { padding-left: 26px; } /* room for the unread dot, clear of the avatar, as Messages leaves it */
+.msg-list .msg-row::after { left: calc(26px + var(--row-inset, 0px)); }
 .msg-row.is-unread::before {
-  content: ''; position: absolute; z-index: 1; left: 5px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
+  /* Centred on the avatar (11px row padding + half a 44px avatar), not on a row that grows with its preview */
+  content: ''; position: absolute; z-index: 1; left: 9px; top: 33px; width: 8px; height: 8px; margin-top: -4px;
   border-radius: 50%; background: var(--brand); pointer-events: none;
 }
 .msg-row.is-unread .row-meta { color: var(--ink); }
@@ -32,7 +35,7 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 19rem; min-height: 44px; margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
+  align-self: center; max-width: 19rem; min-height: 44px; margin: 0 0 calc(-1 * var(--space-2)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
   background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; cursor: pointer;
 }
 .thread-caption .icon { display: inline; margin-right: 4px; vertical-align: -2px; }
@@ -99,7 +102,7 @@
 @media (min-width: 1024px) {
   /* No tab bar on a laptop: the composer rests near the bottom, and the chat keeps a readable width */
   .thread-screen { min-height: 100dvh; margin-bottom: calc(-1 * (var(--tabbar-space) + var(--space-6))); }
-  .thread-screen > .screen-body { width: 100%; max-width: 44rem; margin-inline: auto; }
+  .thread-screen > .screen-body { width: 100%; max-width: 40rem; margin-inline: auto; }
   .thread-screen .msg-col { max-width: min(80%, 28rem); } /* a long line stays a comfortable measure on a wide screen */
   .thread-screen .composer-wrap { bottom: 0; padding-bottom: var(--space-4); }
 }
@@ -169,6 +172,7 @@
   .messages-list-pane { border-right: 1px solid var(--line); }
   .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
   .messages-list-pane .bar-lead { display: none; }
+  .messages-list-pane .messages-inbox-heading { margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 8.5px); } /* the title sits where every other laptop title sits */
   /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */
   .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
   .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -180,4 +184,4 @@
   .messages-detail-pane .thread-screen .bar-back { display: none; }
 }
 
-.messages-inbox-heading { display: flex; align-items: center; justify-content: space-between; min-height: 100px; gap: var(--space-2); }
+.messages-inbox-heading { display: flex; align-items: center; justify-content: space-between; min-height: 3.5rem; margin-bottom: var(--space-2); gap: var(--space-2); }

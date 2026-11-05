@@ -136,9 +136,9 @@ export default function Today() {
   return (
     <Screen title="Today" subtitle={formatLongDate(now)} className="screen--today" action={<AccountButton />}>
       <p className="today-greeting">{greeting(model, loading)}</p>
-      {model && !error && model.state !== 'noschool' && <DayStrip model={model} />}
       <div className="today-cols">
-        <div className="today-day">{day}</div>
+        {/* The strip belongs to the day: on a laptop it spans the day's column, not the page */}
+        <div className="today-day">{model && !error && model.state !== 'noschool' && <DayStrip model={model} />}{day}</div>
         {!loading && <div className="today-side"><Shelves nowMs={now} todayIso={today} /></div>}
       </div>
       <p className="today-updated">

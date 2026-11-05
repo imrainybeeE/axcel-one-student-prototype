@@ -137,7 +137,7 @@ export default function Messages({ params = {} }) {
     </>
   )
   // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers)
-  const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" /> : null
+  const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" /> : null
   return (
     <div className={`messages-split${selected ? ' has-thread' : ''}`}>
     <div className="messages-list-pane">

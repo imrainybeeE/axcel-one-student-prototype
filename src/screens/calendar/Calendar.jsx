@@ -157,7 +157,7 @@ function EventSheet({ e, onClose, today }) {
         <ul className="list" role="list">
           <Row lead={<Icon name="calendar" />} leadKind="icon" title={formatLongDate(isoToMs(e.start))} meta={when(e)} />
           {e.place && <Row lead={<Icon name="pin" />} leadKind="icon" title={e.place} meta="Where" />}
-          <Row lead={<Icon name="group" />} leadKind="icon" title={e.audience} meta="Who it is for" />
+          <Row lead={<Icon name="group" />} leadKind="icon" title={`For ${e.audience.charAt(0).toLowerCase()}${e.audience.slice(1)}`} />
         </ul>
         {e.note && <p className="t-soft">{e.note}</p>}
         {!NO_SCHOOL.has(e.category) && e.start > today && (

@@ -154,7 +154,7 @@
   --ink-soft: #B8BCC3;       /* 9.0 on page, 8.1 on card */
   --ink-faint: #B8BCC3;      /* two text levels: secondary = faint */
   --ink-disabled: rgb(235 235 245 / 0.3); /* a control that cannot be used yet (iOS tertiary label) */
-  --ink-tertiary: rgb(235 235 245 / 0.3);
+  --ink-tertiary: rgb(235 235 245 / 0.42); /* chevrons read on charcoal */
 
   --divider: rgb(84 84 88 / 0.6);
   --line: var(--divider);

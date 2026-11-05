@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
-  Segmented, Rail, RailItem, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
+  Segmented, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
 import { entries, summary, areas } from '../../data/record.js'
@@ -57,12 +57,15 @@ function Measures({ s }) {
 
 function Ladder({ s }) {
   return (
-    <section aria-labelledby="record-awards" className="record-awards">
-      <h2 id="record-awards" className="t-title-s">Current award</h2>
-      <Rail label="Current award">
-        <RailItem kind="marker" status="now" points={s.points} title={`${s.currentAward.name} Award`} meta="Current award level" first last />
-      </Rail>
-    </section>
+    <Group title="Current award">
+      <Row
+        lead={<span className="tile tile--award"><Icon name="award" filled size={18} /></span>}
+        leadKind="icon"
+        title={`${s.currentAward.name} Award`}
+        meta="Current award level"
+        trailing={<span className="record-num"><Num>{s.points}</Num> points</span>}
+      />
+    </Group>
   )
 }
 
@@ -184,7 +187,7 @@ export default function Record() {
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
       {!entries.length ? (
-        <p className="record-empty">Individual RISE entries are hidden in this demo.</p>
+        <p className="att-note card">Individual RISE entries are hidden in this demo.</p>
       ) : !shown.length && (
         <div className="record-empty">
           <p>No {filter} yet.</p>

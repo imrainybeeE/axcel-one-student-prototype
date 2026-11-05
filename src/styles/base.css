@@ -70,8 +70,8 @@ h1[tabindex="-1"]:focus, [tabindex="-1"]:focus:not(:focus-visible) { outline: no
 
 /* ---------- Type utilities (the only sizes in the app) ---------- */
 .t-countdown { font-size: var(--fs-time-xl); line-height: var(--lh-time-xl); font-weight: var(--fw-time-xl); }
-.t-title-l { font-family: var(--font-display); font-stretch: 125%; font-size: var(--fs-title-l); line-height: var(--lh-title-l); font-weight: var(--fw-heavy); letter-spacing: -0.02em; }
-.t-title-now { font-family: var(--font-display); font-stretch: 112%; font-size: var(--fs-title-now); line-height: var(--lh-title-now); font-weight: var(--fw-heavy); letter-spacing: -0.015em; }
+.t-title-l { font-family: var(--font-display); font-stretch: 108%; font-size: var(--fs-title-l); line-height: var(--lh-title-l); font-weight: var(--fw-heavy); letter-spacing: -0.012em; }
+.t-title-now { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-now); line-height: var(--lh-title-now); font-weight: var(--fw-heavy); letter-spacing: -0.015em; }
 .t-title-m { font-family: var(--font-display); font-size: var(--fs-title-m); line-height: var(--lh-title-m); font-weight: var(--fw-title); letter-spacing: -0.01em; }
 .t-title-3 { font-family: var(--font-display); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); letter-spacing: -0.005em; }
 .t-time-l { font-size: var(--fs-time-l); line-height: var(--lh-time-l); }

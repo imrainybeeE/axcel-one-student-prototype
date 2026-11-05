@@ -168,6 +168,9 @@
   .messages-list-pane { border-right: 1px solid var(--line); }
   .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
   .messages-list-pane .bar-lead { display: none; }
+  /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */
+  .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
+  .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .messages-list-pane .large-title--pushed { display: block; }
   .messages-list-pane .msg-row.is-selected { background: var(--fill); border-radius: 14px; }
   .messages-detail-pane { display: block; }

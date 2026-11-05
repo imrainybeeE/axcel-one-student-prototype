@@ -243,9 +243,9 @@
   --fw-strong: 600;
   --fw-head: 600;
   --fw-title: 700;
-  --fw-heavy: 800;
+  --fw-heavy: 700;
   --fw-time: 700;
-  --fw-time-xl: 800;
+  --fw-time-xl: 700;
   --fw-tab-active: 600;
 
   --wdth-words: 100;
@@ -257,7 +257,7 @@
 
 /* The only place numeral width is set: font-stretch, never font-variation-settings. */
 .num      { font-family: var(--font-num); font-stretch: 112%; font-variant-numeric: tabular-nums; font-weight: var(--fw-time); letter-spacing: 0; }
-.num-wide { font-family: var(--font-num); font-stretch: 125%; font-variant-numeric: tabular-nums; font-weight: var(--fw-time); letter-spacing: 0; }
+.num-wide { font-family: var(--font-num); font-stretch: 116%; font-variant-numeric: tabular-nums; font-weight: var(--fw-time); letter-spacing: 0; }
 
 /* ---------- Space: 4px base ---------- */
 :root {

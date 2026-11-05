@@ -51,7 +51,7 @@
   aspect-ratio: 7 / 5; padding: 11px 12px; border-radius: 18px; background: var(--subj, var(--subj-event)); color: #FFFFFF;
   transition: filter var(--dur-2) var(--ease);
 }
-.cover-time { font-family: var(--font-num); font-stretch: 125%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1; letter-spacing: -0.01em; }
+.cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1; letter-spacing: -0.01em; }
 .cover-icon { position: absolute; top: 12px; right: 12px; }
 .cover-sub { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .cover-double { padding: 1px 6px; border-radius: 6px; background: rgb(0 0 0 / 0.18); font-weight: var(--fw-strong); }

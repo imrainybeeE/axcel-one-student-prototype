@@ -27,11 +27,12 @@
 .diamond--skills.record-split-seg { background: var(--merit-skills); }
 .diamond--knowledge.record-split-seg { background: var(--merit-knowledge); }
 .record-num { white-space: nowrap; color: var(--ink-soft); }
-.record-num .num { font-weight: 800; color: var(--ink); font-size: var(--fs-title-s); }
+.record-num .num { font-weight: 700; color: var(--ink); font-size: var(--fs-title-s); }
 
 /* Section headings match the kit's (Where your points come from) */
 .record-awards h2, .record-entries > h2, .att-term-head { margin-bottom: var(--space-2); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); }
 .record-entries { display: flex; flex-direction: column; gap: var(--space-4); }
+.record-entries > h2 { margin-bottom: calc(var(--space-2) - var(--space-4)); } /* 8 to its content, as every group title */
 .record-empty { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 .record-empty .btn { margin-top: var(--space-3); }
 
@@ -44,7 +45,7 @@
 /* Entry sheet */
 .record-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
 .record-sheet-points { display: flex; align-items: baseline; gap: var(--space-2); color: var(--ink-soft); }
-.record-sheet-points .num-wide { font-size: 2.5rem; font-weight: 800; color: var(--good); line-height: 1; }
+.record-sheet-points .num-wide { font-size: 2.5rem; font-weight: 700; color: var(--good); line-height: 1; }
 .record-sheet-points .num-wide.is-minus { color: var(--danger); }
 .record-sheet-note, .record-sheet-help { color: var(--ink-soft); }
 

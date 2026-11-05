@@ -90,7 +90,7 @@ export default function Messages({ params = {} }) {
             <Row
               key={t.id}
               to={`/messages/${t.id}`}
-              zoom
+              zoom={selected !== t.id} /* the open thread's screen holds that zoom name; two mounted at once would clash */
               className={`msg-row${isNew ? ' is-unread' : ''}${selected === t.id ? ' is-selected' : ''}`}
               aria-current={selected === t.id ? 'page' : undefined}
               lead={<Avatar initials={t.initials} kind={t.kind === 'class' ? 'group' : t.kind === 'announcement' ? 'announcement' : 'person'} />}

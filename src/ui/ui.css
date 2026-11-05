@@ -340,7 +340,7 @@
 .seg-item:has(input:checked) { font-weight: var(--fw-strong); }
 .seg-item:not(:has(input:checked)):active { opacity: 0.55; transition-duration: 0s; }
 .seg-item:has(input:focus-visible) { outline: 2px solid var(--focus-outer); outline-offset: 0; box-shadow: inset 0 0 0 2px var(--focus-inner); }
-.seg-sub { font-family: var(--font-num); font-stretch: 125%; font-variant-numeric: tabular-nums; font-size: var(--fs-time-l); line-height: var(--lh-time-l); font-weight: var(--fw-time); color: var(--ink); }
+.seg-sub { font-family: var(--font-num); font-stretch: 112%; font-variant-numeric: tabular-nums; font-size: var(--fs-time-l); line-height: var(--lh-time-l); font-weight: var(--fw-time); color: var(--ink); }
 .seg-item:has(input:checked) .seg-sub { color: var(--brand); }
 [data-theme="dark"] .seg-item:has(input:checked) .seg-sub { color: var(--ink); }
 @media (forced-colors: active) {

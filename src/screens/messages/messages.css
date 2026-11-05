@@ -179,7 +179,7 @@
   .messages-split.has-thread > .messages-detail-pane { display: block; }
 }
 @media (min-width: 1024px) {
-  .messages-split { display: grid; grid-template-columns: 22rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
+  .messages-split { display: grid; grid-template-columns: 23.5rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
   .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
   .messages-list-pane { box-shadow: 0.5px 0 0 color-mix(in srgb, var(--divider) 55%, transparent); } /* a hairline, not a wall */
   .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }

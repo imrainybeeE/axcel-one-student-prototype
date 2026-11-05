@@ -144,8 +144,8 @@ function EventsShelf({ todayIso }) {
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
               </span>
-              <span className="event-card-title">{e.title.replace(/-/g, "\u2011") /* "Y7-Y10" never breaks at its hyphen */}</span>
               <span className="event-card-meta">{eventWhen(e)}</span>
+              <span className="event-card-title">{e.title.replace(/-/g, "\u2011") /* "Y7-Y10" never breaks at its hyphen */}</span>
             </Link>
           </li>
         ))}

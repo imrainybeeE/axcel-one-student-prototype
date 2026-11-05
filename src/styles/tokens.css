@@ -29,8 +29,8 @@
   --logo-charcoal: #3F3D3D;
 
   /* Merit types take the logo's three squares. One meaning each, nowhere else. */
-  --merit-attitude: #1F6FCC;   /* the logo's three hues, a step deeper so they sit calmly together */
-  --merit-skills: #DD6A12;
+  --merit-attitude: #1F6FCC;   /* three calm, cool-to-green hues; amber is kept for Late alone */
+  --merit-skills: #148A9C;
   --merit-knowledge: #4A9424;
 }
 

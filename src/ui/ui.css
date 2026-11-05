@@ -43,7 +43,7 @@
 [data-theme='dark'] [data-tone='award'][data-award='silver'] { --tone: #C5CAD2; --tone-solid: #AEB4BD; }
 [data-theme='dark'] [data-tone='award'][data-award='gold'] { --tone: #F2C94C; --tone-solid: #E0B000; }
 [data-theme='dark'] [data-tone='award'][data-award='bronze'] { --tone: #E0A578; --tone-solid: #C98B5A; }
-.tile--award[data-award='silver'] { --tile-bg: #8E949D; }
+.tile--award[data-award='silver'] { --tile-bg: #A2A7AF; }
 [data-theme='dark'] .tile--award[data-award='silver'] { --tile-bg: #48484A; }
 .tile--award[data-award='gold'] { --tile-bg: #D9A400; }
 .tile--award[data-award='bronze'] { --tile-bg: #B87A48; }
@@ -846,5 +846,5 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   .now-bar-fill { transition: none; }
 }
 .now--rail .now-elapsed + .now-details { margin-top: 0; }
-.now--rail .now-elapsed-ends { display: none; } /* the rail's time column already says 10.30 to 11.15 */
+.now-elapsed-ends { display: none; } /* the rail's times, or the Next row's time, already say when it ends */
 .now--rail .now-elapsed { margin: var(--space-3) 0 var(--space-3); }

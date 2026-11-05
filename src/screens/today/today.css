@@ -74,18 +74,18 @@
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
 .event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
-.event-card-title { margin-top: var(--space-4); min-height: calc(2 * var(--lh-subhead)); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* two lines reserved, so every card's meta shares one baseline */
+.event-card-title { margin-top: var(--space-3); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* last in the card: a wrap only changes the card's foot */
 .event-card-meta { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* You: Record and Attendance as two tiles, each a coloured title, a figure and one small mark */
 .stat-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); }
 .stat-tile {
-  display: flex; flex-direction: column; min-height: 8.5rem; padding: 12px 14px 14px var(--space-4);
+  display: flex; flex-direction: column; padding: 12px 14px 14px var(--space-4);
   background: var(--card); border-radius: var(--radius); color: var(--ink); text-decoration: none;
 }
 .stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .stat-chev { color: var(--ink-tertiary); }
-.stat-fig { display: flex; align-items: last baseline; gap: 4px; min-width: 0; margin-top: auto; padding-top: var(--space-4); }
+.stat-fig { display: flex; align-items: last baseline; gap: 4px; min-width: 0; margin-top: var(--space-3); }
 .stat-n { font-size: 2.125rem; line-height: 1; font-weight: var(--fw-heavy); letter-spacing: -0.01em; }
 .stat-fig--pc { gap: 1px; } /* a percent sign sits tight to its figure, in the figure's own face, as Health sets it */
 .stat-fig--pc .stat-unit { font-family: var(--font-num); font-stretch: 112%; font-size: 1.1875rem; font-weight: var(--fw-heavy); color: var(--ink); }
@@ -138,6 +138,7 @@
 @media (min-width: 1024px) {
   .now-mini { display: none; }
   .today-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
+  .today-cols { grid-template-rows: auto 1fr; } /* the side column's height goes to the day's row, never into the strip's */
   .today-strip { grid-column: 1; grid-row: 1; }
   .today-strip .day-strip { margin-top: 0; }
   .today-day { grid-column: 1; grid-row: 2; }

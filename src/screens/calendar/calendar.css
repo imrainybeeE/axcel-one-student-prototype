@@ -16,7 +16,7 @@
 /* Month */
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
 .cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
-.cal-month-bar { display: flex; align-items: center; justify-content: space-between; }
+.cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }

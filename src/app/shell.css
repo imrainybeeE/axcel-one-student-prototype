@@ -30,17 +30,18 @@
      window, so moving between pages never shifts the left edge */
   .screen--wide {
     --pad-l: var(--space-9);
-    --pad-r: max(var(--space-8), calc(100% - var(--space-9) - var(--content-wide)));
+    --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-wide))); /* vw, not %: the bar inherits this and must resolve it against the page, not itself */
   }
   .screen--narrow {
     --pad-l: var(--space-9);
-    --pad-r: max(var(--space-8), calc(100% - var(--space-9) - var(--content-max)));
+    --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-max)));
   }
 }
 
 /* Laptop: a root screen's actions (Week, Show, the account) sit on its large title's line, as a Mac toolbar's do,
    and rise into the bar once the title has scrolled under it */
 @media (min-width: 1024px) {
+  .screen > .bar { padding-inline-end: var(--space-7); } /* every trailing button at one spot, 32 from the window's edge */
   .screen[data-root] > .bar .bar-trail { transform: translateY(calc(var(--header-h) / 2 + var(--space-1) + var(--lh-title-l) / 2)); transition: transform var(--dur-spring-smooth) var(--spring-smooth); }
   .screen[data-root] > .bar[data-collapsed] .bar-trail { transform: none; }
 }

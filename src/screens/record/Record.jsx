@@ -22,7 +22,7 @@ function Lead({ s, onHow }) {
   return (
     <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award" data-award={prev?.name.toLowerCase()}>
       <h2 id="record-lead-title" className="record-hero-status">
-        {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : `${prev?.name || 'Current'} Award level`}
+        {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : 'Total points'}
       </h2>
       <p className="record-hero-fig"><Num wide className="record-hero-n">{points}</Num><span className="record-hero-unit">points</span></p>
       {next && <span className="record-hero-bar" style={{ '--p': p }} aria-hidden="true"><i /></span>}

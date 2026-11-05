@@ -94,3 +94,5 @@
 .att-how .disclosure summary { min-height: var(--row-min); color: var(--ink); font-weight: 400; }
 .att-how .disclosure-chevron { color: var(--ink-tertiary); }
 .att-how .disclosure-body { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); padding-bottom: var(--space-4); }
+
+.att-status-line { color: var(--ink-soft); font-weight: 400; } /* green stays on the bar */

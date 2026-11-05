@@ -141,9 +141,8 @@
   .today-strip { grid-column: 1; grid-row: 1; }
   .today-strip .day-strip { margin-top: 0; }
   .today-day { grid-column: 1; grid-row: 2; }
-  .today-side { grid-column: 2; grid-row: 2; }
-  .today-side > .shelf:first-child .shelf-head { margin-top: calc(-1 * (var(--lh-title-3) + var(--space-2))); } /* its first heading rides above, so its first card meets the block's top */
-  .today-updated { max-width: 52%; text-align: left; }
+  .today-side { grid-column: 2; grid-row: 1 / span 2; } /* both columns start on one line, under the title */
+  .today-updated { text-align: center; }
   .today-side { margin-top: 0; }
   /* On a laptop the block is wider than a phone: more room inside, and Join only as wide as it needs */
   .screen--today .now { padding: var(--space-6); }

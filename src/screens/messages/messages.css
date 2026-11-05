@@ -186,7 +186,7 @@
   .messages-list-pane .bar-lead { display: none; }
   .messages-list-pane .messages-inbox-heading { margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 8.5px); } /* the title sits where every other laptop title sits */
   /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */
-  .messages-list-pane .messages-inbox-heading .icon-btn { background: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; color: var(--brand); }
+  .messages-list-pane .messages-inbox-heading .icon-btn { background: var(--glass-solid); box-shadow: var(--glass-rim), 0 1px 3px rgb(0 0 0 / 0.06); color: var(--ink); } /* the same glass circle as the thread's … */
   .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
   .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .messages-list-pane .large-title--pushed { display: block; }

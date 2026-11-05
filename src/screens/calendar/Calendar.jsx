@@ -131,7 +131,7 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
                     onKeyDown={(e) => key(e, iso)}
                   >
                     <Num>{Number(iso.slice(8))}</Num>
-                    <span className="cal-dots" aria-hidden="true">{evs.filter((e, n) => evs.findIndex((o) => o.category === e.category) === n).slice(0, 3).map((e) => <i key={e.id} className={`cal-row${e.start !== iso ? ' is-cont' : ''}`} data-cat={e.category} />)}</span>
+                    <span className="cal-dots" aria-hidden="true">{evs.filter((e) => e.start === iso).filter((e, n, a) => a.findIndex((o) => o.category === e.category) === n).slice(0, 3).map((e) => <i key={e.id} className="cal-row" data-cat={e.category} />)}</span>
                   </button>
                 </span>
               )

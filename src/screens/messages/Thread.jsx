@@ -203,7 +203,6 @@ export default function Thread({ params }) {
           <p className="composer-readonly">You blocked {thread.title}. <button type="button" className="text-link" onClick={unblock}>Unblock</button></p>
         ) : (
           <form className="composer" onSubmit={(e) => { e.preventDefault(); if (draft.trim()) send(draft.trim()) }}>
-            <p className="composer-readonly">Demo only: messages are not sent.</p>
             {reply && (
               <p className="composer-reply">
                 <span>Replying to <strong>{reply.who}</strong>: {reply.text}</span>
@@ -211,12 +210,12 @@ export default function Thread({ params }) {
               </p>
             )}
             <div className="composer-row glass" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" data-liquid-frost="4">
-              <label className="vh" htmlFor="composer-field">Message {thread.title}</label>
+              <label className="vh" htmlFor="composer-field">Message {thread.title}. Demo only: messages are not sent.</label>
               <textarea
                 id="composer-field"
                 className="composer-field"
                 rows={1}
-                placeholder="Message"
+                placeholder="Message (demo, not sent)"
                 enterKeyHint="send"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}

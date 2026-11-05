@@ -179,7 +179,7 @@ function AttendanceTile() {
   return (
     <ZoomLink to="/attendance" className="stat-tile card-link" data-tone="good" aria-label={`Attendance, ${Math.round(attendance.percent)}% this term, ${attendance.present + attendance.late} of ${attendance.days} days`}>
       <span className="stat-title">Attendance<Icon name="chevron-right" size={16} className="stat-chev" /></span>
-      <span className="stat-fig"><Num wide className="stat-n">{Math.round(attendance.percent)}</Num><span className="stat-unit">%</span></span>
+      <span className="stat-fig stat-fig--pc"><Num wide className="stat-n">{Math.round(attendance.percent)}</Num><span className="stat-unit">%</span></span>
       <span className="stat-sub"><Num>{attendance.present + attendance.late}</Num> of <Num>{attendance.days}</Num> days</span>
     </ZoomLink>
   )

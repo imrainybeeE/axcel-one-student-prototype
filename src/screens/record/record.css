@@ -10,7 +10,7 @@
 .record-hero-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tone-solid); transform-origin: left; transform: scaleX(var(--p)); }
 .record-hero-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .record-hero-note { margin-top: var(--space-3); color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
-.record-how { font-size: inherit; }
+.record-how { font-size: inherit; margin-block: -12px; } /* 44px target, but the card keeps even padding */
 /* The Silver moment: the line turns silver and the figure lands with one spring */
 /* The Silver moment keeps the award colour (a grey line would read as switched off); only the figure celebrates */
 @media (prefers-reduced-motion: no-preference) {
@@ -81,7 +81,7 @@
 .record-how { padding-inline: 0; margin-top: calc(-1 * var(--space-2)); }
 
 /* Attendance lead: the % sits close to its figure, and one thin split bar says the term at a glance */
-.att-fig { gap: 4px; }
+.att-fig { gap: 2px; }
 .att-split { display: flex; height: 4px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill-strong); overflow: hidden; } /* one track, the term filled along it */
 .att-split i { flex: var(--len) 1 0; }
 .att-split-present { background: var(--tone-solid); }

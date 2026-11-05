@@ -15,7 +15,7 @@
 
 /* The account circle in the bar holds a 36px avatar */
 .account-btn { padding: 0; }
-.account-btn .avatar { background: none; color: var(--ink); font-size: 0.875rem; }
+.account-btn .avatar { background: var(--brand-solid); color: #FFFFFF; font-size: 0.9375rem; font-weight: var(--fw-strong); } /* the same disc as More's profile */
 
 
 /* ============ Shelves (Music Home) ============ */
@@ -49,7 +49,7 @@
 .cover-link { display: block; border-radius: 18px; color: var(--ink); text-decoration: none; } /* the focus ring follows the cover's corners */
 .cover {
   position: relative; display: flex; flex-direction: column; justify-content: space-between;
-  aspect-ratio: 8 / 5; padding: 11px 12px 10px; border-radius: 18px; background: var(--card); color: var(--ink);
+  aspect-ratio: 2 / 1; padding: 11px 12px 10px; border-radius: 18px; background: var(--card); color: var(--ink);
   transition: filter var(--dur-2) var(--ease);
 }
 .cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.25rem; line-height: 1; letter-spacing: 0; color: var(--subj-mark, var(--ink)); }
@@ -73,7 +73,7 @@
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
 .event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
-.event-card-title { margin-top: var(--space-4); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.event-card-title { margin-top: var(--space-4); min-height: calc(2 * var(--lh-subhead)); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* two lines reserved, so every card's meta shares one baseline */
 .event-card-meta { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* You: Record and Attendance as two tiles, each a coloured title, a figure and one small mark */
@@ -86,6 +86,7 @@
 .stat-chev { color: var(--ink-tertiary); }
 .stat-fig { display: flex; align-items: last baseline; gap: 4px; min-width: 0; margin-top: auto; padding-top: var(--space-4); }
 .stat-n { font-size: 2.125rem; line-height: 1; font-weight: var(--fw-heavy); letter-spacing: -0.01em; }
+.stat-fig--pc { gap: 2px; } /* a percent sign sits tight to its figure */
 .stat-unit { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 500; } /* every unit: 15 medium, grey, on the figure's baseline, 4px from it */
 .stat-sub { margin-top: 6px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 /* Progress to the next award: the now block's thin line, in the tile's colour */
@@ -134,9 +135,14 @@
 
 @media (min-width: 1024px) {
   .now-mini { display: none; }
-  .today-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
+  .today-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
+  .today-strip { grid-column: 1; grid-row: 1; }
+  .today-strip .day-strip { margin-top: 0; }
+  .today-day { grid-column: 1; grid-row: 2; }
+  .today-side { grid-column: 2; grid-row: 2; }
+  .today-side > .shelf:first-child .shelf-head { margin-top: calc(-1 * (var(--lh-title-3) + var(--space-2))); } /* its first heading rides above, so its first card meets the block's top */
+  .today-updated { max-width: 52%; text-align: left; }
   .today-side { margin-top: 0; }
-  .today-day > .day-strip:first-child { margin-top: 0; }
   /* On a laptop the block is wider than a phone: more room inside, and Join only as wide as it needs */
   .screen--today .now { padding: var(--space-6); }
   .screen--today .now-next { margin-inline: calc(-1 * var(--space-6)); padding-inline: var(--space-6); margin-bottom: calc(-1 * var(--space-4)); }

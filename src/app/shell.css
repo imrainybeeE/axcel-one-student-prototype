@@ -38,6 +38,13 @@
   }
 }
 
+/* Laptop: a root screen's actions (Week, Show, the account) sit on its large title's line, as a Mac toolbar's do,
+   and rise into the bar once the title has scrolled under it */
+@media (min-width: 1024px) {
+  .screen[data-root] > .bar .bar-trail { transform: translateY(calc(var(--header-h) / 2 + var(--space-1) + var(--lh-title-l) / 2)); transition: transform var(--dur-spring-smooth) var(--spring-smooth); }
+  .screen[data-root] > .bar[data-collapsed] .bar-trail { transform: none; }
+}
+
 /* ---------- The bar: transparent at the top; glass with a scroll-edge fade once content runs under it ---------- */
 .bar {
   position: sticky; top: 0; z-index: var(--z-sticky); isolation: isolate;

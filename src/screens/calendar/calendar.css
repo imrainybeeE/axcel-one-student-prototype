@@ -34,16 +34,15 @@
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
 .cal-cell.is-blank { min-height: 50px; }
-.cal-dots { display: flex; gap: 3px; height: 5px; }
-.cal-dots i.is-cont { opacity: 0.35; } /* the days a break runs on after its first: quieter than the day it starts */
-.cal-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+.cal-dots { display: flex; gap: 3px; height: 6px; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
-  .cal-stack > .seg { max-width: 22.5rem; } /* 360 */ /* two choices never stretch across a laptop */
+  .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 58fr) minmax(17rem, 42fr); column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
@@ -52,3 +51,4 @@
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
 @media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
+@media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: var(--space-2); } } /* the day's heading on the month name's line */

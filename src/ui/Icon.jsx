@@ -5,6 +5,13 @@ const CUT = 'var(--icon-cut, var(--paper))'
 const paths = {
   // Today: the logo's three squares, monochrome like every tab icon (tinted by the tab's colour)
   today: (
+    <g transform="rotate(45 12 14)" strokeWidth="1.6">
+      <rect x="5.9" y="7.9" width="5.4" height="5.4" rx="0.8" />
+      <rect x="12.7" y="7.9" width="5.4" height="5.4" rx="0.8" />
+      <rect x="5.9" y="14.7" width="5.4" height="5.4" rx="0.8" />
+    </g>
+  ),
+  'today-fill': (
     <g transform="rotate(45 12 14)" stroke="none" fill="currentColor">
       <rect x="5.6" y="7.6" width="6" height="6" rx="0.8" />
       <rect x="12.4" y="7.6" width="6" height="6" rx="0.8" opacity="0.7" />

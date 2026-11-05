@@ -24,9 +24,11 @@ function useUnreadCount() {
  * follows; let go on a tab to go there (press-drag-release, as iOS 26). Scrolling down minimises the pill.
  */
 export function TabBar() {
-  const { tab, route } = useRoute()
+  const { tab, route, loc } = useRoute()
   const unread = useUnreadCount()
-  const minimised = useScrolledDown()
+  // In a chat the bar rests as one circle and the composer takes the rest of the row, as Messages keeps one layer
+  const inThread = /^\/messages\/[^/]+/.test(loc.path)
+  const minimised = useScrolledDown() || inThread
   const nav = useRef(null)
   const fill = useRef(null)
   const press = useRef(null) // { at, x, captured }

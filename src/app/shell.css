@@ -26,13 +26,15 @@
 @media (min-width: 1024px) {
   .main { margin-left: var(--sidebar-w); padding-bottom: var(--space-8); }
   .main--bare { margin-left: 0; }
+  /* One grid on every page: content starts 56px from the sidebar and runs to its measure, never centred in the
+     window, so moving between pages never shifts the left edge */
   .screen--wide {
-    --pad-l: max(var(--space-8), calc((100% - var(--content-wide)) / 2));
-    --pad-r: max(var(--space-8), calc((100% - var(--content-wide)) / 2));
+    --pad-l: var(--space-9);
+    --pad-r: max(var(--space-8), calc(100% - var(--space-9) - var(--content-wide)));
   }
   .screen--narrow {
-    --pad-l: max(var(--space-8), calc((100% - var(--content-max)) / 2));
-    --pad-r: max(var(--space-8), calc((100% - var(--content-max)) / 2));
+    --pad-l: var(--space-9);
+    --pad-r: max(var(--space-8), calc(100% - var(--space-9) - var(--content-max)));
   }
 }
 
@@ -60,8 +62,8 @@
 }
 .bar::after {
   inset: 0 0 -6px 0;
-  background: color-mix(in srgb, var(--paper) 86%, transparent);
-  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
   mask-image: linear-gradient(180deg, #000 55%, transparent);
 }
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
@@ -146,9 +148,9 @@
   body::after {
     content: ""; position: fixed; z-index: calc(var(--z-tabbar) - 1); inset: auto 0 0 0; pointer-events: none;
     height: calc(var(--tabbar-space) + 24px);
-    background: color-mix(in srgb, var(--paper) 82%, transparent);
-    -webkit-mask-image: linear-gradient(0deg, #000 40%, transparent);
-    mask-image: linear-gradient(0deg, #000 40%, transparent);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    -webkit-mask-image: linear-gradient(0deg, #000 55%, transparent);
+    mask-image: linear-gradient(0deg, #000 55%, transparent);
   }
   @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
     body::after { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }

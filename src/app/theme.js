@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react'
 
 const KEY = 'axcel-theme'
-const PAPER = { light: '#F2F2F7', dark: '#16181B' }
+const PAPER = { light: '#F2F2F7', dark: '#161618' }
 const listeners = new Set()
 const mql = window.matchMedia('(prefers-color-scheme: dark)')
 

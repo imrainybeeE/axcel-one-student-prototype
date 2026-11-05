@@ -20,7 +20,7 @@
 }
 .appear-opt:active .appear-phone { transform: scale(calc(1 - 0.04 * var(--motion))); transition-duration: 90ms; }
 .appear-phone[data-look='light'] { --ph-page: #F2F2F7; --ph-card: #FFFFFF; --ph-ink: #111113; --ph-bar: rgb(255 255 255 / 0.9); }
-.appear-phone[data-look='dark'] { --ph-page: #16181B; --ph-card: #22252A; --ph-ink: #FFFFFF; --ph-bar: rgb(60 64 72 / 0.9); }
+.appear-phone[data-look='dark'] { --ph-page: #161618; --ph-card: #232326; --ph-ink: #FFFFFF; --ph-bar: rgb(62 62 66 / 0.9); }
 .appear-phone i { position: absolute; left: 6px; right: 6px; display: block; border-radius: 3px; background: var(--ph-card); }
 .appear-phone i:nth-child(1) { top: 10px; height: 5px; right: 26px; background: var(--ph-ink); }
 .appear-phone i:nth-child(2) { top: 22px; height: 23px; border-radius: 5px; background: var(--subj-physics); }

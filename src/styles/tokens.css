@@ -136,11 +136,11 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --paper: #16181B;
+  --paper: #161618;
   --page-bg: var(--paper);
-  --card: #22252A;
+  --card: #232326;
   --solid-card: var(--card);
-  --raised: #2A2E33;
+  --raised: #2C2C2F;
   --surface: var(--paper);
   --fill: rgb(118 118 128 / 0.24);
   --fill-strong: rgb(118 118 128 / 0.36);
@@ -190,19 +190,19 @@
   --focus-outer: #FFFFFF;
   --focus-inner: #000000;
 
-  --glass-top: rgb(62 66 72 / 0.74);
-  --glass-bottom: rgb(52 56 62 / 0.7);
-  --glass-solid: rgb(34 37 42 / 0.97);
+  --glass-top: rgb(64 64 68 / 0.74);
+  --glass-bottom: rgb(54 54 58 / 0.7);
+  --glass-solid: rgb(35 35 38 / 0.97);
   --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.12), inset 0 -0.5px 0 rgb(255 255 255 / 0.03), inset 0 0 0 0.5px rgb(255 255 255 / 0.06);
   --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 20px rgb(0 0 0 / 0.35);
   --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.06));
   --lens: rgb(255 255 255 / 0.08);
-  --lg-tint: rgb(60 64 70 / 0.46);
+  --lg-tint: rgb(62 62 66 / 0.46);
   --lg-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 20px rgb(0 0 0 / 0.35);
   --press-glow: rgb(255 255 255 / 0.22);
 
   --toast-bg: var(--glass-top);
-  --toast-glass: rgb(42 46 51 / 0.94);
+  --toast-glass: rgb(44 44 47 / 0.94);
   --on-toast: var(--ink);
   --toast-action: var(--brand);
   --scrim: rgb(0 0 0 / 0.5);

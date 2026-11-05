@@ -60,6 +60,7 @@
   background: var(--subj-a);
 }
 .now--quiet { --now-bg: #3A3D44; background: #3A3D44; }
+[data-theme='dark'] .now[data-subject] { background: color-mix(in srgb, var(--subj-a) 84%, black); }
 
 @media (prefers-reduced-motion: reduce) { [data-subject] { transition: none; } }
 

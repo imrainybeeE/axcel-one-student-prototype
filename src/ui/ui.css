@@ -92,8 +92,19 @@
 }
 .btn.is-loading { cursor: progress; }
 /* Text buttons in a bar or a sheet's head are only text, as on iOS: no fill when pressed or hovered; they dim instead */
-.bar .btn--plain, .sheet-head .btn--plain, .bar .btn--plain.is-unavailable { background: none; transition: opacity var(--dur-2) var(--ease); }
-.bar .btn--plain:active, .sheet-head .btn--plain:active { background: none; opacity: 0.35; transition-duration: 0s; }
+.sheet-head .btn--plain { background: none; transition: opacity var(--dur-2) var(--ease); }
+.sheet-head .btn--plain:active { background: none; opacity: 0.35; transition-duration: 0s; }
+/* A word in the bar (Week, Show) is a glass capsule like the bar's glass circles: one material for every bar action */
+.bar .btn--plain, .bar .btn--plain.is-unavailable {
+  min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-capsule); color: var(--ink); font-weight: 500;
+  background: var(--glass-solid); box-shadow: var(--glass-rim), 0 1px 3px rgb(0 0 0 / 0.06);
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy);
+}
+@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .bar .btn--plain { background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom)); -webkit-backdrop-filter: blur(14px) saturate(180%); backdrop-filter: blur(14px) saturate(180%); }
+}
+.bar .btn--plain:active { transform: scale(calc(1 + 0.06 * var(--motion))); transition-duration: 90ms; }
+.bar .btn--plain .icon { color: var(--ink); }
 .bar .btn--plain[aria-disabled="true"], .sheet-head .btn--plain[aria-disabled="true"] { color: var(--ink-disabled); cursor: default; }
 .bar .btn--plain[aria-disabled="true"]:active, .sheet-head .btn--plain[aria-disabled="true"]:active { opacity: 1; }
 .btn-with-reason { display: inline-flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
@@ -106,7 +117,7 @@
   .btn--destructive:hover { background: color-mix(in srgb, var(--danger-tint) 90%, var(--danger)); color: var(--danger); }
   .btn--on-now:hover { background: rgb(255 255 255 / 0.92); color: var(--now-bg); }
   .btn.is-unavailable:hover { background: var(--fill); color: var(--ink-faint); }
-  .bar .btn--plain:hover, .sheet-head .btn--plain:hover, .bar .btn--plain.is-unavailable:hover { background: none; }
+  .sheet-head .btn--plain:hover { background: none; }
   .bar .btn--plain:not([aria-disabled="true"]):hover, .sheet-head .btn--plain:not([aria-disabled="true"]):hover { opacity: 0.7; }
 }
 
@@ -256,7 +267,7 @@
   background: var(--brand-tint); color: var(--brand-tint-ink);
 }
 .tag .icon { width: 16px; height: 16px; }
-.tag--inverse { background: rgb(0 0 0 / 0.18); color: #FFFFFF; } /* a darker plate keeps white text above 4.5:1 on every subject colour */
+.tag--inverse { background: rgb(255 255 255 / 0.18); color: #FFFFFF; } /* a light plate: white text stays above 4.5:1 on every deep subject colour */
 .tag--neutral { background: var(--fill); color: var(--ink-soft); }
 .tag--good { background: var(--good-tint); color: var(--good); }
 .tag--warn { background: var(--warn-tint); color: var(--warn); }

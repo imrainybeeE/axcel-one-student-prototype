@@ -57,14 +57,14 @@
 .msg-name { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); margin: 0 0 -2px 16px; }
 .msg-role { font-weight: 400; }
 .msg-bubble {
-  --bubble: #E9E9EB; /* opaque, so the tail can overlap it without a seam */
+  --bubble: #E4E4E9; /* opaque, so the tail can overlap it without a seam; a step darker than Apple's on-white grey, to hold on the grey page */
   position: relative; isolation: isolate; display: block; padding: 7px 12px; color: var(--ink);
   /* A 36px bubble inside a 44px target: the transparent border is part of the button, not of what it draws */
   border: 4px solid transparent; border-radius: 22px; background: var(--bubble); background-clip: padding-box;
   font: inherit; line-height: 1.375rem; text-align: left; cursor: pointer; overflow-wrap: anywhere; min-height: 44px; user-select: text;
 }
 .msg--mine .msg-bubble { --bubble: var(--brand-solid); color: var(--on-brand); }
-[data-theme='dark'] .msg:not(.msg--mine) .msg-bubble { --bubble: #2C3036; }
+[data-theme='dark'] .msg:not(.msg--mine) .msg-bubble { --bubble: #2C2C2E; } /* neutral, as Messages: no slate cast */
 /* Tight inside a group, as Messages stacks a run of bubbles */
 .msg + .msg:not(.is-first) { margin-top: -10px; }
 /* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
@@ -81,9 +81,9 @@
 .msg-meta { display: inline-flex; align-items: center; gap: var(--space-1); margin: -1px 12px 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; }
 .msg-retry { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; margin-top: var(--space-1); padding: 0 var(--space-2); border: 0; background: none; color: var(--danger); font: inherit; font-weight: 600; cursor: pointer; }
 /* A reaction sits on the bubble's top corner, as a Messages tapback: the leading corner on yours, the trailing on theirs */
-.msg-reactions { position: absolute; z-index: 1; top: -18px; display: flex; gap: var(--space-1); }
-.msg--mine .msg-reactions { left: -14px; }
-.msg:not(.msg--mine) .msg-reactions { right: -14px; }
+.msg-reactions { position: absolute; z-index: 1; top: -15px; display: flex; gap: var(--space-1); }
+.msg--mine .msg-reactions { left: -12px; }
+.msg:not(.msg--mine) .msg-reactions { right: -12px; }
 .msg.has-react { margin-top: 20px !important; }
 .msg-chip { display: inline-flex; align-items: center; gap: 2px; min-height: 26px; padding: 2px 8px; border-radius: 13px; background: var(--card); box-shadow: 0 0 0 2px var(--paper), 0 1px 3px rgb(0 0 0 / 0.12); font-size: var(--fs-subhead); }
 
@@ -137,7 +137,7 @@
   position: relative; isolation: isolate; max-width: 85%; padding: 7px 12px 8px; border-radius: 18px;
   background: var(--bubble); color: var(--ink); line-height: 1.375rem; overflow-wrap: anywhere;
 }
-[data-theme='dark'] .msg-actions-bubble { --bubble: #3A3A3C; --cut: var(--raised); } /* the dark sheet is #2A2E33, so the thread's #2C3036 would vanish */
+[data-theme='dark'] .msg-actions-bubble { --bubble: #3A3A3C; --cut: var(--raised); } /* the dark sheet is #2C2C2F, so the thread's #2C2C2E would vanish */
 .msg-actions-msg.is-mine .msg-actions-bubble { --bubble: var(--brand-solid); color: var(--on-brand); }
 .msg-actions-bubble::before, .msg-actions-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 20px; pointer-events: none; }
 .msg-actions-bubble::before { left: -7px; width: 20px; background: var(--bubble); border-bottom-right-radius: 16px 14px; }

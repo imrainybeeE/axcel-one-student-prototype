@@ -35,7 +35,7 @@ export default function Attendance() {
             <p>Every day you are not in school counts as absent, including days with a medical certificate or a planned absence. Lates count as present.</p>
           </Disclosure>
         </div>
-        <p className="att-note card">Daily attendance details are hidden in this demo.</p>
+        <p className="t-faint settings-note att-foot">Daily attendance details are hidden in this demo.</p>
       </div>
     </Screen>
   )

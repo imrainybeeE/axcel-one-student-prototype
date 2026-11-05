@@ -42,11 +42,11 @@
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
   .cal-stack.cal-laptop { max-width: 58rem; }
-  .cal-stack > .seg { max-width: 22.5rem; } /* two choices never stretch across a laptop */
+  .cal-stack > .seg { max-width: 22.5rem; } /* 360 */ /* two choices never stretch across a laptop */
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 33rem) minmax(17rem, 1fr); column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
-  .cal-laptop .cal-cell { min-height: 72px; }
+  .cal-laptop .cal-cell { min-height: 68px; }
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }

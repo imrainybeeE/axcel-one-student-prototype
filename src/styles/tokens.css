@@ -107,12 +107,12 @@
   --glass-top: rgb(255 255 255 / 0.78);
   --glass-bottom: rgb(255 255 255 / 0.64);
   --glass-solid: rgb(250 250 252 / 0.97);
-  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.9), inset 0 -0.5px 0 rgb(255 255 255 / 0.35), inset 0 0 0 0.5px rgb(0 0 0 / 0.06);
-  --glass-shadow: 0 1px 2px rgb(20 20 40 / 0.06), 0 8px 28px rgb(20 20 40 / 0.14);
+  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.7), inset 0 -0.5px 0 rgb(255 255 255 / 0.2), inset 0 0 0 0.5px rgb(0 0 0 / 0.05);
+  --glass-shadow: 0 1px 2px rgb(20 20 40 / 0.04), 0 4px 16px rgb(20 20 40 / 0.09);
   --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0) 38%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.25));
-  --lens: rgb(118 118 128 / 0.14);       /* the tab bar's moving selection */
+  --lens: rgb(118 118 128 / 0.11);       /* the tab bar's moving selection */
   --lg-tint: rgb(255 255 255 / 0.34);    /* over real refraction (Chromium) */
-  --lg-shadow: 0 1px 2px rgb(20 20 40 / 0.06), 0 8px 24px rgb(20 20 40 / 0.12);
+  --lg-shadow: 0 1px 2px rgb(20 20 40 / 0.04), 0 4px 16px rgb(20 20 40 / 0.09);
   --press-glow: rgb(255 255 255 / 0.6);
 
   /* Floating layers */
@@ -193,12 +193,12 @@
   --glass-top: rgb(62 66 72 / 0.74);
   --glass-bottom: rgb(52 56 62 / 0.7);
   --glass-solid: rgb(34 37 42 / 0.97);
-  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.22), inset 0 -0.5px 0 rgb(255 255 255 / 0.06), inset 0 0 0 0.5px rgb(255 255 255 / 0.08);
-  --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 32px rgb(0 0 0 / 0.5);
+  --glass-rim: inset 0 0.5px 0 rgb(255 255 255 / 0.12), inset 0 -0.5px 0 rgb(255 255 255 / 0.03), inset 0 0 0 0.5px rgb(255 255 255 / 0.06);
+  --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 20px rgb(0 0 0 / 0.35);
   --glass-sheen: linear-gradient(135deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 70%, rgb(255 255 255 / 0.06));
-  --lens: rgb(255 255 255 / 0.12);
+  --lens: rgb(255 255 255 / 0.08);
   --lg-tint: rgb(60 64 70 / 0.46);
-  --lg-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 30px rgb(0 0 0 / 0.45);
+  --lg-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 20px rgb(0 0 0 / 0.35);
   --press-glow: rgb(255 255 255 / 0.22);
 
   --toast-bg: var(--glass-top);
@@ -311,8 +311,8 @@
   --radius-tag: 7px;       /* tags, badges, small tiles */
   --radius-tile: 8px;      /* 30px icon tiles */
   --radius-control: 12px;  /* inputs, notices, plates */
-  --radius: 26px;          /* cards, inset groups and the now block: one radius for every card */
-  --radius-hero: 26px;
+  --radius: 22px;          /* cards, inset groups and the now block: one radius for every card */
+  --radius-hero: 22px;
   --radius-sheet: 32px;    /* sheets at the medium detent, toasts */
   --radius-btn: 14px;      /* buttons and fields: rounded rectangles, never pills */
   --radius-capsule: 999px; /* the floating tab bar and its lens only */

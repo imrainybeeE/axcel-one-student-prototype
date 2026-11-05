@@ -151,7 +151,7 @@
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--space-3);
   margin-bottom: 6px;
 }
-.section-head > :is(h2, h3, legend) { font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); letter-spacing: 0.018em; }
+.section-head > :is(h2, h3, legend) { font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-strong); letter-spacing: 0; }
 .section-head .text-link { margin-block: -12px; }
 .group + .group { margin-top: var(--space-7); }
 
@@ -332,21 +332,21 @@
 .seg-thumb-fill {
   display: block; width: 100%; height: 100%; border-radius: 9px;
   background: var(--card);
-  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 2px 6px rgb(0 0 0 / 0.08), 0 1px 1px rgb(0 0 0 / 0.03);
+  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.1);
   animation: seg-squish var(--dur-spring-snappy) var(--ease);
 }
 [data-theme="dark"] .seg-thumb-fill { background: #50535A; box-shadow: 0 2px 6px rgb(0 0 0 / 0.25); }
 @keyframes seg-squish { 40% { transform: scale(calc(1 + 0.06 * var(--motion)), calc(1 - 0.08 * var(--motion))); } }
 .seg-item {
   position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 38px; padding: 0 var(--space-2); border-radius: 9px;
+  min-height: 32px; padding: 0 var(--space-2); border-radius: 9px;
   color: var(--ink); font-size: var(--fs-subhead); font-weight: 500; text-align: center; cursor: pointer;
   transition: opacity var(--dur-2) var(--ease);
 }
 .seg--tall .seg-item { min-height: var(--space-9); border-radius: 18px; }
 .seg--tall .seg-track { border-radius: 21px; }
 .seg--tall .seg-thumb-fill { border-radius: 18px; }
-.seg-item input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.seg-item input { position: absolute; inset: -6px 0; width: 100%; height: calc(100% + 12px); margin: 0; opacity: 0; cursor: pointer; } /* a 44px target around the 32px segment */
 .seg-item:has(input:checked) { font-weight: var(--fw-strong); }
 .seg-item:not(:has(input:checked)):active { opacity: 0.55; transition-duration: 0s; }
 .seg-item:has(input:focus-visible) { outline: 2px solid var(--focus-outer); outline-offset: 0; box-shadow: inset 0 0 0 2px var(--focus-inner); }
@@ -722,7 +722,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now-count-stack { display: inline-flex; flex-direction: column; margin-left: 2px; font-size: var(--fs-subhead); line-height: 1.0625rem; font-weight: var(--fw-strong); }
 .now-count-stack > :last-child { color: var(--on-now-soft); font-weight: 500; }
 .now-count-until { color: var(--on-now-soft); white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
-.now-elapsed { margin: var(--space-5) 0 var(--space-4); }
+.now-elapsed { margin: var(--space-4) 0 var(--space-3); }
 .now-bar { position: relative; display: block; height: 5px; border-radius: var(--radius-capsule); background: var(--now-track); overflow: hidden; }
 .now-elapsed-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--on-now-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .now-bar-fill {
@@ -788,21 +788,21 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .rail-item { display: grid; grid-template-columns: var(--rail-time) var(--rail-track) minmax(0, 1fr); column-gap: var(--space-2); }
 .rail-time { display: flex; flex-direction: column; align-items: flex-end; padding-block: var(--space-3); text-align: right; font-size: var(--fs-subhead); line-height: 1.375rem; } /* 15 on the title's 22 line, so start sits on the title's baseline */
 .rail-start { font-weight: 600; }
-.rail-end { color: var(--ink-faint); font-weight: 600; }
+.rail-end { color: var(--ink-faint); font-family: var(--font); font-stretch: normal; font-size: var(--fs-footnote); font-weight: 400; }
 .rail-track { position: relative; }
-.rail-track::before { content: ""; position: absolute; left: calc(50% - 1.5px); top: 0; bottom: 0; width: 3px; border-radius: 2px; background: var(--subj-mark, var(--brand-line)); opacity: 0.35; }
+.rail-track::before { content: ""; position: absolute; left: calc(50% - 1px); top: 0; bottom: 0; width: 2px; border-radius: 2px; background: var(--subj-mark, var(--brand-line)); opacity: 0.35; }
 .rail-item.is-done .rail-track::before { background: var(--ink-faint); opacity: 0.25; }
 .rail-item.is-first .rail-track::before { top: 24px; }
 .rail-item.is-last .rail-track::before { bottom: auto; height: 24px; }
 .rail-item--gap .rail-track::before { background: repeating-linear-gradient(to bottom, var(--ink-faint) 0 3px, transparent 3px 7px); opacity: 0.5; }
 .rail-stop {
-  position: absolute; left: 50%; top: 24px; width: 14px; height: 14px; margin: -7px 0 0 -7px;
-  border-radius: var(--radius-dot); background: var(--surface); border: 3px solid var(--subj-mark, var(--brand-line));
+  position: absolute; left: 50%; top: 24px; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: var(--radius-dot); background: var(--surface); border: 2px solid var(--subj-mark, var(--brand-line));
 }
 .rail-item.is-done .rail-stop { background: var(--ink-faint); border-color: var(--ink-faint); opacity: 0.6; }
 .rail-item.is-now .rail-stop {
-  width: 18px; height: 18px; margin: -9px 0 0 -9px; background: var(--subj, var(--brand-line)); border-color: var(--subj, var(--brand-line));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--subj, var(--brand-line)) 25%, transparent);
+  width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--subj, var(--brand-line)); border-color: var(--subj, var(--brand-line));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--subj, var(--brand-line)) 20%, transparent);
 }
 .rail-body { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); padding-block: var(--space-3); min-width: 0; }
 .rail-item.is-now .rail-body { display: block; padding-block: 0; }

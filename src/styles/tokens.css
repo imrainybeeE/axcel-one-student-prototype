@@ -223,13 +223,13 @@
   --font-display: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif; /* titles: wide and heavy */
   --font-num: var(--font-display);
 
-  --fs-time-xl: 3.5rem;    --lh-time-xl: 1;          /* 56, the countdown, Archivo 125 / 800 */
+  --fs-time-xl: 3rem;      --lh-time-xl: 1;          /* 48, the countdown and lead figures, Archivo 116 / 700 */
   --fs-time-l: 1.375rem;   --lh-time-l: 1.75rem;     /* 22/28 rail dates, totals */
   --fs-time-m: 1.0625rem;  --lh-time-m: 1.375rem;    /* 17/22 rail times, message times */
   --fs-title-l: 2.125rem;  --lh-title-l: 2.5625rem;  /* 34/41 large title, heavy */
   --fs-title-l-laptop: 2.125rem; --lh-title-l-laptop: 2.5625rem;
   --fs-bar-title: 1.0625rem; --lh-bar-title: 1.375rem; /* 17/22 inline bar title, semibold */
-  --fs-title-now: 1.75rem; --lh-title-now: 2.125rem; /* 28/34 subject on the now block */
+  --fs-title-now: 1.5rem;  --lh-title-now: 1.875rem; /* 24/30 subject on the now block */
   --fs-title-m: 1.375rem;  --lh-title-m: 1.75rem;    /* 22/28 title2: greeting, hero lines */
   --fs-title-3: 1.25rem;   --lh-title-3: 1.5625rem;  /* 20/25 section headers */
   --fs-title-s: 1.0625rem; --lh-title-s: 1.375rem;   /* 17/22 headline: row titles */
@@ -278,7 +278,7 @@
   --tabbar-h: 3.875rem;    /* 62 floating pill */
   --tabbar-gap: 0.75rem;   /* 12 between the pill and the screen edges */
   --tabbar-space: calc(var(--tabbar-h) + var(--tabbar-gap) + max(var(--safe-bottom), var(--space-2))); /* what the pill covers */
-  --rail-time: 3.5rem;
+  --rail-time: 3.25rem;
   --rail-track: 1.75rem;
   --sidebar-w: 16.5rem;    /* 264 floating glass panel incl. its 12px inset */
   --topbar: 0px;

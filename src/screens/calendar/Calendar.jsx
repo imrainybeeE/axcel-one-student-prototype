@@ -170,7 +170,7 @@ function EventSheet({ e, onClose, today }) {
             >
               {on ? 'Reminder on' : 'Remind me'}
             </Button>
-            <p className="t-soft">Demo only: no notification will be sent.</p>
+            <p className="t-soft t-footnote">Demo only: no notification will be sent.</p>
           </>
         )}
       </div>

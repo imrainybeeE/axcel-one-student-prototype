@@ -30,8 +30,8 @@
 }
 .shelf-row::-webkit-scrollbar { display: none; }
 .shelf-one { list-style: none; margin: 0; padding: 0; }
-.shelf-item { flex: none; width: 8.75rem; scroll-snap-align: start; }
-.shelf-item--wide { width: 17.5rem; }
+.shelf-item { flex: none; width: 8rem; scroll-snap-align: start; }
+.shelf-item--wide { width: 16rem; }
 /* Two items share the row instead of leaving its right third empty */
 .shelf-row:not(:has(> :nth-child(3))) > .shelf-item { flex: 1 1 0; width: auto; }
 .shelf-one .shelf-item--wide { width: auto; }
@@ -51,7 +51,7 @@
   aspect-ratio: 7 / 5; padding: 11px 12px; border-radius: 18px; background: var(--subj, var(--subj-event)); color: #FFFFFF;
   transition: filter var(--dur-2) var(--ease);
 }
-.cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1; letter-spacing: -0.01em; }
+.cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.125rem; line-height: 1; letter-spacing: 0; }
 .cover-icon { position: absolute; top: 12px; right: 12px; }
 .cover-sub { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .cover-double { padding: 1px 6px; border-radius: 6px; background: rgb(0 0 0 / 0.18); font-weight: var(--fw-strong); }
@@ -148,3 +148,4 @@
   .shelf--later .cover { aspect-ratio: 2 / 1; }
 }
 @media (prefers-reduced-motion: reduce) { .now-mini, .now-mini-in { transition-duration: var(--dur-1); } }
+

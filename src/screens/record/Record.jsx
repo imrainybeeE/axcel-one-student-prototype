@@ -20,7 +20,7 @@ function Lead({ s, onHow }) {
   const from = prev ? prev.points : 0
   const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 0
   return (
-    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award">
+    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award" data-award={prev?.name.toLowerCase()}>
       <h2 id="record-lead-title" className="record-hero-status">
         {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : `${prev?.name || 'Current'} Award level`}
       </h2>
@@ -59,7 +59,7 @@ function Ladder({ s }) {
   return (
     <Group title="Current award">
       <Row
-        lead={<span className="tile tile--award"><Icon name="award" filled size={18} /></span>}
+        lead={<span className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
         leadKind="icon"
         title={`${s.currentAward.name} Award`}
         meta="Current award level"

@@ -36,6 +36,16 @@
 [data-tone='good'] { --tone: #1E7A3C; --tone-solid: #2F9E45; }
 [data-theme='dark'] [data-tone='award'] { --tone: #FFB340; --tone-solid: #FF9F0A; }
 [data-theme='dark'] [data-tone='good'] { --tone: #4ED07A; --tone-solid: #30D158; }
+/* An award level wears its own metal, never the generic award orange: a Silver total in amber reads as the wrong medal */
+[data-tone='award'][data-award='silver'] { --tone: #5F646D; --tone-solid: #8E949D; }
+[data-tone='award'][data-award='gold'] { --tone: #8A6100; --tone-solid: #D9A400; }
+[data-tone='award'][data-award='bronze'] { --tone: #8C5326; --tone-solid: #B87A48; }
+[data-theme='dark'] [data-tone='award'][data-award='silver'] { --tone: #C5CAD2; --tone-solid: #AEB4BD; }
+[data-theme='dark'] [data-tone='award'][data-award='gold'] { --tone: #F2C94C; --tone-solid: #E0B000; }
+[data-theme='dark'] [data-tone='award'][data-award='bronze'] { --tone: #E0A578; --tone-solid: #C98B5A; }
+.tile--award[data-award='silver'] { --tile-bg: #8E949D; }
+.tile--award[data-award='gold'] { --tile-bg: #D9A400; }
+.tile--award[data-award='bronze'] { --tile-bg: #B87A48; }
 
 
 /* ============ Press physics (shared) ============ */
@@ -322,10 +332,10 @@
 .seg-thumb-fill {
   display: block; width: 100%; height: 100%; border-radius: 9px;
   background: var(--card);
-  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04);
+  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 2px 6px rgb(0 0 0 / 0.08), 0 1px 1px rgb(0 0 0 / 0.03);
   animation: seg-squish var(--dur-spring-snappy) var(--ease);
 }
-[data-theme="dark"] .seg-thumb-fill { background: #636366; box-shadow: 0 3px 8px rgb(0 0 0 / 0.3); }
+[data-theme="dark"] .seg-thumb-fill { background: #50535A; box-shadow: 0 2px 6px rgb(0 0 0 / 0.25); }
 @keyframes seg-squish { 40% { transform: scale(calc(1 + 0.06 * var(--motion)), calc(1 - 0.08 * var(--motion))); } }
 .seg-item {
   position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -526,7 +536,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   transition: transform var(--dur-spring-snappy) var(--spring-snappy), background-color var(--dur-2) var(--ease);
 }
 .sheet-close .icon { stroke-width: 2.4; }
-.sheet-title:focus { outline: none; }
+.sheet-title:focus { outline: none; box-shadow: none; } /* focused by script on open: no ring, no inner white edge */
 .sheet-close:active { transform: scale(calc(1 - 0.08 * var(--motion))); background-color: var(--fill); transition-duration: 90ms; }
 @media (hover: hover) and (pointer: fine) { .sheet-close:hover { background-color: var(--fill); } }
 .sheet-head-trail { justify-self: end; }
@@ -776,8 +786,8 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 /* ============ Rail ============ */
 .rail { list-style: none; margin: 0; padding: 0; }
 .rail-item { display: grid; grid-template-columns: var(--rail-time) var(--rail-track) minmax(0, 1fr); column-gap: var(--space-2); }
-.rail-time { display: flex; flex-direction: column; align-items: flex-end; padding-block: var(--space-3); text-align: right; }
-.rail-start { font-weight: var(--fw-time); }
+.rail-time { display: flex; flex-direction: column; align-items: flex-end; padding-block: var(--space-3); text-align: right; font-size: var(--fs-subhead); line-height: 1.375rem; } /* 15 on the title's 22 line, so start sits on the title's baseline */
+.rail-start { font-weight: 600; }
 .rail-end { color: var(--ink-faint); font-weight: 600; }
 .rail-track { position: relative; }
 .rail-track::before { content: ""; position: absolute; left: calc(50% - 1.5px); top: 0; bottom: 0; width: 3px; border-radius: 2px; background: var(--subj-mark, var(--brand-line)); opacity: 0.35; }

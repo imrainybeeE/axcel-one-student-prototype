@@ -78,10 +78,10 @@
 .msg-meta { display: inline-flex; align-items: center; gap: var(--space-1); margin: -1px 12px 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; }
 .msg-retry { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; margin-top: var(--space-1); padding: 0 var(--space-2); border: 0; background: none; color: var(--danger); font: inherit; font-weight: 600; cursor: pointer; }
 /* A reaction sits on the bubble's top corner, as a Messages tapback: the leading corner on yours, the trailing on theirs */
-.msg-reactions { position: absolute; z-index: 1; top: -10px; display: flex; gap: var(--space-1); }
-.msg--mine .msg-reactions { left: -8px; }
-.msg:not(.msg--mine) .msg-reactions { right: -8px; }
-.msg.has-react { margin-top: 14px !important; }
+.msg-reactions { position: absolute; z-index: 1; top: -18px; display: flex; gap: var(--space-1); }
+.msg--mine .msg-reactions { left: -14px; }
+.msg:not(.msg--mine) .msg-reactions { right: -14px; }
+.msg.has-react { margin-top: 20px !important; }
 .msg-chip { display: inline-flex; align-items: center; gap: 2px; min-height: 26px; padding: 2px 8px; border-radius: 13px; background: var(--card); box-shadow: 0 0 0 2px var(--paper), 0 1px 3px rgb(0 0 0 / 0.12); font-size: var(--fs-subhead); }
 
 /* Skeleton bubbles */
@@ -99,7 +99,8 @@
 @media (min-width: 1024px) {
   /* No tab bar on a laptop: the composer rests near the bottom, and the chat keeps a readable width */
   .thread-screen { min-height: 100dvh; margin-bottom: calc(-1 * (var(--tabbar-space) + var(--space-6))); }
-  .thread-screen > .screen-body { width: 100%; max-width: 46rem; margin-inline: auto; }
+  .thread-screen > .screen-body { width: 100%; max-width: 44rem; margin-inline: auto; }
+  .thread-screen .msg-col { max-width: min(80%, 28rem); } /* a long line stays a comfortable measure on a wide screen */
   .thread-screen .composer-wrap { bottom: 0; padding-bottom: var(--space-4); }
 }
 .composer-row { display: flex; align-items: flex-end; gap: var(--space-2); min-height: 44px; padding: 0 0 0 16px; border-radius: 22px; }
@@ -120,7 +121,7 @@
 @keyframes send-ready { from { transform: scale(calc(1 - 0.2 * var(--motion))); } }
 .composer-send:not([aria-disabled]):active { transform: scale(calc(1 - 0.1 * var(--motion))); transition-duration: 90ms; }
 .composer-reply { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin: 0 0 var(--space-2); padding-left: var(--space-3); border-radius: 10px; background: var(--subtle); color: var(--ink-soft); }
-.composer-readonly { margin: 0; color: var(--ink-soft); text-align: center; padding: var(--space-2) 0; }
+.composer-readonly { margin: 0; color: var(--ink-soft); text-align: center; padding: var(--space-2) 0; font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* Message actions sheet */
 .msg-actions { display: flex; flex-direction: column; gap: var(--space-4); padding-bottom: var(--space-2); }

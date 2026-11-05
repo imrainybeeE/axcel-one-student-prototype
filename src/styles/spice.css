@@ -1,24 +1,25 @@
-/* Spice: subject colour as personality. Each subject has one flat, deep colour (white text 5.18:1 or more).
+/* Spice: subject colour as personality. Each subject has one flat, deep colour from one family (OKLCH lightness 0.46,
+   chroma 0.14 or less, so no subject shouts louder than another; white text 6.8:1 or more).
    The current lesson's colour fills the now block and the day strip's marker; it is registered so it tweens
    when the lesson changes. No gradients. */
 
 :root {
-  --subj-physics: #0062C4;
-  --subj-maths: #00756E;
-  --subj-esl: #C2410C;
-  --subj-bm: #2E7D10;
-  --subj-chemistry: #B4235F;
-  --subj-biology: #1E7A4C;
-  --subj-mandarin: #C0262D;
-  --subj-gp: #6A3DBD;
-  --subj-ict: #3A4A5E;
-  --subj-pe: #A85208;
-  --subj-art: #9C2A8A;
+  --subj-physics: #1157A4;
+  --subj-maths: #006660;
+  --subj-esl: #953307;
+  --subj-bm: #23690D;
+  --subj-chemistry: #932D52;
+  --subj-biology: #076941;
+  --subj-mandarin: #972E2D;
+  --subj-gp: #5E439D;
+  --subj-ict: #495A6E;
+  --subj-pe: #854408;
+  --subj-art: #853376;
   --subj-event: #3F3D3D;
 }
 
 /* Registered so a change of subject tweens instead of cutting (the now block and the day strip's marker) */
-@property --subj-a { syntax: "<color>"; inherits: true; initial-value: #0062C4; }
+@property --subj-a { syntax: "<color>"; inherits: true; initial-value: #1157A4; }
 
 /* Subject accent for any element that names a subject. */
 [data-subject='physics'] { --subj: var(--subj-physics); }

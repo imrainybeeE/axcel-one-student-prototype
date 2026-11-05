@@ -9,22 +9,22 @@
 .row--destructive .row-body { align-items: center; }
 
 /* Appearance (Display & Brightness): two small phones, a round check under each, then Automatic */
-.appear { padding: var(--space-4) var(--space-4) var(--space-2); }
+.appear { padding: var(--space-3) var(--space-4) var(--space-1); }
 .appear-pick { display: flex; justify-content: center; gap: var(--space-8); }
 .appear-opt { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
 .appear-phone {
-  position: relative; width: 64px; height: 124px; border-radius: 12px; overflow: hidden;
+  position: relative; width: 54px; height: 104px; border-radius: 11px; overflow: hidden;
   background: var(--ph-page); box-shadow: 0 0 0 1px var(--divider), 0 2px 8px rgb(0 0 0 / 0.08);
   transition: transform var(--dur-spring-snappy) var(--spring-snappy);
 }
 .appear-opt:active .appear-phone { transform: scale(calc(1 - 0.04 * var(--motion))); transition-duration: 90ms; }
 .appear-phone[data-look='light'] { --ph-page: #F2F2F7; --ph-card: #FFFFFF; --ph-ink: #111113; --ph-bar: rgb(255 255 255 / 0.9); }
 .appear-phone[data-look='dark'] { --ph-page: #16181B; --ph-card: #22252A; --ph-ink: #FFFFFF; --ph-bar: rgb(60 64 72 / 0.9); }
-.appear-phone i { position: absolute; left: 7px; right: 7px; display: block; border-radius: 3px; background: var(--ph-card); }
-.appear-phone i:nth-child(1) { top: 12px; height: 6px; right: 30px; background: var(--ph-ink); }
-.appear-phone i:nth-child(2) { top: 26px; height: 28px; border-radius: 6px; background: #0062C4; }
-.appear-phone i:nth-child(3) { top: 60px; height: 22px; border-radius: 6px; }
-.appear-phone i:nth-child(4) { top: 108px; height: 9px; left: 10px; right: 10px; border-radius: 5px; background: var(--ph-bar); }
+.appear-phone i { position: absolute; left: 6px; right: 6px; display: block; border-radius: 3px; background: var(--ph-card); }
+.appear-phone i:nth-child(1) { top: 10px; height: 5px; right: 26px; background: var(--ph-ink); }
+.appear-phone i:nth-child(2) { top: 22px; height: 23px; border-radius: 5px; background: var(--subj-physics); }
+.appear-phone i:nth-child(3) { top: 50px; height: 18px; border-radius: 5px; }
+.appear-phone i:nth-child(4) { top: 90px; height: 8px; left: 8px; right: 8px; border-radius: 4px; background: var(--ph-bar); }
 .appear-name { font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 .appear-check { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink-tertiary); color: #FFFFFF; transition: background-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease); }
 .appear-opt[aria-checked='true'] .appear-check { background: var(--brand-solid); box-shadow: none; }

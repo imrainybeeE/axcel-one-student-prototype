@@ -87,7 +87,7 @@ function ReportSheet({ open, onClose }) {
     <Sheet open={open} onClose={onClose} title="Report" detents={['large']}>
       <div className="report-note">
         <p className="t-title-s">Tell a trusted teacher in person.</p>
-        <p className="t-soft">Demo only: this report is not sent.</p>
+        <p className="t-soft t-footnote">Demo only: this report is not sent.</p>
         <Button variant="primary" full onClick={onClose}>Done</Button>
       </div>
     </Sheet>

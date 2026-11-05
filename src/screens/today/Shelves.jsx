@@ -164,6 +164,7 @@ function RecordTile() {
       to="/record"
       className="stat-tile card-link"
       data-tone="award"
+      data-award={record.currentAward?.name.toLowerCase()}
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

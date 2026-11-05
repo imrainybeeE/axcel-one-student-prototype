@@ -143,7 +143,7 @@ export function TabBar() {
 export function Sidebar() {
   const { tab, route } = useRoute()
   const unread = useUnreadCount()
-  const current = route.nav || (route.root ? tab : null)
+  const current = route.nav || tab // a pushed screen keeps its section selected, as a Mac sidebar does
   return (
     <nav className="sidebar glass" aria-label="Main">
       <span className="sidebar-logo">

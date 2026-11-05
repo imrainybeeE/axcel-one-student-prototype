@@ -73,9 +73,9 @@
 .msg + .msg:not(.is-first) { margin-top: -10px; }
 /* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
 .msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 16px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -5px; width: 18px; background: var(--bubble); border-bottom-right-radius: 14px 12px; }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -5px; width: 24px; background: var(--bubble); } /* square: its bottom runs on from the bubble's, so no notch; the cut below shapes the tail */
 .msg.is-last:not(.msg--mine) .msg-bubble::after { left: -7px; width: 7px; background: var(--paper); border-bottom-right-radius: 8px; }
-.msg--mine.is-last .msg-bubble::before { right: -5px; width: 18px; background: var(--bubble); border-bottom-left-radius: 14px 12px; }
+.msg--mine.is-last .msg-bubble::before { right: -5px; width: 24px; background: var(--bubble); }
 .msg--mine.is-last .msg-bubble::after { right: -7px; width: 7px; background: var(--paper); border-bottom-left-radius: 8px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
@@ -206,3 +206,10 @@
 }
 
 .messages-inbox-heading { display: flex; align-items: center; justify-content: space-between; min-height: 3.5rem; margin-bottom: var(--space-2); gap: var(--space-2); }
+
+/* Light: a chat sits on white, as Messages does, so received bubbles (#E9E9EB) read clearly */
+:root:not([data-theme='dark']) .thread-screen { --paper: var(--card); background: var(--paper); }
+:root:not([data-theme='dark']) .thread-screen .msg-bubble { --bubble: #E9E9EB; }
+:root:not([data-theme='dark']) .thread-screen .msg--mine .msg-bubble { --bubble: var(--brand-solid); }
+:root:not([data-theme='dark']) body:has(.thread-screen)::after { background: color-mix(in srgb, var(--card) 94%, transparent); }
+:root:not([data-theme='dark']) .thread-screen .msg-chip { background: #E9E9EB; } /* a tapback in the received grey, ringed in the page's white */

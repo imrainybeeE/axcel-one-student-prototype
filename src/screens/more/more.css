@@ -33,7 +33,9 @@
 .appear-opt:focus-visible .appear-phone { box-shadow: 0 0 0 3px var(--brand); }
 .appear-card { overflow: clip; }
 .appear-card .list { position: relative; margin-top: var(--space-2); border-radius: 0; }
-.appear-card .list::before { content: ''; position: absolute; z-index: 1; top: 0; left: var(--space-4); right: 0; height: 0.5px; background: var(--divider); } /* inset, as every row divider */
+.appear-card .list::before { content: ''; position: absolute; z-index: 1; top: 0; left: var(--space-4); right: 0; height: 1px; background: var(--divider); transform-origin: top; } /* inset, as every row divider */
+@media (min-resolution: 2dppx) { .appear-card .list::before { transform: scaleY(0.5); } }
+@media (min-resolution: 3dppx) { .appear-card .list::before { transform: scaleY(0.3334); } }
 .more-foot { padding: var(--space-2) 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; }
 /* Settings rows: one line, 44 tall at least, the value grey before the chevron */
 .screen-more .row-trail .num { font-family: var(--font); font-weight: 400; font-stretch: normal; }

@@ -73,7 +73,8 @@ export function LessonShelf({ model, nowMs, offline }) {
                   <Time value={it.start} className="cover-time" />
                   {it.meet && !model.online && <Icon name="video" size={18} className="cover-icon" />}
                   <span className="cover-title">{shortTitle(it)}{it.double && <span className="cover-double">Double</span>}</span>
-                  <span className="cover-meta">{who}, {open ? 'Join open' : `in ${formatDuration(away)}`}</span>
+                  <span className="cover-meta">{who}</span>
+                  <span className="cover-meta">{open ? 'Join open' : `in ${formatDuration(away)}`}</span>
                 </span>
               </Link>
             </li>

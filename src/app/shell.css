@@ -274,7 +274,7 @@
   transition: background-color var(--dur-2) var(--ease), transform var(--dur-spring-snappy) var(--spring-snappy);
 }
 .side-link:active { background: var(--fill); transform: scale(calc(1 - 0.02 * var(--motion))); transition-duration: 0s, 100ms; }
-.side-link[aria-current="page"] { background: var(--brand-tint); color: var(--brand-tint-ink); font-weight: var(--fw-strong); --icon-cut: var(--brand-tint); }
+.side-link[aria-current="page"] { background: var(--fill); color: var(--brand); font-weight: var(--fw-strong); --icon-cut: var(--card); } /* neutral plate, blue word: no wash */
 .side-badge { margin-left: auto; }
 @media (hover: hover) and (pointer: fine) {
   .side-link:not([aria-current]):hover { background: var(--fill); }

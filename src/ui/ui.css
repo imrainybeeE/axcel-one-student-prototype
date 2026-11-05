@@ -208,6 +208,7 @@
 .row-hit--partial { grid-column: lead / trail; }
 .row-lead { grid-column: lead; align-self: start; }
 .row:has(.tile) .row-lead { align-self: center; }
+.row-lead > .icon { color: var(--ink-soft); } /* a bare glyph leads quietly; colour belongs to tiles */
 .row:has(.row-lead .tile) { --row-inset: calc(var(--tile) + 0.75rem) !important; } /* dividers start under the text: a 30px tile is wider than a 24px icon */
 /* Time and date leads share the title's first baseline */
 .row:has(.lead-time, .lead-date) .row-hit { align-items: first baseline; }

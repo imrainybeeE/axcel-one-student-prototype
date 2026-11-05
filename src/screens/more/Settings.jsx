@@ -50,7 +50,6 @@ export default function Settings() {
         </section>
         <section className="group" aria-labelledby="notifications-h">
           <div className="section-head"><h2 id="notifications-h">Notifications</h2></div>
-          <p className="t-faint settings-note" style={{ marginBottom: 'var(--space-2)' }}>Demo: notifications are not sent.</p>
           <ul className="list" role="list">
           <Switch label="Messages" description="When someone messages you" checked={notify.messages} onChange={set('messages')} unavailable={need} />
           <Switch label="Timetable changes" description="Room changes, cancelled lessons, online links" checked={notify.timetable} onChange={set('timetable')} unavailable={need} />
@@ -58,6 +57,7 @@ export default function Settings() {
           <Switch label="Quiet hours, 9 pm to 7 am" description="Notifications wait until morning" checked={notify.quiet} onChange={set('quiet')} unavailable={need} />
           <Switch label="Show message text on the lock screen" checked={notify.preview} onChange={set('preview')} unavailable={need} />
           </ul>
+          <p className="t-faint settings-note">Demo: notifications are not sent.</p>
         </section>
         {saved && <p className="t-faint settings-note" role="status">{saved}</p>}
         {!standalone && (
@@ -68,13 +68,13 @@ export default function Settings() {
         )}
         <section className="group" aria-labelledby="messages-h">
           <div className="section-head"><h2 id="messages-h">Messages</h2></div>
-          <p className="t-faint settings-note" style={{ marginBottom: 'var(--space-2)' }}>Demo blocks do not stop messages.</p>
           <ul className="list" role="list">
           <Row lead={<Icon name="shield" />} leadKind="icon" title="How messages are monitored" meta="The school can read every message in Axcel One. Messages cannot be deleted." />
           {blockedPeople.length === 0 ? <Row lead={<Icon name="block" />} leadKind="icon" title="Blocked people" meta="Nobody blocked" /> : blockedPeople.map((person) => (
             <Row key={person.id} lead={<Icon name="block" />} leadKind="icon" title={person.name} trailingAction trailing={<button type="button" className="text-link" onClick={() => { setBlockedPerson(person, false); announce(`${person.name} unblocked`) }}>Unblock</button>} />
           ))}
           </ul>
+          <p className="t-faint settings-note">Demo blocks do not stop messages.</p>
         </section>
         <Group title="Accessibility">
           <Switch label="Keep messages on screen until I close them" description="Undo and other notes stay until you close them" checked={keep} onChange={(v) => { setKeep(v); announce('Saved') }} />

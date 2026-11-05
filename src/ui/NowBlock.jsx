@@ -183,7 +183,7 @@ function useChangeover(key) {
  * forcedEmpty: the model came from nowModel(now, { forceEmpty: true }).
  * showNext: end the block with the next lesson (a break always does).
  */
-export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false }) {
+export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false, onDetails }) {
   const nameId = useId()
   const H = `h${headingLevel}`
   const content = useChangeover(error ? 'error' : `${model?.state}|${model?.item?.id ?? ''}`)
@@ -225,6 +225,11 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
         <p className="now-meta">{meta(item)}</p>
         <Elapsed key={item.id} item={item} minutesLeft={model.minutes} progress={model.progress} />
         <JoinButton item={item} join={model.join} offline={offline} joining={joining} onJoin={onJoin} />
+        {onDetails && (
+          <button type="button" className="now-next now-details" onClick={onDetails} aria-haspopup="dialog" aria-label={`Show ${item.title} details`}>
+            <span className="now-next-title">Details</span><Icon name="chevron-right" size={18} />
+          </button>
+        )}
       </section>
     )
   }

@@ -738,6 +738,9 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   border-top: 0.5px solid rgb(255 255 255 / 0.28); font-size: var(--fs-subhead); line-height: var(--lh-subhead);
 }
 .now-next-label { color: var(--on-now-soft); }
+/* Timetable's block ends on Details, a row under the same hairline as Today's Next line */
+.now-details { width: calc(100% + 2 * var(--space-4)); margin-bottom: calc(-1 * var(--space-3)); padding-bottom: var(--space-1); border-inline: 0; border-bottom: 0; background: none; color: var(--on-now); font: inherit; font-size: var(--fs-subhead); text-align: left; cursor: pointer; }
+.now-details:active { opacity: 0.6; }
 .now-next-title { flex: 1; min-width: 0; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .now-next-time { font-weight: var(--fw-strong); }
 /* A 32px plate inside a 44px target: the transparent border is part of the button, not of what it draws */
@@ -826,3 +829,4 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   .badge, .choice-check, .check-box .icon { animation: none !important; }
   .now-bar-fill { transition: none; }
 }
+.now--rail .now-elapsed + .now-details { margin-top: 0; }

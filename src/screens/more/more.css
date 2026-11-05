@@ -31,7 +31,8 @@
 .appear-opt:focus-visible { outline: none; }
 .appear-opt:focus-visible .appear-phone { box-shadow: 0 0 0 3px var(--brand); }
 .appear-card { overflow: clip; }
-.appear-card .list { margin-top: var(--space-2); border-radius: 0; box-shadow: inset 0 0.5px 0 var(--divider); }
+.appear-card .list { position: relative; margin-top: var(--space-2); border-radius: 0; }
+.appear-card .list::before { content: ''; position: absolute; z-index: 1; top: 0; left: var(--space-4); right: 0; height: 0.5px; background: var(--divider); } /* inset, as every row divider */
 .more-foot { padding: var(--space-2) 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; }
 /* Settings rows: one line, 44 tall at least, the value grey before the chevron */
 .screen-more .row-trail .num { font-family: var(--font); font-weight: 400; font-stretch: normal; }

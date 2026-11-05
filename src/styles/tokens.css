@@ -285,7 +285,7 @@
   --content-max: 45rem;    /* 720 */
   --content-wide: 70rem;   /* 1120 */
 
-  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-top: max(env(safe-area-inset-top, 0px), 6px); /* the bar's glass circles never touch the top edge */
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);

@@ -4,10 +4,10 @@
 .cal-row[data-cat='event'] { --cat: #2F9E45; }
 .cal-row[data-cat='exam'] { --cat: #E8920C; }
 .cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
-.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #8E8E93; }
+.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #2F7FB8; } /* school days that run as usual: a calm blue, never a disabled grey */
 .cal-row[data-cat='meeting'] { --cat: #5856D6; }
 .cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 13px; }
-.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 2px; background: var(--cat); }
+.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; border-radius: 2px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
 .cal-row.is-today .lead-date .num { color: var(--brand); }
 .cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
@@ -15,6 +15,7 @@
 
 /* Month */
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
+.cal-month > .cal-day { margin-top: var(--space-5); } /* the chosen day stands apart from the grid */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; }
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -34,7 +35,7 @@
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
 .cal-cell.is-blank { min-height: 56px; }
 .cal-dots { display: flex; gap: 3px; height: 6px; }
-.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
 
@@ -50,3 +51,4 @@
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+@media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }

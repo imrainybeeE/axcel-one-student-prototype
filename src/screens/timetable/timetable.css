@@ -92,3 +92,5 @@
 .tt-week--grid .tt-week-day, .tt-week--grid .tt-week-day > .list { display: contents; }
 .tt-week--grid .tt-week-row { min-width: 0; }
 .tt-rail, .tt-day-head { max-width: 46rem; }
+/* The next lesson is named, not boxed: one word in the accent, as Calendar marks a time */
+.tt-next { margin-left: 2px; color: var(--brand); font-size: var(--fs-footnote); font-weight: var(--fw-strong); vertical-align: 1px; }

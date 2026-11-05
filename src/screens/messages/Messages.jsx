@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT } from '../../app'
 import {
+  IconButton,
   Segmented, SearchField, Row, Group, Avatar, Num, Button, Sheet, Icon,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
@@ -135,7 +136,8 @@ export default function Messages({ params = {} }) {
       <ComposeSheet open={compose} onClose={() => setCompose(false)} />
     </>
   )
-  const composeAction = canCompose ? <Button variant="plain" size="compact" icon="pen" onClick={() => setCompose(true)} aria-haspopup="dialog">New message</Button> : null
+  // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers)
+  const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" /> : null
   return (
     <div className={`messages-split${selected ? ' has-thread' : ''}`}>
     <div className="messages-list-pane">

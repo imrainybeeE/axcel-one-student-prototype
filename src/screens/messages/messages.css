@@ -91,7 +91,7 @@
 
 /* Composer (iOS 26): a floating glass capsule above the tab bar, the send button a blue circle inside it.
    The thread scrolls under it; nothing paints a band behind it. */
-.composer-wrap { position: sticky; bottom: calc(var(--tabbar-space) + var(--space-2)); padding: var(--space-2) 0 0; z-index: 2; }
+.composer-wrap { position: sticky; bottom: calc(var(--tabbar-space) + var(--space-2)); padding: var(--space-2) 0 0; z-index: var(--z-tabbar); } /* above the bottom scroll edge */
 /* A short chat still keeps the composer at the bottom, where Messages pins it: the screen fills the view above the tab bar */
 .thread-screen { display: flex; flex-direction: column; min-height: calc(100dvh - var(--tabbar-space) - var(--space-2)); margin-bottom: calc(var(--space-2) - var(--space-6)); }
 .thread-screen > .screen-body { flex: 1; display: flex; flex-direction: column; }

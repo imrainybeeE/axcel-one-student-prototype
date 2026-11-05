@@ -47,7 +47,6 @@ function Measures({ s }) {
           lead={<MeritDiamond area={a} />}
           leadKind="diamond"
           title={areas[a].label}
-          meta={areas[a].hint}
           trailing={<span className="record-num"><Num>{s[a]}</Num> points</span>}
         />
       ))}

@@ -15,6 +15,9 @@
   --subj-ict: #495A6E;
   --subj-pe: #854408;
   --subj-art: #853376;
+  --subj-english: #00627A;
+  --subj-homeroom: #495A6E;
+  --subj-tutorial: #7A3D82;
   --subj-event: #3F3D3D;
 }
 
@@ -33,6 +36,9 @@
 [data-subject='ict'] { --subj: var(--subj-ict); }
 [data-subject='pe'] { --subj: var(--subj-pe); }
 [data-subject='art'] { --subj: var(--subj-art); }
+[data-subject='english'] { --subj: var(--subj-english); }
+[data-subject='homeroom'] { --subj: var(--subj-homeroom); }
+[data-subject='tutorial'] { --subj: var(--subj-tutorial); }
 [data-subject='event'] { --subj: var(--subj-event); }
 /* Small marks (strip segments, rail stops, dots) are about 3:1 on charcoal: in dark they lift a quarter towards white.
    Fills that carry white text (the now block, covers) keep the true colour. */
@@ -67,18 +73,18 @@
   text-decoration: none;
   border-radius: var(--radius-control);
 }
-.day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 6px; container-type: inline-size; }
+.day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 5px; container-type: inline-size; }
 .day-strip-seg {
   flex: var(--len) 1 0; border-radius: var(--radius-capsule);
-  background: var(--subj-mark, var(--divider));
+  background: var(--fill-strong); /* to come: one quiet grey, so the day reads as progress, not a rainbow */
   transition: background-color 420ms var(--ease);
 }
 /* A break is a thin link between lessons, never a gap that looks like missing data */
-.day-strip-seg.is-break { align-self: center; height: 2px; background: var(--fill-strong); }
+.day-strip-seg.is-break { background: none; } /* a break is a gap */
 .day-strip-seg:not(.is-break) { align-self: stretch; }
-.day-strip-seg.is-done { background: var(--fill-strong); }
+.day-strip-seg.is-done { background: color-mix(in srgb, var(--ink) 34%, transparent); }
 /* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */
-.day-strip-seg.is-now { background: linear-gradient(90deg, var(--fill-strong) calc(var(--cut) * 100%), var(--subj-mark) 0); }
+.day-strip-seg.is-now { background: linear-gradient(90deg, color-mix(in srgb, var(--ink) 34%, transparent) calc(var(--cut) * 100%), var(--subj-mark) 0); }
 /* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
 .day-strip-now {
   position: absolute; top: 50%; left: 0;

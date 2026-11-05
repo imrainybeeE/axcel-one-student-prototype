@@ -113,8 +113,7 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
           return (
             <RailItem key={it.id} status="now" start={it.start} end={it.end} subject={it.subjectId} first={first} last={last}>
               <div className="tt-now">
-                <NowBlock model={model} variant="rail" offline={offline} onJoin={joinProps.onJoin} joiningId={joinProps.joiningId} headingLevel={3} />
-                <Button variant="secondary" onClick={() => onOpen(it)} aria-haspopup="dialog" aria-label={`Show ${it.title} details`}>Details</Button>
+                <NowBlock model={model} variant="rail" offline={offline} onJoin={joinProps.onJoin} joiningId={joinProps.joiningId} headingLevel={3} onDetails={() => onOpen(it)} />
               </div>
             </RailItem>
           )
@@ -135,7 +134,7 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
             last={last}
           >
             <button type="button" className="rail-text tt-open" aria-haspopup="dialog" onClick={() => onOpen(it)}>
-              <span className="rail-title">{it.title}{isNext && <> <Tag>Next</Tag></>}</span>
+              <span className="rail-title">{it.title}{isNext && <> <span className="tt-next">Next</span></>}</span>
               <span className="rail-meta">{place(it)}</span>
               {status !== 'done' && wait && <span className="rail-meta join-wait"><Icon name="clock" size={20} />{wait}</span>}
             </button>

@@ -26,9 +26,9 @@ export default function Attendance() {
           </span>
         </section>
         <Group title="Days this term">
-          <Row lead={<Icon name="check" />} leadKind="icon" title="Present" trailing={<span className="record-num"><Num>{s.present}</Num> days</span>} />
-          <Row lead={<Icon name="clock" />} leadKind="icon" title="Late" trailing={<span className="record-num"><Num>{s.late}</Num> days</span>} />
-          <Row lead={<Icon name="close" />} leadKind="icon" title="Absent" trailing={<span className="record-num"><Num>{s.absent}</Num> days</span>} />
+          <Row lead={<span className="tile tile--attendance"><Icon name="check" size={18} /></span>} leadKind="icon" title="Present" trailing={<span className="record-num"><Num>{s.present}</Num> days</span>} />
+          <Row lead={<span className="tile tile--late"><Icon name="clock" size={18} /></span>} leadKind="icon" title="Late" trailing={<span className="record-num"><Num>{s.late}</Num> days</span>} />
+          <Row lead={<span className="tile tile--absent"><Icon name="close" size={18} /></span>} leadKind="icon" title="Absent" trailing={<span className="record-num"><Num>{s.absent}</Num> days</span>} />
         </Group>
         <div className="card att-how">
           <Disclosure summary="How absences are counted">

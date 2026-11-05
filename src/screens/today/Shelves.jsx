@@ -68,15 +68,13 @@ export function LessonShelf({ model, nowMs, offline }) {
                 className="cover-link card-link"
                 aria-label={`${it.title}, ${it.start} to ${it.end}${it.double ? ', double lesson' : ''}, ${who}${open ? ', Join is open' : ''}`}
               >
+                {/* One card holds the lesson: its time, the subject beside its colour dot, then who and when */}
                 <span className="cover" data-subject={it.subjectId || 'event'}>
                   <Time value={it.start} className="cover-time" />
                   {it.meet && !model.online && <Icon name="video" size={18} className="cover-icon" />}
-                  <span className="cover-sub">
-                    {open ? 'Join open' : `in ${formatDuration(away)}`}{it.double && <span className="cover-double">Double</span>}
-                  </span>
+                  <span className="cover-title">{shortTitle(it)}{it.double && <span className="cover-double">Double</span>}</span>
+                  <span className="cover-meta">{who}, {open ? 'Join open' : `in ${formatDuration(away)}`}</span>
                 </span>
-                <span className="cover-title">{shortTitle(it)}</span>
-                <span className="cover-meta">{who}</span>
               </Link>
             </li>
           )

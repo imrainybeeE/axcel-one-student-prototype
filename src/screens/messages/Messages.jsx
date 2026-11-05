@@ -101,7 +101,6 @@ export default function Messages({ params = {} }) {
                 <span className="msg-row-top">
                   <span className="msg-row-name">{t.title}</span>
                   <span className="msg-row-time num">{whenLabel(last.at, now)}</span>
-                  <Icon name="chevron-right" size={16} className="msg-row-chev" />
                 </span>
               }
               meta={<span className="clamp-2">{sender}{last.text}</span>}

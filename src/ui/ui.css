@@ -241,6 +241,8 @@
 .tile .icon { width: 19px; height: 19px; }
 .tile--award { --tile-bg: #E8920C; }
 .tile--attendance { --tile-bg: #2F9E45; }
+.tile--late { --tile-bg: #E8920C; }
+.tile--absent { --tile-bg: #E5483D; }
 .tile--calendar { --tile-bg: #E5483D; }
 .tile--gear { --tile-bg: #8E8E93; }
 .tile--book { --tile-bg: #5856D6; }

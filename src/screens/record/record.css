@@ -81,7 +81,8 @@
 .record-how { padding-inline: 0; margin-top: calc(-1 * var(--space-2)); }
 
 /* Attendance lead: the % sits close to its figure, and one thin split bar says the term at a glance */
-.att-fig { gap: 2px; }
+.att-fig { gap: 1px; }
+.att-fig .record-hero-unit { font-family: var(--font-num); font-stretch: 112%; font-size: 1.625rem; font-weight: var(--fw-heavy); color: var(--ink); }
 .att-split { display: flex; height: 4px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill-strong); overflow: hidden; } /* one track, the term filled along it */
 .att-split i { flex: var(--len) 1 0; }
 .att-split-present { background: var(--tone-solid); }

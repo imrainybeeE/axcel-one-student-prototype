@@ -62,7 +62,6 @@ function Ladder({ s }) {
         leadKind="icon"
         title={`${s.currentAward.name} Award`}
         meta="Current award level"
-        trailing={<span className="record-num"><Num>{s.points}</Num> points</span>}
       />
     </Group>
   )

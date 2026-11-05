@@ -120,7 +120,7 @@
   --toast-glass: rgb(255 255 255 / 0.9); /* text-heavy glass: thicker, as Apple's regular material over busy content */
   --on-toast: var(--ink);
   --toast-action: var(--brand);
-  --scrim: rgb(10 10 20 / 0.32);
+  --scrim: rgb(0 0 0 / 0.22); /* a clean dim, not a grey veil */
 
   /* Elevation: a half-pixel edge plus two very soft layers, tinted cool */
   --shadow-card: none;

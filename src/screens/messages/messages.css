@@ -190,7 +190,9 @@
   .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
   .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .messages-list-pane .large-title--pushed { display: block; }
-  .messages-list-pane .msg-row.is-selected { background: var(--brand-solid); }
+  .messages-list-pane .msg-row.is-selected { background: none; }
+  .messages-list-pane .msg-row.is-selected::before { content: ''; position: absolute; z-index: 0; inset: 4px 8px; width: auto; height: auto; margin: 0; border-radius: 10px; background: var(--brand-solid); } /* inset, as a Mac sidebar selects */
+  .messages-list-pane .msg-row.is-selected .row-hit { position: relative; z-index: 1; }
   .messages-list-pane .msg-row.is-selected :is(.row-title, .row-meta, .msg-row-time, .msg-row-chev) { color: #FFFFFF; }
   .messages-list-pane .msg-row.is-selected .avatar { background: rgb(255 255 255 / 0.22); color: #FFFFFF; }
   .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }

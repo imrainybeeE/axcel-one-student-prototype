@@ -76,12 +76,12 @@
 }
 .day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 5px; container-type: inline-size; }
 .day-strip-seg {
-  flex: var(--len) 1 0; border-radius: var(--radius-capsule);
+  flex: var(--len) 1 0; min-width: 10px; border-radius: var(--radius-capsule);
   background: var(--fill-strong); /* to come: one quiet grey, so the day reads as progress, not a rainbow */
   transition: background-color 420ms var(--ease);
 }
 /* A break is a thin link between lessons, never a gap that looks like missing data */
-.day-strip-seg.is-break { background: none; } /* a break is a gap */
+.day-strip-seg.is-break { min-width: 0; background: none; } /* a break is a gap */
 .day-strip-seg:not(.is-break) { align-self: stretch; }
 .day-strip-seg.is-done { background: color-mix(in srgb, var(--ink) 34%, transparent); }
 /* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */

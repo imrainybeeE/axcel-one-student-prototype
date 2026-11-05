@@ -27,7 +27,7 @@
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
 .cal-cell .num { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
-.cal-cell.is-off .num { color: var(--ink-soft); }
+.cal-cell.is-off .num { color: var(--ink); }
 .cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
 .cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
@@ -52,3 +52,6 @@
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
 @media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
 @media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: var(--space-2); } } /* the day's heading on the month name's line */
+
+.cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
+@media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }

@@ -15,6 +15,7 @@ const REACTIONS = [
   { e: '😮', name: 'Surprised' }, { e: '❓', name: 'Question' }, { e: '✅', name: 'Done' },
 ]
 const MONITOR = 'The school can read every message in Axcel One. Messages cannot be deleted.'
+const DEMO_NOTE = 'In this demo, messages are not sent.'
 
 function threadFor(id) {
   const t = threads.find((x) => x.id === id)
@@ -165,7 +166,7 @@ export default function Thread({ params }) {
     body = (
       <div className="thread-log" role="log" aria-label={`Messages with ${thread.title}`}>
         <button type="button" className="thread-caption" aria-haspopup="dialog" onClick={() => setShield(true)}>
-          <span><Icon name="shield" size={14} />{MONITOR}</span>
+          <span><Icon name="shield" size={14} /><span>{MONITOR} {DEMO_NOTE}</span></span>
         </button>
         {items.length === 0 && <p className="thread-empty">Say hello to {thread.title.split(' ').slice(0, 2).join(' ')}.</p>}
         {items.map((it) => {
@@ -215,7 +216,7 @@ export default function Thread({ params }) {
                 id="composer-field"
                 className="composer-field"
                 rows={1}
-                placeholder="Message (demo, not sent)"
+                placeholder="Message"
                 enterKeyHint="send"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}

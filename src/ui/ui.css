@@ -80,7 +80,7 @@
 .btn--full { width: 100%; white-space: normal; text-align: center; }
 .btn--primary { background-color: var(--brand-solid); color: var(--on-brand); }
 .btn--primary:active { background-color: var(--brand-solid-press); }
-.btn--secondary { background: var(--fill); color: var(--brand); } /* grey fill, blue word: no colour wash */
+.btn--secondary { background: var(--fill); color: var(--brand-tint-ink); } /* grey fill, deep blue word (4.5:1 on the fill over page or card): no colour wash */
 .btn--secondary:active { background: var(--fill-strong); }
 .btn--destructive { background: var(--danger-tint); color: var(--danger); }
 .btn--destructive:active { background: color-mix(in srgb, var(--danger-tint) 82%, var(--danger)); }
@@ -113,7 +113,7 @@
 .btn > span { transition: opacity var(--dur-2) var(--ease); }
 @media (hover: hover) and (pointer: fine) {
   .btn--primary:hover { background-color: var(--brand-solid-hover); color: var(--on-brand); }
-  .btn--secondary:hover { background: var(--fill-strong); color: var(--brand); }
+  .btn--secondary:hover { background: var(--fill-strong); color: var(--brand-tint-ink); }
   .btn--plain:hover { background: var(--fill); color: var(--brand); }
   .btn--destructive:hover { background: color-mix(in srgb, var(--danger-tint) 90%, var(--danger)); color: var(--danger); }
   .btn--on-now:hover { background: rgb(255 255 255 / 0.92); color: var(--now-bg); }
@@ -350,7 +350,7 @@
   box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.1);
   animation: seg-squish var(--dur-spring-snappy) var(--ease);
 }
-[data-theme="dark"] .seg-thumb-fill { background: #636366; box-shadow: 0 2px 6px rgb(0 0 0 / 0.25); }
+[data-theme="dark"] .seg-thumb-fill { background: #545458; box-shadow: 0 2px 6px rgb(0 0 0 / 0.25); }
 @keyframes seg-squish { 40% { transform: scale(calc(1 + 0.06 * var(--motion)), calc(1 - 0.08 * var(--motion))); } }
 .seg-item {
   position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -754,7 +754,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 }
 .now-next-label { color: var(--on-now-soft); }
 /* Timetable's block ends on Details, a row under the same hairline as Today's Next line */
-.now-details { width: calc(100% + 2 * var(--space-4)); min-height: 40px; margin-bottom: calc(-1 * var(--space-3)); padding-block: 0; border-inline: 0; border-bottom: 0; background: none; color: var(--on-now); font: inherit; font-size: var(--fs-subhead); text-align: left; cursor: pointer; }
+.now-details { width: calc(100% + 2 * var(--space-4)); min-height: 44px; margin-bottom: calc(-1 * var(--space-3)); padding-block: 0; border-inline: 0; border-bottom: 0; background: none; color: var(--on-now); font: inherit; font-size: var(--fs-subhead); text-align: left; cursor: pointer; }
 .now-details:active { opacity: 0.6; }
 .now-next-title { flex: 1; min-width: 0; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .now-next-time { font-weight: var(--fw-strong); }

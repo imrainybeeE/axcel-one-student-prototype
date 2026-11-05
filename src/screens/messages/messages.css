@@ -181,7 +181,7 @@
 @media (min-width: 1024px) {
   .messages-split { display: grid; grid-template-columns: 22rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
   .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
-  .messages-list-pane { border-right: 1px solid var(--line); }
+  .messages-list-pane { box-shadow: 0.5px 0 0 color-mix(in srgb, var(--divider) 55%, transparent); } /* a hairline, not a wall */
   .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
   .messages-list-pane .bar-lead { display: none; }
   .messages-list-pane .messages-inbox-heading { margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 8.5px); } /* the title sits where every other laptop title sits */
@@ -198,7 +198,10 @@
   .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }
   .messages-detail-pane { display: block; }
   .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }
-  .messages-detail-pane .thread-screen { min-height: 100%; margin-bottom: 0; }
+  .messages-detail-pane .thread-screen { min-height: 100%; margin-bottom: 0; --pad-l: max(var(--space-7), calc((100% - 40rem) / 2)); --pad-r: max(var(--space-7), calc((100% - 40rem) / 2)); }
+  /* The header, the bubbles and the composer share one column; the header sits on the list title's line */
+  .messages-detail-pane .thread-screen > .screen-body { max-width: none; }
+  .messages-detail-pane .thread-screen > .bar { top: 0; margin-top: calc(74.5px - (var(--thread-header-h) / 2 + var(--safe-top))); }
   .messages-detail-pane .thread-screen .bar-back { display: none; }
 }
 

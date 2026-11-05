@@ -87,10 +87,10 @@ function NextLine({ model, offline, onJoin, joiningId }) {
   return (
     <p className="now-next">
       <span className="now-next-label">{model.state === 'lesson' || model.state === 'break' ? 'Next' : 'Then'}</span>
-      <span className="now-next-title">{shortTitle(next)}{model.item?.subjectId === next.subjectId && model.item.endsAt === next.startsAt ? ' again' : ''}</span>
+      <span className="now-next-title">{shortTitle(next)}</span>
       {open ? (
         <Button variant="on-now" size="compact" loading={joiningId === next.id} loadingLabel="Joining" aria-label={`Join ${next.title}`} onClick={() => onJoin?.(next)} className="now-next-join">Join</Button>
-      ) : model.state === 'lesson' && next.startsAt === model.item.endsAt ? null : (
+      ) : (
         <Time value={next.start} className="now-next-time" />
       )}
     </p>

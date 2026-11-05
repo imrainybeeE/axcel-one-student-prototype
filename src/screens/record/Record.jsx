@@ -185,7 +185,7 @@ export default function Record() {
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
       {!entries.length ? (
-        <p className="att-note card">Individual RISE entries are hidden in this demo.</p>
+        <p className="t-faint settings-note">Individual RISE entries are hidden in this demo.</p>
       ) : !shown.length && (
         <div className="record-empty">
           <p>No {filter} yet.</p>

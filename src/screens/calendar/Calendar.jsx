@@ -163,7 +163,7 @@ function EventSheet({ e, onClose, today }) {
         {!NO_SCHOOL.has(e.category) && e.start > today && (
           <>
             <Button
-              variant="secondary"
+              variant={on ? 'secondary' : 'primary'}
               full
               icon={on ? 'check' : 'bell'}
               onClick={() => setReminded((r) => ({ ...r, [e.id]: !on }))}

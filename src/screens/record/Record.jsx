@@ -37,7 +37,7 @@ function Lead({ s, onHow }) {
 function Measures({ s }) {
   const total = s.attitude + s.skills + s.knowledge
   return (
-    <Group title="Where your points come from">
+    <Group title="Merit points by area">
       <li className="record-split" aria-hidden="true">
         {['attitude', 'skills', 'knowledge'].map((a) => <span key={a} className={`record-split-seg diamond--${a}`} style={{ '--len': s[a] / total }} />)}
       </li>
@@ -186,7 +186,7 @@ export default function Record() {
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
       {!entries.length ? (
-        <p className="att-note card">Individual RISE entries are hidden in this demo.</p>
+        <p className="t-faint settings-note">Individual RISE entries are hidden in this demo.</p>
       ) : !shown.length && (
         <div className="record-empty">
           <p>No {filter} yet.</p>

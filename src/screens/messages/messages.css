@@ -3,7 +3,7 @@
 /* Inbox rows (Messages): the name, then the time and a small chevron; unread is a dot in the leading margin */
 .msg-row { padding-block: 2px; }
 .msg-row-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
-.msg-row-name { flex: 1; min-width: 0; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-row-name { flex: 1; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 400; white-space: nowrap; }
 .msg-row-chev { flex: none; align-self: center; color: var(--ink-tertiary); margin-right: -4px; }
 .msg-list .msg-row { padding-left: 26px; } /* room for the unread dot, clear of the avatar, as Messages leaves it */
@@ -14,6 +14,8 @@
   border-radius: 50%; background: var(--brand); pointer-events: none;
 }
 .msg-row.is-unread .row-meta { color: var(--ink); }
+.msg-row.is-unread .msg-row-name { font-weight: var(--fw-strong); }
+.msg-list .msg-row .row-meta { min-height: calc(2 * var(--lh-subhead)); } /* two preview lines always, as Messages: one row height */
 .msg-row .row-body { min-width: 0; flex: 1; }
 
 /* Compose sheet */
@@ -35,10 +37,11 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 19rem; min-height: 44px; margin: 0 0 calc(-1 * var(--space-2)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
-  background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; cursor: pointer;
+  align-self: center; max-width: 20rem; min-height: 44px; margin: 0 0 calc(-1 * var(--space-2)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
+  background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: left; cursor: pointer;
 }
-.thread-caption .icon { display: inline; margin-right: 4px; vertical-align: -2px; }
+.thread-caption > span { display: grid; grid-template-columns: 16px minmax(0, 1fr); column-gap: 6px; align-items: start; } /* the shield in its own column beside the notice */
+.thread-caption .icon { margin-top: 2px; }
 .thread-caption:active { background: var(--fill); }
 /* "Today 10.12": the day in semibold, the time regular, centred */
 .thread-sep { align-self: center; margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
@@ -68,11 +71,11 @@
 /* Tight inside a group, as Messages stacks a run of bubbles */
 .msg + .msg:not(.is-first) { margin-top: -10px; }
 /* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
-.msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 20px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -7px; width: 20px; background: var(--bubble); border-bottom-right-radius: 16px 14px; }
-.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -9px; width: 9px; background: var(--paper); border-bottom-right-radius: 10px; }
-.msg--mine.is-last .msg-bubble::before { right: -7px; width: 20px; background: var(--bubble); border-bottom-left-radius: 16px 14px; }
-.msg--mine.is-last .msg-bubble::after { right: -9px; width: 9px; background: var(--paper); border-bottom-left-radius: 10px; }
+.msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 16px; pointer-events: none; }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -5px; width: 18px; background: var(--bubble); border-bottom-right-radius: 14px 12px; }
+.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -7px; width: 7px; background: var(--paper); border-bottom-right-radius: 8px; }
+.msg--mine.is-last .msg-bubble::before { right: -5px; width: 18px; background: var(--bubble); border-bottom-left-radius: 14px 12px; }
+.msg--mine.is-last .msg-bubble::after { right: -7px; width: 7px; background: var(--paper); border-bottom-left-radius: 8px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
 .msg.is-failed .msg-bubble { box-shadow: inset 0 0 0 2px var(--danger); }
@@ -177,7 +180,10 @@
   .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
   .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .messages-list-pane .large-title--pushed { display: block; }
-  .messages-list-pane .msg-row.is-selected { background: var(--fill); border-radius: 14px; }
+  .messages-list-pane .msg-row.is-selected { background: var(--brand-solid); }
+  .messages-list-pane .msg-row.is-selected :is(.row-title, .row-meta, .msg-row-time, .msg-row-chev) { color: #FFFFFF; }
+  .messages-list-pane .msg-row.is-selected .avatar { background: rgb(255 255 255 / 0.22); color: #FFFFFF; }
+  .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }
   .messages-detail-pane { display: block; }
   .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }
   .messages-detail-pane .thread-screen { min-height: 100%; margin-bottom: 0; }

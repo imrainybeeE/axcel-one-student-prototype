@@ -15,7 +15,7 @@
 
 /* Month */
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
-.cal-month > .cal-day { margin-top: var(--space-5); } /* the chosen day stands apart from the grid */
+.cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; }
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -23,7 +23,7 @@
 .cal-grid-row > span { display: block; }
 .cal-cell {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
-  width: 100%; min-height: 56px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  width: 100%; min-height: 50px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
 .cal-cell .num { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
@@ -33,7 +33,7 @@
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 56px; }
+.cal-cell.is-blank { min-height: 50px; }
 .cal-dots { display: flex; gap: 3px; height: 5px; }
 .cal-dots i.is-cont { opacity: 0.35; } /* the days a break runs on after its first: quieter than the day it starts */
 .cal-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */

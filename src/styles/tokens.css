@@ -29,9 +29,9 @@
   --logo-charcoal: #3F3D3D;
 
   /* Merit types take the logo's three squares. One meaning each, nowhere else. */
-  --merit-attitude: var(--logo-blue);
-  --merit-skills: var(--logo-orange);
-  --merit-knowledge: var(--logo-green);
+  --merit-attitude: #1F6FCC;   /* the logo's three hues, a step deeper so they sit calmly together */
+  --merit-skills: #DD6A12;
+  --merit-knowledge: #4A9424;
 }
 
 /* ---------- Light (default). genalpha is retired and aliased here so saved preferences still load ---------- */
@@ -223,7 +223,7 @@
   --font-display: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif; /* titles: wide and heavy */
   --font-num: var(--font-display);
 
-  --fs-time-xl: 3rem;      --lh-time-xl: 1;          /* 48, the countdown and lead figures, Archivo 116 / 700 */
+  --fs-time-xl: 2.75rem;   --lh-time-xl: 1;          /* 48, the countdown and lead figures, Archivo 116 / 700 */
   --fs-time-l: 1.375rem;   --lh-time-l: 1.75rem;     /* 22/28 rail dates, totals */
   --fs-time-m: 1.0625rem;  --lh-time-m: 1.375rem;    /* 17/22 rail times, message times */
   --fs-title-l: 2.125rem;  --lh-title-l: 2.5625rem;  /* 34/41 large title, heavy */

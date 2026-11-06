@@ -1,19 +1,28 @@
-// A lazily loaded screen that can also be fetched ahead of time, so a tap never waits for its code.
+// A lazily loaded screen whose code is fetched the moment a link to it is about to be used, so a tap
+// rarely waits for it and a visit only downloads the screens it opens.
 import { lazy } from 'react'
 
-const loaders = []
-
-/** lazy() plus a registered loader: lazyRoute(() => import('./Timetable.jsx')) */
+/** lazy() plus a preload(): lazyRoute(() => import('./Timetable.jsx')) */
 export function lazyRoute(load) {
   let promise = null
-  const once = () => (promise ??= load())
-  loaders.push(once)
-  return lazy(once)
+  // Every screen but the first may use any icon or move with a transition: secondScreen.js comes with its code
+  const once = () => (promise ??= Promise.all([load(), import('./secondScreen.js')]).then(([m]) => m))
+  const component = lazy(once)
+  component.preload = once
+  return component
 }
 
-/** Fetch every screen's code once the first screen is up and the main thread is idle. */
-export function preloadRoutes() {
-  const run = () => { for (const load of loaders) load().catch(() => {}) }
-  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2000 })
-  else setTimeout(run, 1000)
+/**
+ * Fetch a screen's code on intent: a pointer resting on a link, a finger landing on it, or keyboard focus.
+ * resolve(href) returns the route's component (or null); preload() runs once per screen.
+ */
+export function preloadOnIntent(resolve) {
+  const warm = (e) => {
+    const a = e.target instanceof Element ? e.target.closest('a[href]') : null
+    if (!a || a.target === '_blank') return
+    const url = new URL(a.href, window.location.href)
+    if (url.origin !== window.location.origin) return
+    resolve(url.pathname)?.preload?.()?.catch(() => {})
+  }
+  for (const type of ['pointerover', 'touchstart', 'focusin']) document.addEventListener(type, warm, { passive: true, capture: true })
 }

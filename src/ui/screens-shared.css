@@ -1,0 +1,8 @@
+/* Rules several screens use (not Today), so none of them depends on another screen's stylesheet having loaded.
+   Loaded with every screen's code but Today's (app/secondScreen.js). */
+.settings-note { margin-top: var(--space-2) !important; padding-inline: var(--space-4); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.record-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+.record-sheet-points { display: flex; align-items: baseline; gap: var(--space-2); color: var(--ink-soft); }
+.record-sheet-points .num-wide { font-size: 2.5rem; font-weight: 700; color: var(--good); line-height: 1; }
+.record-sheet-points .num-wide.is-minus { color: var(--danger); }
+.record-sheet-note, .record-sheet-help { color: var(--ink-soft); }

@@ -41,11 +41,6 @@
 .record-delta.is-minus .num-wide { color: var(--danger); }
 
 /* Entry sheet */
-.record-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
-.record-sheet-points { display: flex; align-items: baseline; gap: var(--space-2); color: var(--ink-soft); }
-.record-sheet-points .num-wide { font-size: 2.5rem; font-weight: 700; color: var(--good); line-height: 1; }
-.record-sheet-points .num-wide.is-minus { color: var(--danger); }
-.record-sheet-note, .record-sheet-help { color: var(--ink-soft); }
 
 /* Laptop: summary left, entries right */
 .record-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-8, 40px); align-items: start; }

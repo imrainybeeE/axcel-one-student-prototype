@@ -1,0 +1,89 @@
+/* Fields: loaded with its component, not on first paint */
+/* ============ Fields: filled, no outlines; focus draws a soft ring ============ */
+.field + .field { margin-top: var(--space-4); }
+.field-label { display: block; font-weight: var(--fw-strong); padding-inline: var(--space-1); }
+.field-hint { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); padding-inline: var(--space-1); }
+.field-control { position: relative; display: flex; margin-top: var(--space-2); }
+.input {
+  width: 100%; min-height: 50px; padding: 0 var(--space-4);
+  border: 0; border-radius: var(--radius-control);
+  background: var(--input-bg); color: var(--ink);
+  transition: box-shadow var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease);
+}
+.list .input, .card .input { background: var(--fill); }
+.input:focus-visible { outline: none; background: var(--card); box-shadow: 0 0 0 1px var(--brand), 0 0 0 4px color-mix(in srgb, var(--brand) 25%, transparent); }
+/* On a touch screen a search field shows only its caret when tapped, as iOS does; keyboards keep the ring */
+@media (hover: none) and (pointer: coarse) { .search-input:focus-visible { background: var(--input-bg); box-shadow: none; } }
+textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; resize: vertical; margin-top: var(--space-2); display: block; }
+.input::placeholder { color: var(--ink-faint); opacity: 1; }
+.field--error .input { box-shadow: 0 0 0 2px var(--danger); }
+.field-error { display: flex; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-2); color: var(--danger); font-weight: 500; }
+.field-error .icon { margin-top: 2px; }
+
+.search { position: relative; margin-inline: -3px; } /* the clear 3px hit border sits outside the margin, so the field's fill lines up with the cards */
+/* iOS's slim 38pt field, inside a 44pt hit area (a clear 3px border the fill doesn't paint) */
+.search-icon { position: absolute; left: 12px; top: 13.5px; width: 17px; height: 17px; color: var(--ink-soft); pointer-events: none; }
+.search-input { min-height: 44px; border: 3px solid transparent; background-clip: padding-box; border-radius: 15px; padding-left: 32px; padding-right: var(--space-7); appearance: none; -webkit-appearance: none; }
+@media (hover: hover), (pointer: fine) { .search-input:focus-visible { box-shadow: inset 0 0 0 2px var(--brand); } }
+.search-input::-webkit-search-cancel-button { display: none; }
+.search-clear { position: absolute; right: 1px; top: 1px; color: var(--ink-soft); }
+
+/* Choice rows: switches, checkboxes, option lists (inside an inset card) */
+.choice-list { min-width: 0; }
+.choice-row { position: relative; padding-inline: var(--card-pad); }
+.choice-row::after { content: ""; position: absolute; left: var(--card-pad); right: 0; bottom: 0; height: 1px; background: var(--divider); transform-origin: bottom; }
+.choice-row:last-child::after { display: none; }
+.choice-hit {
+  position: relative; display: flex; align-items: center; gap: var(--space-3);
+  min-height: var(--row-min); padding-block: 11px; cursor: pointer;
+}
+.choice-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.choice-desc { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.choice-reason { color: var(--ink-faint); }
+.choice-meta { color: var(--ink-soft); }
+.choice-radio { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.choice-check { color: var(--brand); visibility: hidden; }
+.choice-hit:has(.choice-radio:checked) .choice-check { visibility: visible; animation: pop-in var(--dur-spring-bouncy) var(--spring-bouncy); }
+.choice-hit:has(.choice-radio:checked) .choice-label { font-weight: var(--fw-strong); }
+.choice-hit:has(input:focus-visible) { outline: 2px solid var(--focus-outer); outline-offset: 2px; box-shadow: 0 0 0 2px var(--focus-inner); border-radius: var(--radius-tag); }
+.choice-row:has(.choice-hit:active) { background: var(--fill); }
+
+/* Switch: iOS proportions. The thumb stretches while pressed and slides on the snappy spring. */
+.switch { position: relative; flex: none; width: 51px; height: 31px; }
+.switch input { position: absolute; inset: -7px; width: calc(100% + 14px); height: var(--tap); margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
+.switch-track {
+  display: flow-root; /* a new block context, so the thumb's 2px margin can't collapse through the track's top */
+  width: 51px; height: 31px; border-radius: var(--radius-capsule);
+  background: rgb(120 120 128 / 0.32);
+  transition: background-color var(--dur-spring-snappy) var(--ease);
+}
+.switch-thumb {
+  display: block; width: 27px; height: 27px; margin: 2px; border-radius: var(--radius-capsule);
+  background: #FFFFFF;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 0.1), 0 1px 1px rgb(0 0 0 / 0.04), 0 0 0 0.5px rgb(0 0 0 / 0.04);
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy), width var(--dur-spring-snappy) var(--spring-snappy);
+}
+.switch input:checked + .switch-track { background: var(--switch-on); }
+.switch input:checked + .switch-track .switch-thumb { transform: translateX(20px); }
+.choice-hit:active .switch-thumb { width: 33px; }
+.choice-hit:active .switch input:checked + .switch-track .switch-thumb { transform: translateX(14px); }
+.switch-row.is-unavailable .switch-track { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) { .switch-thumb { transition: transform var(--dur-1) linear; } .choice-hit:active .switch-thumb { width: 27px; } }
+
+.check { position: relative; flex: none; width: 24px; height: 24px; }
+.check input { position: absolute; inset: -10px; width: var(--tap); height: var(--tap); margin: 0; opacity: 0; cursor: pointer; }
+.check-box {
+  display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--radius-dot);
+  border: 2px solid var(--input-border); color: transparent; background: var(--surface);
+  transition: background-color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
+}
+.check input:checked + .check-box { background: var(--brand-solid); border-color: var(--brand-solid); color: #FFFFFF; }
+.check input:checked + .check-box .icon { animation: pop-in var(--dur-spring-bouncy) var(--spring-bouncy); }
+
+
+/* A two-line switch label breaks evenly, never leaving one word behind */
+.choice-label, .choice-desc { text-wrap: balance; }
+
+/* A search field and what follows it sit 16px apart (the inbox, the Handbook) */
+.stack:has(> .search) > * + * { margin-top: var(--space-4); }
+.stack:has(> .search) > .search + * { margin-top: calc(var(--space-4) - 3px); }

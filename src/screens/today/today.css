@@ -97,14 +97,6 @@
 /* Progress to the next award: the now block's thin line, in the tile's colour */
 .stat-bar { display: block; height: 4px; margin-top: 10px; border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }
 .stat-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tone-solid); transform-origin: left; transform: scaleX(var(--p)); }
-.stat-week { display: flex; justify-content: space-between; margin-top: 10px; color: var(--ink-soft); font-size: 0.6875rem; line-height: 0.8125rem; font-weight: 500; }
-.stat-day { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 14px; }
-.stat-day i { display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--fill-strong); }
-.stat-day[data-status='present'] i { background: var(--tone-solid); }
-.stat-day[data-status='late'] i { background: #E8920C; }
-.stat-day[data-status='absent'] i { background: #E5483D; }
-.stat-day[data-status='later'] i { background: none; box-shadow: inset 0 0 0 1.5px var(--fill-strong); }
-.stat-day[data-today] { color: var(--ink); font-weight: var(--fw-strong); }
 
 /* Loading: the shelf's real shape */
 .shelf-row--skel { overflow: hidden; }

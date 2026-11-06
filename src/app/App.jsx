@@ -1,13 +1,14 @@
-import { Component, Suspense, ViewTransition } from 'react'
+import { Component, Suspense, ViewTransition, lazy, useState } from 'react'
 import { RouterProvider } from './RouterProvider.jsx'
-import { useRoute } from './router.js'
+import { useRoute, backTarget } from './router.js'
+import { useLaptop } from './hooks.js'
 import { routes } from './routes.js'
 import { Screen } from './Screen.jsx'
 import { TabBar, Sidebar } from './TabBar.jsx'
 import { ToastProvider } from '../ui/Toast.jsx'
 import { ErrorState } from '../ui/States.jsx'
-import { EdgeUnderlay } from './EdgeUnderlay.jsx'
-import { useEdgeBack } from './edgeBack.js'
+
+const EdgeBack = lazy(() => import('./EdgeBack.jsx'))
 
 // Push: the new screen slides over from the right while the old one recedes; pop reverses it.
 // Exits get their own class so the screen on top (new on push, old on pop) can be raised. Tab switches cross-fade;
@@ -42,15 +43,20 @@ function RouteFallback({ title }) {
 }
 
 function Shell() {
-  const { route, params } = useRoute()
+  const { route, params, loc } = useRoute()
   const chrome = route.chrome !== false
   const Comp = route.component
-  const key = `${route.path}|${JSON.stringify(params)}`
-  useEdgeBack()
+  // A split screen (laptop Messages) keeps one key across its routes, so picking a conversation swaps the pane, not the page
+  const wide = useLaptop()
+  const key = wide && route.split ? `split:${route.split}` : `${route.path}|${JSON.stringify(params)}`
+  // The edge swipe loads with the first pushed screen and then stays mounted
+  const pushed = Boolean(backTarget(loc, route))
+  const [edge, setEdge] = useState(pushed)
+  if (pushed && !edge) setEdge(true)
   return (
     <>
       {chrome && <Sidebar />}
-      <EdgeUnderlay />
+      {edge && <Suspense fallback={null}><EdgeBack /></Suspense>}
       <main id="main" className={chrome ? 'main' : 'main main--bare'}>
         <RouteErrorBoundary resetKey={key} title={route.title}>
           <Suspense fallback={<RouteFallback title={route.title} />}>

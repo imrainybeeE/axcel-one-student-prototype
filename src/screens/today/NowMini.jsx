@@ -4,7 +4,9 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useScrolledDown } from '../../app'
 import { UnderlayContext } from '../../app/underlay.js'
-import { Time, Num, Icon, RollNum } from '../../ui'
+import { Time, Num } from '../../ui/Num.jsx'
+import { Icon } from '../../ui/Icon.jsx'
+import { RollNum } from '../../ui/Motion.jsx'
 
 const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.title)
 
@@ -54,7 +56,7 @@ export function NowMini({ model, offline, joiningId, onJoin }) {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           aria-label={`${isBreak ? 'Break' : item.title}, ${model.minutes} minutes. Show the lesson`}
         >
-          <span className="now-mini-tile" data-subject={isBreak ? 'break' : item.subjectId}><Num wide><RollNum value={model.minutes} /></Num></span>
+          <span className="now-mini-tile" data-subject={isBreak ? 'break' : item.subjectId}><Num wide><RollNum value={model.minutes} /></Num><span className="now-mini-unit">min</span></span>
           <span className="now-mini-text">
             <span className="now-mini-title">{isBreak ? 'Break' : shortTitle(item)}</span>
             <span className="now-mini-sub">{sub}</span>

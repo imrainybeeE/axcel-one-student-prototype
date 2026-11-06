@@ -2,6 +2,7 @@
 // the laptop Today and the award ladder. The track is decorative; every fact is in text.
 import { Num, Time } from './Num.jsx'
 import { Tag } from './Tag.jsx'
+import './rail.css'
 
 /** <Rail label="Rest of today"> ...RailItem </Rail> renders an ordered list. */
 export function Rail({ label, children, className }) {

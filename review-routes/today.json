@@ -2,127 +2,108 @@
   {
     "id": "today-before",
     "label": "Today before school, 7.40",
-    "path": "/?d=2026-10-21&t=7.40"
+    "path": "/?d=2026-11-02&t=7.40"
   },
   {
     "id": "today-lesson",
-    "label": "Today in Physics, 10.40 (online day)",
-    "path": "/?d=2026-10-21&t=10.40"
+    "label": "Today in Physics, 10.40 (campus day)",
+    "path": "/?d=2026-11-02&t=10.40"
   },
   {
     "id": "today-last-minute",
-    "label": "Today last minute of Physics, 10.59",
-    "path": "/?d=2026-10-21&t=10.59"
+    "label": "Today last minute of Physics, 11.14",
+    "path": "/?d=2026-11-02&t=11.14"
   },
   {
     "id": "today-break",
     "label": "Today at break, 10.10",
-    "path": "/?d=2026-10-21&t=10.10"
-  },
-  {
-    "id": "today-join-window",
-    "label": "Today at break with Physics Join open, 10.27",
-    "path": "/?d=2026-10-21&t=10.27"
+    "path": "/?d=2026-11-02&t=10.10"
   },
   {
     "id": "today-lunch",
     "label": "Today at lunch, 12.00",
-    "path": "/?d=2026-10-21&t=12.00"
+    "path": "/?d=2026-11-02&t=12.00"
   },
   {
     "id": "today-after",
-    "label": "Today after school, 14.30",
-    "path": "/?d=2026-10-21&t=14.30"
+    "label": "Today after school, 16.30",
+    "path": "/?d=2026-11-02&t=16.30"
   },
   {
     "id": "today-campus",
     "label": "Today on a campus day, Thursday 10.20",
-    "path": "/?d=2026-10-22&t=10.20"
+    "path": "/?d=2026-11-05&t=10.20"
   },
   {
     "id": "today-weekend",
     "label": "Today on Saturday, 10.00",
-    "path": "/?d=2026-10-24&t=10.00"
+    "path": "/?d=2026-11-14&t=10.00"
   },
   {
     "id": "today-holiday",
-    "label": "Today on the Deepavali replacement holiday",
-    "path": "/?d=2026-10-26&t=9.00"
+    "label": "Today on the Deepavali break",
+    "path": "/?d=2026-11-06&t=9.00"
   },
   {
     "id": "today-loading",
     "label": "Today loading",
-    "path": "/?d=2026-10-21&t=10.40&state=loading"
+    "path": "/?d=2026-11-02&t=10.40&state=loading"
   },
   {
     "id": "today-empty",
     "label": "Today empty (no lessons)",
-    "path": "/?d=2026-10-21&t=10.40&state=empty"
+    "path": "/?d=2026-11-02&t=10.40&state=empty"
   },
   {
     "id": "today-error",
     "label": "Today error",
-    "path": "/?d=2026-10-21&t=10.40&state=error"
+    "path": "/?d=2026-11-02&t=10.40&state=error"
   },
   {
     "id": "today-offline",
     "label": "Today offline",
-    "path": "/?d=2026-10-21&t=10.40&state=offline"
+    "path": "/?d=2026-11-02&t=10.40&state=offline"
   },
   {
     "id": "today-lesson-dark",
     "label": "Today in Physics, dark",
-    "path": "/?d=2026-10-21&t=10.40&theme=dark",
+    "path": "/?d=2026-11-02&t=10.40&theme=dark",
     "theme": "dark"
   },
   {
     "id": "today-before-dark",
     "label": "Today before school, dark",
-    "path": "/?d=2026-10-21&t=7.40&theme=dark",
+    "path": "/?d=2026-11-02&t=7.40&theme=dark",
     "theme": "dark"
   },
   {
     "id": "today-holiday-dark",
     "label": "Today holiday, dark",
-    "path": "/?d=2026-10-26&t=9.00&theme=dark",
+    "path": "/?d=2026-11-06&t=9.00&theme=dark",
     "theme": "dark"
   },
   {
     "id": "today-error-dark",
     "label": "Today error, dark",
-    "path": "/?d=2026-10-21&t=10.40&state=error&theme=dark",
+    "path": "/?d=2026-11-02&t=10.40&state=error&theme=dark",
     "theme": "dark"
   },
   {
     "id": "today-offline-dark",
     "label": "Today offline, dark",
-    "path": "/?d=2026-10-21&t=10.40&state=offline&theme=dark",
+    "path": "/?d=2026-11-02&t=10.40&state=offline&theme=dark",
     "theme": "dark"
   },
   {
     "id": "today-loading-dark",
     "label": "Today loading, dark",
-    "path": "/?d=2026-10-21&t=10.40&state=loading&theme=dark",
+    "path": "/?d=2026-11-02&t=10.40&state=loading&theme=dark",
     "theme": "dark"
-  },
-  {
-    "id": "today-join-tapped",
-    "label": "Today after tapping Join Physics (Joining)",
-    "path": "/?d=2026-10-21&t=10.40",
-    "actions": [
-      {
-        "click": ".now-join"
-      },
-      {
-        "wait": 200
-      }
-    ],
-    "settle": 100
   },
   {
     "id": "today-scrolled",
     "label": "Today scrolled: large title collapsed into the bar",
-    "path": "/?d=2026-10-21&t=10.40",
+    "path": "/?d=2026-11-02&t=10.40",
     "actions": [
       {
         "press": "End"

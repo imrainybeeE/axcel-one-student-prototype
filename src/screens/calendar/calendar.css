@@ -4,46 +4,65 @@
 .cal-row[data-cat='event'] { --cat: #2F9E45; }
 .cal-row[data-cat='exam'] { --cat: #E8920C; }
 .cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
-.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #8E8E93; }
+.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #2F7FB8; } /* school days that run as usual: a calm blue, never a disabled grey */
 .cal-row[data-cat='meeting'] { --cat: #5856D6; }
-.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 13px; }
-.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 10px; bottom: 10px; width: 4px; border-radius: 2px; background: var(--cat); }
+.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 11px; }
+.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 2px; border-radius: 1px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
 .cal-row.is-today .lead-date .num { color: var(--brand); }
+.cal-week .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); color: var(--ink-soft); } /* the week names organise; the events lead */
 .cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
 .cal-hidden-dot { display: inline-block; width: 8px; height: 8px; margin-left: 6px; border-radius: 50%; background: var(--brand); vertical-align: middle; }
 
 /* Month */
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
-.cal-month-bar { display: flex; align-items: center; justify-content: space-between; }
+.cal-week + .cal-week { margin-top: var(--space-4); }
+.cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
+.cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
 .cal-grid-row > span { display: block; }
 .cal-cell {
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
-  width: 100%; min-height: 56px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
+  width: 100%; min-height: 46px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
-.cal-cell .num { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
-.cal-cell.is-off .num { color: var(--ink-soft); }
+.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.cal-cell.is-off .num { color: var(--ink); }
 .cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
 .cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 56px; }
+.cal-cell.is-blank { min-height: 50px; }
 .cal-dots { display: flex; gap: 3px; height: 6px; }
-.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
-.cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-3) 0; }
+.cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-4); text-align: center; } /* an empty day: one quiet line, centred in its card */
+.cal-day > .list:has(> .cal-none:only-child) { border-radius: var(--radius-compact); }
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
-  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); column-gap: var(--space-8, 40px); align-items: start; }
+  .cal-stack:not(.cal-laptop) { max-width: 46rem; }
+  .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
+  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; column-gap: var(--space-7) !important; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
-  .cal-laptop .cal-cell { min-height: 84px; }
+  .cal-laptop .cal-cell { min-height: 56px; }
+  .screen--wide.screen--cal { --content-wide: 59rem; } /* 944: a 560 month, a 32 gutter and the 352 day; Show ends on the day's edge */
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+@media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
+@media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: 0; } } /* the day's heading on the month name's line, its card close under it */
+
+.cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
+@media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }
+
+/* Meta parts joined by a dot that only ever sits between two parts on one line: each part carries its dot in front,
+   the line box is pulled left by one dot, and the overflow clip hides the dot of whichever part starts a line */
+.meta-parts { display: block; overflow: hidden; }
+.meta-parts > span { display: block; margin-left: -0.9em; }
+.meta-parts > span > span { display: inline-block; max-width: calc(100% - 0.9em); vertical-align: top; }
+.meta-parts > span > span::before { content: '·'; display: inline-block; width: 0.9em; text-align: center; }

@@ -1,9 +1,11 @@
+// index.html boots the theme before any CSS, so the first paint is already right: ?theme= (not stored), then the
+// stored per-device choice "axcel-theme" (auto|light|dark), then Light. Its comments live here, not in the shipped page.
 // Appearance: Light by default; Automatic (follow the device) and Dark are choices in Settings, stored per device.
 // ?theme=light|dark overrides for the session without being stored.
 import { useSyncExternalStore } from 'react'
 
 const KEY = 'axcel-theme'
-const PAPER = { light: '#F2F2F7', dark: '#16181B' }
+const PAPER = { light: '#F2F2F7', dark: '#161618' }
 const listeners = new Set()
 const mql = window.matchMedia('(prefers-color-scheme: dark)')
 

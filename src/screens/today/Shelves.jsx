@@ -3,17 +3,18 @@
 import { ViewTransition } from 'react'
 import { Link, useUnreadThreads } from '../../app'
 import { zoomName } from '../../app/zoom.js'
-import { Time, Num, Icon, Avatar } from '../../ui'
+import { Time, Num } from '../../ui/Num.jsx'
+import { Icon } from '../../ui/Icon.jsx'
+import { Avatar } from '../../ui/Avatar.jsx'
 import { laterItems, isJoinOpen } from '../../lib/schedule.js'
 import { formatMessageTime, formatWeekdayShort, formatDuration, isoToMs, schoolInstant } from '../../lib/time.js'
 import { threads } from '../../data/messages.js'
 import { events } from '../../data/calendar.js'
 import { summary } from '../../data/record.js'
-import { attendanceSummary, schoolDays } from '../../data/attendance.js'
+import { attendanceSummary } from '../../data/attendance.js'
 
 const record = summary()
 const attendance = attendanceSummary()
-const days = schoolDays()
 
 const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.title)
 
@@ -60,7 +61,7 @@ export function LessonShelf({ model, nowMs, offline }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {items.map((it) => {
           const open = it.meet && !offline && isJoinOpen(it, nowMs)
-          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join(', ')
+          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join('\u00a0· ')
           const away = Math.max(1, Math.ceil((it.startsAt - nowMs) / 60000))
           return (
             <li key={it.id} className="shelf-item">
@@ -69,15 +70,14 @@ export function LessonShelf({ model, nowMs, offline }) {
                 className="cover-link card-link"
                 aria-label={`${it.title}, ${it.start} to ${it.end}${it.double ? ', double lesson' : ''}, ${who}${open ? ', Join is open' : ''}`}
               >
+                {/* One card holds the lesson: its time, the subject beside its colour dot, then who and when */}
                 <span className="cover" data-subject={it.subjectId || 'event'}>
                   <Time value={it.start} className="cover-time" />
                   {it.meet && !model.online && <Icon name="video" size={18} className="cover-icon" />}
-                  <span className="cover-sub">
-                    {open ? 'Join open' : `in ${formatDuration(away)}`}{it.double && <span className="cover-double">Double</span>}
-                  </span>
+                  <span className="cover-title">{shortTitle(it)}{it.double && <span className="cover-double">Double</span>}</span>
+                  <span className="cover-meta">{who}</span>
+                  <span className="cover-meta">{open ? 'Join open' : `in ${formatDuration(away)}`}</span>
                 </span>
-                <span className="cover-title">{shortTitle(it)}</span>
-                <span className="cover-meta">{who}</span>
               </Link>
             </li>
           )
@@ -118,7 +118,7 @@ function MessagesShelf({ nowMs }) {
           })}
         </ul>
       ) : (
-        <p className="shelf-quiet"><Icon name="check-circle" size={20} />You&rsquo;re all caught up.</p>
+        <p className="shelf-quiet">You’re all caught up.</p>
       )}
     </section>
   )
@@ -147,7 +147,7 @@ function EventsShelf({ todayIso }) {
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
               </span>
-              <span className="event-card-title">{e.title}</span>
+              <span className="event-card-title">{e.title.replace(/-/g, "\u2011") /* "Y7-Y10" never breaks at its hyphen */}</span>
               <span className="event-card-meta">{eventWhen(e)}</span>
             </Link>
           </li>
@@ -157,44 +157,31 @@ function EventsShelf({ todayIso }) {
   )
 }
 
-/** Mon to Fri of this week: present, late, absent, or still to come. */
-function thisWeek(todayIso) {
-  const d = new Date(todayIso + 'T00:00:00')
-  const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7))
-  const byDate = new Map(days.map((x) => [x.date, x.status]))
-  return ['M', 'T', 'W', 'T', 'F'].map((letter, i) => {
-    const day = new Date(mon); day.setDate(mon.getDate() + i)
-    const iso = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`
-    return { letter, iso, status: byDate.get(iso) || (iso >= todayIso ? 'later' : 'none') }
-  })
-}
-
 function RecordTile() {
-  const toNext = record.nextAward ? record.points / record.nextAward.points : 1
+  const from = record.currentAward?.points || 0
+  const toNext = record.nextAward ? Math.max(0, Math.min(1, (record.points - from) / (record.nextAward.points - from))) : 0
   return (
     <ZoomLink
       to="/record"
       className="stat-tile card-link"
       data-tone="award"
-      aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points`}
+      data-award={record.currentAward?.name.toLowerCase()}
+      aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>
       <span className="stat-fig"><Num wide className="stat-n">{record.points}</Num><span className="stat-unit">points</span></span>
-      <span className="stat-bar" style={{ '--p': toNext }} aria-hidden="true"><i /></span>
-      <span className="stat-sub">{record.nextAward ? <><Num>{record.toNext}</Num> more for {record.nextAward.name}</> : 'Top award reached'}</span>
+      {record.nextAward && <span className="stat-bar" style={{ '--p': toNext }} aria-hidden="true"><i /></span>}
+      <span className="stat-sub">{record.nextAward ? <><Num>{record.toNext}</Num> more for {record.nextAward.name}</> : `${record.currentAward.name} Award level`}</span>
     </ZoomLink>
   )
 }
 
-function AttendanceTile({ todayIso }) {
-  const week = thisWeek(todayIso)
+function AttendanceTile() {
   return (
-    <ZoomLink to="/attendance" className="stat-tile card-link" data-tone="good" aria-label={`Attendance, ${Math.round(attendance.percent)}% this term`}>
+    <ZoomLink to="/attendance" className="stat-tile card-link" data-tone="good" aria-label={`Attendance, ${Math.round(attendance.percent)}% this term, ${attendance.present + attendance.late} of ${attendance.days} days`}>
       <span className="stat-title">Attendance<Icon name="chevron-right" size={16} className="stat-chev" /></span>
-      <span className="stat-fig"><Num wide className="stat-n">{Math.round(attendance.percent)}</Num><span className="stat-unit">%</span></span>
-      <span className="stat-week" aria-hidden="true">
-        {week.map((d) => <span key={d.iso} className="stat-day" data-status={d.status} data-today={d.iso === todayIso || undefined}><i />{d.letter}</span>)}
-      </span>
+      <span className="stat-fig stat-fig--pc"><Num wide className="stat-n">{Math.round(attendance.percent)}</Num><span className="stat-unit">%</span></span>
+      <span className="stat-sub"><Num>{attendance.present + attendance.late}</Num> of <Num>{attendance.days}</Num> days</span>
     </ZoomLink>
   )
 }
@@ -209,7 +196,7 @@ export function Shelves({ nowMs, todayIso }) {
         <ShelfHead id="shelf-you">You</ShelfHead>
         <div className="stat-pair">
           <RecordTile />
-          <AttendanceTile todayIso={todayIso} />
+          <AttendanceTile />
         </div>
       </section>
     </>

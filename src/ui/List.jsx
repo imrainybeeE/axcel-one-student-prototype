@@ -54,7 +54,7 @@ export function DateLead({ day, label }) {
 }
 
 // Divider inset = lead width + the 12 px column gap, so dividers start at the text.
-const INSETS = { time: 'calc(var(--time-col) + 0.75rem)', date: 'calc(2.75rem + 0.75rem)', avatar: '3.5rem', icon: 'calc(var(--tile) + 0.75rem)', diamond: '2.25rem', none: '0px' }
+const INSETS = { time: 'calc(var(--time-col) + 0.75rem)', date: 'calc(2.75rem + 0.75rem)', avatar: '3.5rem', icon: 'calc(1.5rem + 0.75rem)', diamond: '1.75rem', none: '0px' }
 
 /**
  * One row on the page. Never a card.

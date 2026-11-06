@@ -29,7 +29,7 @@ function joinWait(item, nowMs, offline) {
 
 function place(item) {
   if (item.kind === 'event') return 'School activity'
-  return item.online ? `${item.teacher}, online` : [item.teacher, item.room].filter(Boolean).join(', ')
+  return item.online ? `${item.teacher}\u00a0· Online` : [item.teacher, item.room].filter(Boolean).join('\u00a0· ')
 }
 
 function statusOf(item, iso, today, nowMs) {
@@ -109,10 +109,12 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
         if (it.kind === 'break') {
           return <RailItem key={it.id} kind="gap" status={status === 'done' ? 'done' : 'later'} start={it.start} end={it.end} title={it.title} first={first} last={last} />
         }
-        if (status === 'now' && model?.state === 'lesson' && model.item?.id === it.id) {
+        if (it.kind === 'lesson' && status === 'now' && model?.state === 'lesson' && model.item?.id === it.id) {
           return (
             <RailItem key={it.id} status="now" start={it.start} end={it.end} subject={it.subjectId} first={first} last={last}>
-              <NowBlock model={model} variant="rail" offline={offline} onJoin={joinProps.onJoin} joiningId={joinProps.joiningId} headingLevel={3} />
+              <div className="tt-now">
+                <NowBlock model={model} variant="rail" offline={offline} onJoin={joinProps.onJoin} joiningId={joinProps.joiningId} headingLevel={3} onDetails={() => onOpen(it)} />
+              </div>
             </RailItem>
           )
         }
@@ -132,7 +134,7 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
             last={last}
           >
             <button type="button" className="rail-text tt-open" aria-haspopup="dialog" onClick={() => onOpen(it)}>
-              <span className="rail-title">{it.title}{isNext && <> <Tag>Next</Tag></>}</span>
+              <span className="rail-title">{it.title}{isNext && <> <span className="tt-next">Next</span></>}</span>
               <span className="rail-meta">{place(it)}</span>
               {status !== 'done' && wait && <span className="rail-meta join-wait"><Icon name="clock" size={20} />{wait}</span>}
             </button>
@@ -146,16 +148,18 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
 
 /** The week: stacked days on a phone, five columns on a laptop. */
 function Week({ days, today, nowMs, onOpen, laptop }) {
+  const starts = [...new Set(days.flatMap((day) => day.lessons.map((item) => item.startMin)))].sort((a, b) => a - b)
   return (
+    <div className={laptop ? 'tt-week-scroll' : undefined} data-scroll-x={laptop || undefined}>
     <div className={laptop ? 'tt-week tt-week--grid' : 'tt-week'}>
-      {days.map((day) => (
+      {days.map((day, column) => (
         <section key={day.iso} className="tt-week-day" aria-labelledby={`tt-w-${day.iso}`}>
-          <h2 id={`tt-w-${day.iso}`} className="tt-week-head t-title-s">
+          <h2 id={`tt-w-${day.iso}`} className="tt-week-head t-title-s" style={laptop ? { gridColumn: column + 1, gridRow: 1 } : undefined}>
             {formatWeekday(isoToMs(day.iso))} <Num>{Number(day.iso.slice(8))}</Num>
             {day.iso === today && <Tag>Today</Tag>}
           </h2>
           {day.kind !== 'school' ? (
-            <p className="tt-week-off">{day.reason ? `No school: ${day.reason}` : 'No lessons'}</p>
+            <p className="tt-week-off" style={laptop ? { gridColumn: column + 1, gridRow: 2 } : undefined}>{day.reason ? `No school: ${day.reason}` : 'No lessons'}</p>
           ) : (
             <ul className="list" role="list">
               {day.lessons.map((it) => (
@@ -163,6 +167,7 @@ function Week({ days, today, nowMs, onOpen, laptop }) {
                   key={it.id}
                   data-subject={it.subjectId}
                   className={`tt-week-row${statusOf(it, day.iso, today, nowMs) === 'done' ? ' is-done' : ''}`}
+                  style={laptop ? { gridColumn: column + 1, gridRow: starts.indexOf(it.startMin) + 2 } : undefined}
                   onClick={it.kind === 'event' ? undefined : () => onOpen(it)}
                   lead={<span className="tt-week-time"><Time value={it.start} /></span>}
                   title={it.kind === 'event' ? it.title : laptop ? it.short : it.title}
@@ -173,6 +178,7 @@ function Week({ days, today, nowMs, onOpen, laptop }) {
           )}
         </section>
       ))}
+    </div>
     </div>
   )
 }
@@ -213,7 +219,7 @@ function LessonSheet({ item, onClose, nowMs, offline, joinProps }) {
 
 export default function Timetable() {
   const { query } = useRoute()
-  const { state, offline, now, today, retry, retrying } = useDemo()
+  const { state, offline, now, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const laptop = useLaptop()
   const { joiningId, join } = useJoin()
   const [openItem, setOpenItem] = useState(null)
@@ -240,12 +246,6 @@ export default function Timetable() {
       <LoadingState label="Getting your timetable" onRetry={retry}>
         <SkeletonRows count={6} lead="time" />
       </LoadingState>
-    )
-  } else if (state === 'error') {
-    body = (
-      <ErrorState onRetry={retry} retrying={retrying}>
-        Your timetable did not load. Check that you are online, then try again. Your timetable from <Num>{SAVED_AT}</Num> is below.
-      </ErrorState>
     )
   } else if (view === 'week') {
     body = <Week days={weekDays} today={today} nowMs={now} onOpen={setOpenItem} laptop={laptop} />
@@ -274,6 +274,8 @@ export default function Timetable() {
   return (
     <Screen
       title="Timetable"
+      className="screen--tt"
+      width={view === 'week' ? 'wide' : 'narrow'}
       action={
         <Button variant="plain" size="compact" onClick={() => updateQuery({ view: view === 'week' ? null : 'week' })} aria-label={view === 'week' ? 'Show one day' : 'Show the week'}>
           {view === 'week' ? 'Day' : 'Week'}
@@ -282,11 +284,13 @@ export default function Timetable() {
     >
       <div className="stack">
         {view === 'day' && strip}
-        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} />}
-        {body}
-        {state === 'error' && day.kind === 'school' && view === 'day' && (
-          <DayRail day={day} today={today} nowMs={now} model={model} offline={offline} joinProps={joinProps} onOpen={setOpenItem} />
+        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
+        {state === 'error' && (
+          <ErrorState onRetry={retry} retrying={retrying}>
+            Your timetable did not load. Try again.{(view === 'week' ? weekDays.some((d) => d.lessons.length > 0) : day.kind === 'school') && <> Saved timetable from <Num>{SAVED_AT}</Num> is below.</>}
+          </ErrorState>
         )}
+        {body}
       </div>
       <LessonSheet item={openItem} onClose={() => setOpenItem(null)} nowMs={now} offline={offline} joinProps={joinProps} />
     </Screen>

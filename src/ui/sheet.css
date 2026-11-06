@@ -1,0 +1,121 @@
+/* Sheets and dialogs: loaded with its component, not on first paint */
+/* ============ Sheets and dialogs ============ */
+.sheet {
+  position: fixed; inset: auto 0 0 0; margin: 0; padding: 0; border: 0;
+  width: 100%; max-width: 100%; max-height: 100dvh;
+  background: transparent; color: var(--ink); overflow: visible;
+}
+.sheet::backdrop { background: var(--scrim); opacity: 0; transition: opacity var(--dur-sheet) var(--ease-sheet); }
+.sheet[data-state="open"]::backdrop { opacity: var(--sheet-dim, 1); }
+.sheet:has(> .sheet-panel[data-dragging])::backdrop { transition: none; } /* the dim follows the finger, set by the drag */
+.sheet[data-state="leave"]::backdrop { transition-duration: var(--dur-3); }
+.sheet-panel {
+  --surface: var(--raised);
+  display: flex; flex-direction: column;
+  max-height: calc(100dvh - var(--safe-top) - 10px);
+  margin-inline: 6px;
+  padding-bottom: var(--safe-bottom);
+  background: var(--raised); border-radius: var(--radius-sheet) var(--radius-sheet) 0 0; box-shadow: var(--shadow);
+  transform: translateY(100%);
+  transition: transform var(--dur-sheet) var(--ease-sheet);
+}
+.sheet--large > .sheet-panel, .sheet--medium > .sheet-panel { height: calc(100dvh - var(--safe-top) - 10px); }
+.sheet[data-state="open"] > .sheet-panel { transform: translateY(var(--drag, 0px)); }
+.sheet[data-state="open"][data-detent="medium"] > .sheet-panel { transform: translateY(calc(100% - 50dvh + var(--drag, 0px))); }
+.sheet[data-state="leave"] > .sheet-panel { transition: transform var(--dur-3) var(--ease-out-quick); }
+.sheet-panel[data-dragging] { transition: none; }
+/* Pulled up past the top, the sheet stretches: its surface carries on below the screen edge, so the page never shows under it */
+@media (max-width: 767px) {
+  .sheet:not(.sheet--action) > .sheet-panel { position: relative; }
+  .sheet:not(.sheet--action) > .sheet-panel::after { content: ""; position: absolute; inset-inline: 0; top: 100%; height: 100dvh; background: inherit; pointer-events: none; }
+}
+.sheet[data-detent="medium"] > .sheet-panel > .sheet-body { margin-bottom: calc(50dvh - var(--safe-top) - 10px); }
+/* Grouped content inside a sheet sits on a grey sheet so the cards read */
+.sheet-panel:has(.list) { --surface: var(--paper); background: var(--paper); }
+[data-theme="dark"] .sheet-panel:has(.list) { background: var(--raised); }
+[data-theme="dark"] .sheet-panel .list { --card: #3A3A3C; }
+
+.sheet-strip { flex: none; touch-action: none; user-select: none; }
+.sheet-grabber {
+  position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;
+  width: 88px; height: var(--tap); margin: 0 auto -20px; border-radius: var(--radius-control);
+}
+.sheet-grabber span { display: block; width: var(--grabber-w); height: var(--grabber-h); border-radius: 3px; background: rgb(120 120 128 / 0.5); transition: width var(--dur-spring-snappy) var(--spring-snappy); }
+.sheet-grabber:active span { width: 44px; background: var(--ink-faint); }
+.sheet-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
+  align-items: center; gap: var(--space-2); min-height: 48px; padding: 4px calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
+} /* the close circle (inside its 4px clear ring) sits on the body's 16px edge */
+.sheet-head-lead { justify-self: start; }
+/* The close button: a 36px glass circle inside a 44px target with a dark cross, as iOS 26 sheets have it
+   (the same glass as the bar's back button; the rim is inset so it sits on the 36px circle, not the 44px target) */
+.sheet-close {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 4px solid transparent; border-radius: 50%;
+  background: var(--glass-solid); background-clip: padding-box; color: var(--ink); cursor: pointer;
+  box-shadow: var(--glass-rim);
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy), background-color var(--dur-2) var(--ease);
+}
+.sheet-close .icon { stroke-width: 2.4; }
+.sheet-title:focus { outline: none; box-shadow: none; } /* focused by script on open: no ring, no inner white edge */
+.sheet-close:active { transform: scale(calc(1 - 0.08 * var(--motion))); background-color: var(--fill); transition-duration: 90ms; }
+@media (hover: hover) and (pointer: fine) { .sheet-close:hover { background-color: var(--fill); } }
+.sheet-head-trail { justify-self: end; }
+.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; color: var(--ink-soft); } /* the sheet's kind, quieter than what it shows */
+.sheet-body {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--space-2) var(--gutter-r) var(--space-6) var(--gutter-l);
+}
+.sheet-footer { flex: none; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--divider); }
+
+/* Action sheet: grouped choices plus a separate Cancel, as floating glass */
+.sheet--action > .sheet-panel {
+  background: transparent; box-shadow: none; border-radius: 0; margin: 0;
+  padding: 0 var(--space-2) calc(var(--space-2) + var(--safe-bottom));
+}
+.action-sheet { display: flex; flex-direction: column; gap: var(--space-2); }
+.action-sheet-group, .action-sheet-cancel { border-radius: 18px; overflow: hidden; }
+.action-sheet-head { padding: var(--space-4); text-align: center; border-bottom: 1px solid var(--divider); }
+.action-sheet-msg { margin-top: var(--space-1); color: var(--ink-soft); }
+.action-sheet-list li + li { border-top: 1px solid var(--divider); }
+.action-sheet-btn {
+  display: flex; align-items: center; justify-content: center; width: 100%; min-height: var(--space-9); padding: 0 var(--space-4);
+  font-size: var(--fs-body); line-height: var(--lh-body); font-weight: 500; color: var(--brand); text-align: center;
+  transition: background-color var(--dur-2) var(--ease);
+}
+.action-sheet-btn:focus-visible { outline-offset: -4px; }
+.action-sheet-btn.is-destructive { color: var(--danger); }
+.action-sheet-btn:active { background: var(--fill); transition-duration: 0s; }
+.action-sheet-btn.action-sheet-cancel { font-weight: var(--fw-title); }
+@media (hover: hover) and (pointer: fine) { .action-sheet-btn:hover { background: var(--fill); } }
+
+/* Card stack: while a large sheet is open on a phone, the page behind recedes */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .main { transform-origin: 50% calc(var(--stack-y, 0px) + 40vh); transition: transform var(--dur-sheet) var(--ease-sheet), border-radius var(--dur-sheet) var(--ease-sheet), filter var(--dur-sheet) var(--ease-sheet); }
+  html:has(.sheet--large[data-state="open"]) .main {
+    transform: scale(0.94); border-radius: 14px; overflow: clip; filter: brightness(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet > .sheet-panel, .sheet[data-state="leave"] > .sheet-panel { transform: translateY(0); opacity: 0; transition: opacity var(--dur-1) linear; }
+  .sheet[data-state="open"] > .sheet-panel { transform: translateY(0); opacity: 1; }
+  .sheet[data-state="open"][data-detent="medium"] > .sheet-panel { transform: translateY(calc(100% - 50dvh)); }
+  .sheet::backdrop { transition-duration: var(--dur-1); }
+}
+
+@media (min-width: 768px) {
+  .sheet { inset: 0; margin: auto; width: min(560px, calc(100% - 48px)); height: fit-content; max-height: 85dvh; }
+  .sheet-panel, .sheet--large > .sheet-panel, .sheet--medium > .sheet-panel {
+    height: auto; max-height: 85dvh; padding-bottom: 0; margin: 0; border-radius: var(--radius-sheet);
+    opacity: 0; transform: translateY(calc(12px * var(--motion))) scale(calc(1 - 0.03 * var(--motion)));
+    transition: transform var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease);
+  }
+  .sheet--large > .sheet-panel { height: min(85dvh, 720px); }
+  .sheet[data-state="open"] > .sheet-panel, .sheet[data-state="open"][data-detent="medium"] > .sheet-panel { opacity: 1; transform: none; }
+  .sheet[data-state="leave"] > .sheet-panel { opacity: 0; transform: scale(calc(1 - 0.02 * var(--motion))); transition: opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease); }
+  .sheet[data-detent="medium"] > .sheet-panel > .sheet-body { margin-bottom: 0; }
+  .sheet-grabber { display: none; }
+  .sheet-head { padding-top: var(--space-2); }
+  .sheet--action { width: min(400px, calc(100% - 48px)); }
+  .sheet--action > .sheet-panel { padding: 0; }
+}

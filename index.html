@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <style>html,body{background:#F2F2F7}</style>
     <script>
-      // Theme boot: runs before any CSS so the first paint is already in the right theme.
-      // Order: ?theme= (not stored) > stored per-device choice "axcel-theme" (auto|light|dark) > Light.
       (function () {
         var d = document.documentElement, pref = 'light', q = null
         try { q = new URLSearchParams(location.search).get('theme') } catch (e) {}
@@ -16,22 +14,21 @@
         var dark = pref === 'dark' || (pref === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)
         d.setAttribute('data-theme', dark ? 'dark' : 'light')
         d.setAttribute('data-theme-pref', pref)
-        d.style.background = dark ? '#16181B' : '#F2F2F7'
+        d.style.background = dark ? '#161618' : '#F2F2F7'
       })()
     </script>
     <title>Today - Axcel One</title>
     <meta name="description" content="Student interface redesign prototype for Axcel One. Demonstration with sample data; not a live school service." />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#16181B" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#161618" media="(prefers-color-scheme: dark)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Axcel One" />
-    <link rel="icon" type="image/png" href="%BASE_URL%brand/icon-light.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%brand/icon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="%BASE_URL%brand/apple-touch-icon.png" />
     <link rel="manifest" href="%BASE_URL%manifest.webmanifest" />
-    <!-- Body text uses the system font; Archivo (titles and numerals, 21 KB) is self-hosted -->
     <link rel="preload" href="%BASE_URL%fonts/archivo.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
-  Segmented, Rail, RailItem, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
+  Segmented, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
 import { entries, summary, areas } from '../../data/record.js'
@@ -12,26 +12,20 @@ import './record.css'
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-/**
- * The lead, as Fitness: one big figure with its unit, what it means in a coloured line, and a thin line filling towards
- * the next award with the two ends marked. Reaching an award turns the line silver and says so.
- */
+/** Fitness-style summary, with progress only when a threshold is known. */
 function Lead({ s, onHow }) {
   const next = s.nextAward
   const prev = s.currentAward
   const points = s.points
   const from = prev ? prev.points : 0
-  const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 1
+  const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 0
   return (
-    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award">
+    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award" data-award={prev?.name.toLowerCase()}>
       <h2 id="record-lead-title" className="record-hero-status">
-        {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : `${prev?.name || 'Current'} Award level`}
+        {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : 'Total'}
       </h2>
       <p className="record-hero-fig"><Num wide className="record-hero-n">{points}</Num><span className="record-hero-unit">points</span></p>
-      <span className="record-hero-bar" style={{ '--p': p }} aria-hidden="true"><i /></span>
-      <span className="record-hero-ends" aria-hidden="true">
-        <span>{prev && <>{prev.name} level · <Num>{points}</Num> points</>}</span>
-      </span>
+      {next && <span className="record-hero-bar" style={{ '--p': p }} aria-hidden="true"><i /></span>}
       <p className="record-hero-note">
         <Num>{s.merits}</Num> from merits, minus <Num>{s.demerits}</Num> from demerits.
         {' '}<button type="button" className="text-link record-how" onClick={onHow} aria-haspopup="dialog">How points work</button>
@@ -43,7 +37,7 @@ function Lead({ s, onHow }) {
 function Measures({ s }) {
   const total = s.attitude + s.skills + s.knowledge
   return (
-    <Group title="Where your points come from">
+    <Group title="Merit points by area">
       <li className="record-split" aria-hidden="true">
         {['attitude', 'skills', 'knowledge'].map((a) => <span key={a} className={`record-split-seg diamond--${a}`} style={{ '--len': s[a] / total }} />)}
       </li>
@@ -53,7 +47,6 @@ function Measures({ s }) {
           lead={<MeritDiamond area={a} />}
           leadKind="diamond"
           title={areas[a].label}
-          meta={areas[a].hint}
           trailing={<span className="record-num"><Num>{s[a]}</Num> points</span>}
         />
       ))}
@@ -63,12 +56,13 @@ function Measures({ s }) {
 
 function Ladder({ s }) {
   return (
-    <section aria-labelledby="record-awards" className="record-awards">
-      <h2 id="record-awards" className="t-title-s">Current award</h2>
-      <Rail label="Current award">
-        <RailItem kind="marker" status="now" points={s.points} title={`${s.currentAward.name} Award`} meta="Current award level" first last />
-      </Rail>
-    </section>
+    <Group title="Current award" className="record-current-award">
+      <Row
+        lead={<span className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
+        leadKind="icon"
+        title={`${s.currentAward.name} Award`}
+      />
+    </Group>
   )
 }
 
@@ -105,7 +99,7 @@ function HowSheet({ open, onClose }) {
       <div className="record-sheet">
         <p>Teachers give merits for good work and good behaviour. Each merit counts towards Attitude, Skills or Knowledge.</p>
         <p>Demerits take points away. Your points are your merits minus your demerits.</p>
-        <p>Your current account shows Silver Award level. Individual RISE entries and award thresholds are not included in this public demo.</p>
+        <p>Award thresholds are not shown in this demo.</p>
         <p>Points start again each school year.</p>
       </div>
     </Sheet>
@@ -156,7 +150,7 @@ export default function Record() {
   const entriesCol = (
     <section aria-labelledby="record-entries" className="record-entries">
       <h2 id="record-entries" className="t-title-s">Entries</h2>
-      <Segmented
+      {entries.length > 0 && <Segmented
         legend="Show"
         value={filter}
         onChange={setFilter}
@@ -165,7 +159,7 @@ export default function Record() {
           { value: 'merits', label: 'Merits' },
           { value: 'demerits', label: 'Demerits' },
         ]}
-      />
+      />}
       {(showAll ? byMonth : byMonth.slice(0, 2)).map((g) => (
         <Group key={g.m} title={MONTHS[g.m]}>
           {g.items.map((e) => (
@@ -189,7 +183,14 @@ export default function Record() {
       {!showAll && byMonth.length > 2 && (
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
-      {!entries.length && <EmptyState title="Individual RISE entries are hidden in this public demo.">The totals above match your account.</EmptyState>}
+      {!entries.length ? (
+        <p className="t-faint settings-note">Individual RISE entries are hidden in this demo.</p>
+      ) : !shown.length && (
+        <div className="record-empty">
+          <p>No {filter} yet.</p>
+          <Button variant="secondary" onClick={() => setFilter('all')}>Show all</Button>
+        </div>
+      )}
     </section>
   )
 

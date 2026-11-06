@@ -1,13 +1,16 @@
 // Messages inbox, as Apple Messages: search, one filter row, then one list newest first.
 // Unread is a leading blue dot and a darker preview. New message opens the compose sheet.
-import { useEffect, useState } from 'react'
-import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT } from '../../app'
+import { useState } from 'react'
+import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT, useLaptop } from '../../app'
 import {
+  IconButton,
   Segmented, SearchField, Row, Group, Avatar, Num, Button, Sheet, Icon,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
+import '../../data/messageHistory.js' // the threads' earlier messages
 import { kindWord, lastOf, whenLabel } from './messageTime.js'
+import Thread from './Thread.jsx'
 import './messages.css'
 
 function ComposeSheet({ open, onClose }) {
@@ -16,39 +19,48 @@ function ComposeSheet({ open, onClose }) {
   const teachers = contacts.teachers.filter(match)
   const students = contacts.students.filter(match)
   const pick = (c) => { onClose(); navigate(`/messages/${c.id}`) }
+  const nobody = !contacts.teachers.length && !contacts.students.length
   return (
     <Sheet open={open} onClose={onClose} title="New message" detents={['large']} closeLabel="Cancel">
       <div className="compose">
-        <SearchField label="Search people" placeholder="Search teachers and classmates" onSearch={setQ} />
-        {q === '' && (
-          <Group title="Your teachers">
-            <Row onClick={() => pick(contacts.teachers[0])} lead={<Avatar initials={contacts.teachers[0].initials} />} leadKind="avatar" title={contacts.teachers[0].name} meta={contacts.teachers[0].detail} />
-          </Group>
+        {nobody ? (
+          <EmptyState title="No contacts available." />
+        ) : (
+          <>
+            <SearchField label="Search people" placeholder="Search teachers and classmates" onSearch={setQ} />
+            {q === '' && contacts.teachers.length > 0 && (
+              <Group title="Your teachers">
+                <Row onClick={() => pick(contacts.teachers[0])} lead={<Avatar initials={contacts.teachers[0].initials} />} leadKind="avatar" title={contacts.teachers[0].name} meta={contacts.teachers[0].detail} />
+              </Group>
+            )}
+            {teachers.length > 0 && (
+              <Group title="Teachers">
+                {teachers.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
+              </Group>
+            )}
+            {students.length > 0 && (
+              <Group title="Classmates">
+                {students.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
+              </Group>
+            )}
+            {!teachers.length && !students.length && <p className="t-faint">Nobody matches &lsquo;{q}&rsquo;. Check the spelling.</p>}
+          </>
         )}
-        {teachers.length > 0 && (
-          <Group title="Teachers">
-            {teachers.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
-          </Group>
-        )}
-        {students.length > 0 && (
-          <Group title="Classmates">
-            {students.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
-          </Group>
-        )}
-        {!teachers.length && !students.length && <p className="t-faint">Nobody matches &lsquo;{q}&rsquo;. Check the spelling.</p>}
         <p className="compose-note"><Icon name="shield" size={20} />The school can read every message in Axcel One. Messages cannot be deleted.</p>
       </div>
     </Sheet>
   )
 }
 
-export default function Messages() {
+export default function Messages({ params = {} }) {
   const { state, offline, now, retry, retrying, reconnect, reconnecting } = useDemo()
   const unread = useUnreadThreads()
+  const wide = useLaptop()
   const [filter, setFilter] = useState('all')
   const [q, setQ] = useState('')
   const [compose, setCompose] = useState(false)
-  useEffect(() => { import('./Thread.jsx') }, [])
+  const canCompose = contacts.teachers.length + contacts.students.length > 0
+  const selected = params.id
 
   const list = threads
     .filter((t) => filter === 'all' || (filter === 'unread' ? unread.has(t.id) : filter === 'groups' ? t.kind === 'class' : t.kind === 'announcement'))
@@ -60,7 +72,7 @@ export default function Messages() {
     body = <LoadingState label="Getting your messages" onRetry={retry}><SkeletonRows count={5} lead="avatar" /></LoadingState>
   } else if (state === 'empty') {
     body = (
-      <EmptyState title="No messages yet." action={<Button variant="primary" icon="pen" onClick={() => setCompose(true)}>New message</Button>}>
+      <EmptyState title="No messages yet." action={canCompose ? <Button variant="primary" icon="pen" onClick={() => setCompose(true)}>New message</Button> : null}>
         Messages from your teachers and classmates will show here.
       </EmptyState>
     )
@@ -68,7 +80,7 @@ export default function Messages() {
     body = q ? (
       <EmptyState title={`No messages match ‘${q}’.`}>Try another word, or check the spelling.</EmptyState>
     ) : (
-      <EmptyState title="No unread messages." action={<Button variant="secondary" onClick={() => setFilter('all')}>Show all</Button>}>You are all caught up.</EmptyState>
+      <EmptyState title={{ all: 'No messages yet.', unread: 'No unread messages.', groups: 'No group messages.', school: 'No school messages.' }[filter]}>{filter === 'unread' ? 'You are all caught up.' : null}</EmptyState>
     )
   } else {
     body = (
@@ -81,8 +93,9 @@ export default function Messages() {
             <Row
               key={t.id}
               to={`/messages/${t.id}`}
-              zoom
-              className={`msg-row${isNew ? ' is-unread' : ''}`}
+              zoom={!wide && selected !== t.id} /* phone only: on a laptop the list stays beside the thread; and the open thread's screen holds that zoom name */
+              className={`msg-row${isNew ? ' is-unread' : ''}${selected === t.id ? ' is-selected' : ''}`}
+              aria-current={selected === t.id ? 'page' : undefined}
               lead={<Avatar initials={t.initials} kind={t.kind === 'class' ? 'group' : t.kind === 'announcement' ? 'announcement' : 'person'} />}
               leadKind="avatar"
               aria-label={`${t.title}, ${kindWord(t)}${isNew ? ', new message' : ''}, ${whenLabel(last.at, now)}: ${last.text}`}
@@ -90,7 +103,6 @@ export default function Messages() {
                 <span className="msg-row-top">
                   <span className="msg-row-name">{t.title}</span>
                   <span className="msg-row-time num">{whenLabel(last.at, now)}</span>
-                  <Icon name="chevron-right" size={16} className="msg-row-chev" />
                 </span>
               }
               meta={<span className="clamp-2">{sender}{last.text}</span>}
@@ -101,12 +113,8 @@ export default function Messages() {
     )
   }
 
-  return (
-    <Screen
-      title="Messages"
-      width="narrow"
-      action={<Button variant="plain" size="compact" icon="pen" onClick={() => setCompose(true)} aria-haspopup="dialog">New message</Button>}
-    >
+  const inbox = (
+    <>
       <div className="stack">
         {state !== 'empty' && <SearchField label="Search messages" placeholder="Search messages" onSearch={setQ} />}
         {state !== 'empty' && state !== 'loading' && (
@@ -127,6 +135,23 @@ export default function Messages() {
         {body}
       </div>
       <ComposeSheet open={compose} onClose={() => setCompose(false)} />
-    </Screen>
+    </>
+  )
+  // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers)
+  const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" /> : null
+  return (
+    <div className={`messages-split${selected ? ' has-thread' : ''}`}>
+    <div className="messages-list-pane">
+      {selected ? (
+        <div className="screen messages-inbox-screen">
+          <div className="messages-inbox-heading"><h2 className="t-title-l">Messages</h2>{composeAction}</div>
+          <div className="screen-body">{inbox}</div>
+        </div>
+      ) : <Screen title="Messages" width="narrow" className="messages-inbox-screen" action={composeAction}>{inbox}</Screen>}
+    </div>
+    <div className="messages-detail-pane">
+      {selected ? <Thread key={selected} params={params} /> : <div className="messages-detail-empty">Select a conversation</div>}
+    </div>
+    </div>
   )
 }

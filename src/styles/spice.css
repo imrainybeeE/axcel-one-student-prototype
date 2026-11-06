@@ -1,24 +1,28 @@
-/* Spice: subject colour as personality. Each subject has one flat, deep colour (white text 5.18:1 or more).
+/* Spice: subject colour as personality. Each subject has one flat, deep colour from one family (OKLCH lightness 0.46,
+   chroma 0.14 or less, so no subject shouts louder than another; white text 6.8:1 or more).
    The current lesson's colour fills the now block and the day strip's marker; it is registered so it tweens
    when the lesson changes. No gradients. */
 
 :root {
-  --subj-physics: #0062C4;
-  --subj-maths: #00756E;
-  --subj-esl: #C2410C;
-  --subj-bm: #2E7D10;
-  --subj-chemistry: #B4235F;
-  --subj-biology: #1E7A4C;
-  --subj-mandarin: #C0262D;
-  --subj-gp: #6A3DBD;
-  --subj-ict: #3A4A5E;
-  --subj-pe: #A85208;
-  --subj-art: #9C2A8A;
+  --subj-physics: #1157A4;
+  --subj-maths: #006660;
+  --subj-esl: #953307;
+  --subj-bm: #23690D;
+  --subj-chemistry: #932D52;
+  --subj-biology: #076941;
+  --subj-mandarin: #972E2D;
+  --subj-gp: #5E439D;
+  --subj-ict: #495A6E;
+  --subj-pe: #854408;
+  --subj-art: #853376;
+  --subj-english: #00627A;
+  --subj-homeroom: #495A6E;
+  --subj-tutorial: #7A3D82;
   --subj-event: #3F3D3D;
 }
 
 /* Registered so a change of subject tweens instead of cutting (the now block and the day strip's marker) */
-@property --subj-a { syntax: "<color>"; inherits: true; initial-value: #0062C4; }
+@property --subj-a { syntax: "<color>"; inherits: true; initial-value: #1157A4; }
 
 /* Subject accent for any element that names a subject. */
 [data-subject='physics'] { --subj: var(--subj-physics); }
@@ -32,11 +36,14 @@
 [data-subject='ict'] { --subj: var(--subj-ict); }
 [data-subject='pe'] { --subj: var(--subj-pe); }
 [data-subject='art'] { --subj: var(--subj-art); }
+[data-subject='english'] { --subj: var(--subj-english); }
+[data-subject='homeroom'] { --subj: var(--subj-homeroom); }
+[data-subject='tutorial'] { --subj: var(--subj-tutorial); }
 [data-subject='event'] { --subj: var(--subj-event); }
 /* Small marks (strip segments, rail stops, dots) are about 3:1 on charcoal: in dark they lift a quarter towards white.
    Fills that carry white text (the now block, covers) keep the true colour. */
 [data-subject] { --subj-mark: var(--subj); }
-[data-theme='dark'] [data-subject] { --subj-mark: color-mix(in srgb, var(--subj) 72%, white); }
+[data-theme='dark'] [data-subject] { --subj-mark: color-mix(in srgb, var(--subj) 50%, white); } /* 4.5:1 or more on charcoal cards */
 [data-subject='break'] { --subj: #646872; } /* lighter than ICT's slate, so a break never reads as a lesson */
 
 [data-subject] {
@@ -54,6 +61,7 @@
 }
 .now--quiet { --now-bg: #3A3D44; background: #3A3D44; }
 
+
 @media (prefers-reduced-motion: reduce) { [data-subject] { transition: none; } }
 
 /* ---------- Today: the day at a glance ---------- */
@@ -66,25 +74,25 @@
   text-decoration: none;
   border-radius: var(--radius-control);
 }
-.day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 6px; container-type: inline-size; }
+.day-strip-bar { position: relative; display: flex; align-items: center; gap: 3px; height: 5px; container-type: inline-size; }
 .day-strip-seg {
-  flex: var(--len) 1 0; border-radius: var(--radius-capsule);
-  background: var(--subj-mark, var(--divider));
+  flex: var(--len) 1 0; min-width: 10px; border-radius: var(--radius-capsule);
+  background: var(--fill-strong); /* to come: one quiet grey, so the day reads as progress, not a rainbow */
   transition: background-color 420ms var(--ease);
 }
 /* A break is a thin link between lessons, never a gap that looks like missing data */
-.day-strip-seg.is-break { align-self: center; height: 2px; background: var(--fill-strong); }
+.day-strip-seg.is-break { min-width: 0; background: none; } /* a break is a gap */
 .day-strip-seg:not(.is-break) { align-self: stretch; }
-.day-strip-seg.is-done { background: var(--fill-strong); }
+.day-strip-seg.is-done { background: color-mix(in srgb, var(--ink) 34%, transparent); }
 /* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */
-.day-strip-seg.is-now { background: linear-gradient(90deg, var(--fill-strong) calc(var(--cut) * 100%), var(--subj-mark) 0); }
+/* The current lesson: solid up to the dot, a pale tint of its colour after it (a hard split) */
+.day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 28%, var(--paper)) 0); }
 /* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
 .day-strip-now {
   position: absolute; top: 50%; left: 0;
-  width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; /* a small marker at the split, not a scrubber's knob */
   border-radius: var(--radius-dot);
   background: var(--subj-mark, var(--ink));
-  box-shadow: 0 0 0 2px var(--paper);
   /* Segments are sized by minutes with 3px gaps between them, so the dot skips the gaps before its lesson */
   transform: translateX(calc((100cqw - var(--gn) * 3px) * var(--at) + var(--gi) * 3px));
   transition: transform 800ms var(--spring-smooth);
@@ -93,3 +101,12 @@
 .day-strip-count { color: var(--ink-soft); }
 .day-strip { transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
 .day-strip:active { transform: scale(calc(1 - 0.02 * var(--motion))); transition-duration: 100ms; }
+
+/* Dark: the strip's done and to-come parts must differ at a glance */
+[data-theme='dark'] .day-strip-seg { background: rgb(255 255 255 / 0.16); }
+[data-theme='dark'] .day-strip-seg.is-break { background: none; }
+[data-theme='dark'] .day-strip-seg.is-done { background: rgb(255 255 255 / 0.55); }
+[data-theme='dark'] .day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 34%, var(--paper)) 0); }
+
+/* In a lesson the split itself says how far in (solid, then pale): no marker on top. In a break, the marker shows where the day is. */
+.day-strip-now:not([data-subject='break']) { opacity: 0; }

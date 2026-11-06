@@ -1,0 +1,51 @@
+/* Moving between screens: slides, the zoom and the nav bar's cross-fade. Loaded with any screen's code but Today's
+   (app/secondScreen.js), which always arrives before the first move; the rules that stop the default
+   whole-page cross-fade stay in shell.css. */
+::view-transition-group(navbar) { z-index: 3; animation-duration: var(--dur-spring-smooth); animation-timing-function: var(--spring-smooth); }
+::view-transition-old(navbar) { animation: vt-fade-out 160ms linear both; }
+::view-transition-new(navbar) { animation: vt-fade-in 220ms linear 60ms both; }
+::view-transition-group(.nav-back-exit) { z-index: 2; }
+::view-transition-new(.nav-forward) { animation: vt-in-from-right var(--dur-spring-smooth) var(--spring-smooth) both; box-shadow: -10px 0 28px rgb(0 0 0 / 0.14); }
+::view-transition-old(.nav-forward-exit) { animation: vt-recede-left var(--dur-spring-smooth) var(--spring-smooth) both; }
+::view-transition-old(.nav-back-exit) { animation: vt-out-to-right var(--dur-spring-smooth) var(--spring-smooth) both; box-shadow: -10px 0 28px rgb(0 0 0 / 0.14); }
+::view-transition-new(.nav-back) { animation: vt-return-from-left var(--dur-spring-smooth) var(--spring-smooth) both; }
+::view-transition-old(.nav-tab), ::view-transition-new(.nav-tab) { animation: none; }
+@keyframes vt-in-from-right { from { transform: translateX(calc(100% * var(--motion))); } }
+@keyframes vt-recede-left { to { transform: translateX(calc(-28% * var(--motion))); filter: brightness(0.92); } }
+@keyframes vt-out-to-right { to { transform: translateX(calc(100% * var(--motion))); } }
+@keyframes vt-return-from-left { from { transform: translateX(calc(-28% * var(--motion))); filter: brightness(0.92); } }
+@keyframes vt-fade-in { from { opacity: 0; } }
+@keyframes vt-fade-out { to { opacity: 0; } }
+
+/* Zoom (iOS): the tapped row and the screen it opens are one shared element (React share="zoom"). The new screen,
+   scaled to fill the card, grows out to full screen as the corners ease square; the page behind recedes around
+   where the student was looking. Back shrinks the screen into the same row. */
+::view-transition-group(.zoom) { z-index: 5; animation-duration: var(--dur-spring-smooth); animation-timing-function: var(--spring-smooth); }
+/* An opaque card: the page behind never shows through the morph */
+::view-transition-image-pair(.zoom) { overflow: hidden; border-radius: var(--radius); background: var(--paper); }
+::view-transition-old(.zoom), ::view-transition-new(.zoom) { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+/* The tapped card is drawn at its own size (not stretched into a ghost) and hands over fast */
+::view-transition-old(.zoom) { object-fit: none; object-position: top left; animation: vt-fade-out 90ms linear both; }
+::view-transition-new(.zoom) { animation: vt-fade-in 140ms linear 40ms both; }
+html:active-view-transition-type(nav-zoom) ::view-transition-image-pair(.zoom) { animation: zoom-corners-open var(--dur-spring-smooth) var(--spring-smooth) both; }
+html:active-view-transition-type(nav-unzoom) ::view-transition-image-pair(.zoom) { animation: zoom-corners-close var(--dur-spring-smooth) var(--spring-smooth) both; }
+html:active-view-transition-type(nav-unzoom) ::view-transition-old(.zoom) { animation: vt-fade-out 200ms linear 200ms both; }
+html:active-view-transition-type(nav-unzoom) ::view-transition-new(.zoom) { animation: vt-fade-in 200ms linear 200ms both; }
+/* Both ends of the morph need a surface of their own in the snapshot */
+.row--zoom { background-color: var(--card); }
+html:active-view-transition-type(nav-zoom, nav-unzoom) .screen { background: var(--paper); min-height: 100dvh; }
+::view-transition-old(.nav-zoom-exit) { transform-origin: 50% calc(var(--vt-old-y, 0px) + 50vh); animation: vt-recede var(--dur-spring-smooth) var(--spring-smooth) both; }
+::view-transition-new(.nav-zoom) { animation: vt-hold-hidden var(--dur-spring-smooth) linear both; }
+::view-transition-old(.nav-unzoom-exit) { animation: vt-hold-hidden var(--dur-spring-smooth) linear both; }
+::view-transition-new(.nav-unzoom) { transform-origin: 50% calc(var(--vt-new-y, 0px) + 50vh); animation: vt-return var(--dur-spring-smooth) var(--spring-smooth) both; }
+@keyframes zoom-corners-open { from { border-radius: var(--radius); } to { border-radius: 0; } }
+@keyframes zoom-corners-close { from { border-radius: 0; } to { border-radius: var(--radius); } }
+@keyframes vt-recede { to { transform: scale(calc(1 - 0.07 * var(--motion))); filter: brightness(0.86); } }
+@keyframes vt-return { from { transform: scale(calc(1 - 0.07 * var(--motion))); filter: brightness(0.86); } }
+@keyframes vt-hold-hidden { from, to { opacity: 0; } }
+
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.nav-forward-exit), ::view-transition-old(.nav-back-exit) { animation: vt-fade-out var(--dur-1) linear both; box-shadow: none; }
+  ::view-transition-new(.nav-forward), ::view-transition-new(.nav-back) { animation: vt-fade-in var(--dur-1) linear both; box-shadow: none; }
+}

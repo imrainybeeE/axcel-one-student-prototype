@@ -1,10 +1,12 @@
-// Settings: everything saves the moment it changes and says so. No paragraph before the toggles.
+// Settings: preferences save when changed.
 import { useState } from 'react'
 import { Screen, useTheme, usePref, announce, useDemo } from '../../app'
 import { Group, Switch, Row, Icon, Notice } from '../../ui'
+import { useBlocked, setBlockedPerson } from '../messages/blockedStore.js'
 import './more.css'
 
 export default function Settings() {
+  const blockedPeople = useBlocked()
   const { pref, resolved, setPref } = useTheme()
   const choose = (v) => { setPref(v); announce(`Appearance: ${v === 'auto' ? 'Automatic' : v === 'dark' ? 'Dark' : 'Light'}`) }
   const { offline } = useDemo()
@@ -46,29 +48,39 @@ export default function Settings() {
           </ul>
           </div>
         </section>
-        <Group title="Notifications">
+        <section className="group" aria-labelledby="notifications-h">
+          <div className="section-head"><h2 id="notifications-h">Notifications</h2></div>
+          <ul className="list" role="list">
           <Switch label="Messages" description="When someone messages you" checked={notify.messages} onChange={set('messages')} unavailable={need} />
           <Switch label="Timetable changes" description="Room changes, cancelled lessons, online links" checked={notify.timetable} onChange={set('timetable')} unavailable={need} />
           <Switch label="School notices" description="Announcements from the school office" checked={notify.notices} onChange={set('notices')} unavailable={need} />
           <Switch label="Quiet hours, 9 pm to 7 am" description="Notifications wait until morning" checked={notify.quiet} onChange={set('quiet')} unavailable={need} />
           <Switch label="Show message text on the lock screen" checked={notify.preview} onChange={set('preview')} unavailable={need} />
-        </Group>
+          </ul>
+          <p className="t-faint settings-note">Demo: notifications are not sent.</p>
+        </section>
         {saved && <p className="t-faint settings-note" role="status">{saved}</p>}
         {!standalone && (
           <Group title="Add to Home Screen">
-            <Row lead={<Icon name="info" />} leadKind="icon" title="On iPhone" meta="Tap Share, then Add to Home Screen. Notifications need this." />
+            <Row lead={<Icon name="info" />} leadKind="icon" title="On iPhone" meta="Tap Share, then Add to Home Screen." />
             <Row lead={<Icon name="info" />} leadKind="icon" title="On Android" meta="Tap the menu, then Install app." />
           </Group>
         )}
-        <Group title="Messages">
+        <section className="group" aria-labelledby="messages-h">
+          <div className="section-head"><h2 id="messages-h">Messages</h2></div>
+          <ul className="list" role="list">
           <Row lead={<Icon name="shield" />} leadKind="icon" title="How messages are monitored" meta="The school can read every message in Axcel One. Messages cannot be deleted." />
-          <Row lead={<Icon name="block" />} leadKind="icon" title="Blocked people" meta="Nobody blocked" />
-        </Group>
+          {blockedPeople.length === 0 ? <Row lead={<Icon name="block" />} leadKind="icon" title="Blocked people" meta="Nobody blocked" /> : blockedPeople.map((person) => (
+            <Row key={person.id} lead={<Icon name="block" />} leadKind="icon" title={person.name} trailingAction trailing={<button type="button" className="text-link" onClick={() => { setBlockedPerson(person, false); announce(`${person.name} unblocked`) }}>Unblock</button>} />
+          ))}
+          </ul>
+          <p className="t-faint settings-note">Demo blocks do not stop messages.</p>
+        </section>
         <Group title="Accessibility">
           <Switch label="Keep messages on screen until I close them" description="Undo and other notes stay until you close them" checked={keep} onChange={(v) => { setKeep(v); announce('Saved') }} />
           <Row lead={<Icon name="eye" />} leadKind="icon" title="Text size" meta="Axcel One follows the text size set on your phone." />
         </Group>
-        {offline && <Notice>You are offline. Notification changes will save when you are back.</Notice>}
+        {offline && <Notice>Connect to change notification settings.</Notice>}
       </div>
     </Screen>
   )

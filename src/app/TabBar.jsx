@@ -24,8 +24,10 @@ function useUnreadCount() {
  * follows; let go on a tab to go there (press-drag-release, as iOS 26). Scrolling down minimises the pill.
  */
 export function TabBar() {
-  const { tab, route } = useRoute()
+  const { tab, route, loc } = useRoute()
   const unread = useUnreadCount()
+  // In a chat the bar steps away and the composer takes the whole row, as Messages keeps one floating layer
+  const inThread = /^\/messages\/[^/]+/.test(loc.path)
   const minimised = useScrolledDown()
   const nav = useRef(null)
   const fill = useRef(null)
@@ -91,6 +93,8 @@ export function TabBar() {
   }
 
   return (
+    <>
+    <span className="tabbar-shade" data-min={(minimised && pressAt == null) || undefined} data-away={inThread || undefined} aria-hidden="true" />
     <nav
       ref={nav}
       className="tabbar glass"
@@ -100,6 +104,8 @@ export function TabBar() {
       data-liquid-strength="14"
       data-liquid-frost="3"
       data-min={minimised || undefined}
+      data-away={inThread || undefined}
+      inert={inThread || undefined}
       data-pressing={pressAt != null || undefined}
       data-dragging={dragging || undefined}
       data-ready={ready || undefined}
@@ -136,6 +142,7 @@ export function TabBar() {
         )
       })}
     </nav>
+    </>
   )
 }
 
@@ -143,11 +150,11 @@ export function TabBar() {
 export function Sidebar() {
   const { tab, route } = useRoute()
   const unread = useUnreadCount()
-  const current = route.nav || (route.root ? tab : null)
+  const current = route.nav || tab // a pushed screen keeps its section selected, as a Mac sidebar does
   return (
     <nav className="sidebar glass" aria-label="Main">
       <span className="sidebar-logo">
-        <img src={assetPath('brand/logo-horizontal.png')} alt="Axcel One" width="134" height="28" />
+        <img src={assetPath('brand/logo-268.png')} srcSet={`${assetPath('brand/logo-268.png')} 2x, ${assetPath('brand/logo-402.png')} 3x`} alt="Axcel One" width="134" height="28" loading="lazy" decoding="async" />{/* lazy: the sidebar is hidden on phones, so they never fetch it */}
       </span>
       {SIDEBAR_GROUPS.map((group, gi) => (
         <ul key={gi} className="sidebar-group" role="list">

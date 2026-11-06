@@ -1,17 +1,14 @@
-// One conversation. Every state answers: what just happened, can I take it back, what do I do next.
-// Sending -> Sent -> Seen; a failed send keeps the text and says "Not sent. Tap to try again";
-// offline messages wait in an outbox and go quietly once back online; blocking asks once, as Messages does;
-// reporting is two taps from any message.
-// Demo: type a message containing "fail" to see a failed send; ?state=offline queues it, and Try again sends it.
 import { useEffect, useRef, useState } from 'react'
 import { Screen, useDemo, markThreadRead, navigate, SAVED_AT } from '../../app'
 import {
-  Avatar, Button, IconButton, Icon, Sheet, ActionSheet, ConfirmSheet, ChoiceList, TextArea, Num, Notice,
+  Avatar, Button, IconButton, Icon, Sheet, ActionSheet, ConfirmSheet, Num, Notice,
   LoadingState, ErrorState, useToast,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
+import '../../data/messageHistory.js' // the threads' earlier messages
 import { messageAt, separatorLabel, isStudent } from './messageTime.js'
 import { formatTime } from '../../lib/time.js'
+import { useBlocked, setBlockedPerson } from './blockedStore.js'
 import './messages.css'
 
 const REACTIONS = [
@@ -19,6 +16,7 @@ const REACTIONS = [
   { e: '😮', name: 'Surprised' }, { e: '❓', name: 'Question' }, { e: '✅', name: 'Done' },
 ]
 const MONITOR = 'The school can read every message in Axcel One. Messages cannot be deleted.'
+const DEMO_NOTE = 'In this demo, messages are not sent.'
 
 function threadFor(id) {
   const t = threads.find((x) => x.id === id)
@@ -86,52 +84,14 @@ function Bubble({ item, thread, onOpen, onRetry, reactions }) {
   )
 }
 
-function ReportSheet({ open, onClose, who, onBlock }) {
-  const [step, setStep] = useState('why')
-  const [why, setWhy] = useState(null)
-  const [note, setNote] = useState('')
-  const done = step === 'done'
-  const close = () => { setStep('why'); setWhy(null); setNote(''); onClose() }
+function ReportSheet({ open, onClose }) {
   return (
-    <Sheet
-      open={open}
-      onClose={close}
-      title={done ? 'Report sent' : 'Report'}
-      detents={['large']}
-      closeLabel={done ? 'Close' : 'Cancel'}
-      dirty={!done && (Boolean(why) || note.length > 0)}
-      discardLabel="Discard report"
-      trailing={!done && step === 'why' && why ? <Button variant="plain" size="compact" onClick={() => setStep('note')}>Next</Button> : null}
-    >
-      {step === 'why' && (
-        <ChoiceList
-          legend="What happened?"
-          value={why}
-          onChange={setWhy}
-          options={[
-            { value: 'unkind', label: 'It is unkind or bullying' },
-            { value: 'unsafe', label: 'It makes me feel unsafe' },
-            { value: 'inappropriate', label: 'It is not appropriate' },
-            { value: 'other', label: 'Something else' },
-          ]}
-        />
-      )}
-      {step === 'note' && (
-        <div className="report-note">
-          <TextArea label="Anything else to add? (optional)" hint="The safeguarding team reads this with the message." value={note} onChange={(e) => setNote(e.target.value)} />
-          <p className="t-soft">Your report goes to the Secondary safeguarding team. {who} is not told who reported.</p>
-          <Button variant="primary" full onClick={() => setStep('done')}>Send report to the safeguarding team</Button>
-        </div>
-      )}
-      {done && (
-        <div className="report-done">
-          <Icon name="check" size={32} className="report-done-icon" />
-          <h3 className="t-title-m">Thanks. Your report is with the safeguarding team.</h3>
-          <p className="t-soft">They will look at it today and may talk to you. If you feel unsafe right now, tell a teacher.</p>
-          {onBlock && <Button variant="secondary" full icon="block" onClick={() => { close(); onBlock() }}>Block {who}</Button>}
-          <Button variant="plain" full onClick={close}>Keep chatting</Button>
-        </div>
-      )}
+    <Sheet open={open} onClose={onClose} title="Report" detents={['large']}>
+      <div className="report-note">
+        <p className="t-title-s">Tell a trusted teacher in person.</p>
+        <p className="t-soft t-footnote">Demo only: this report is not sent.</p>
+        <Button variant="primary" full onClick={onClose}>Done</Button>
+      </div>
     </Sheet>
   )
 }
@@ -149,7 +109,8 @@ export default function Thread({ params }) {
   const [shield, setShield] = useState(false)
   const [report, setReport] = useState(false)
   const [blockAsk, setBlockAsk] = useState(false)
-  const [blocked, setBlocked] = useState(false)
+  const blockedPeople = useBlocked()
+  const blocked = blockedPeople.some((person) => person.id === params.id)
   const [mutedUntil, setMutedUntil] = useState(null)
   const endRef = useRef(null)
   const [unreadFrom] = useState(() => (thread?.unread ? thread.messages[thread.messages.length - thread.unread]?.id : null))
@@ -166,14 +127,10 @@ export default function Thread({ params }) {
   const items = layout(thread, extra, now, unreadFrom)
 
   const send = (text, id = `x${Date.now()}`) => {
-    const m = { id, from: 'me', text, at: Date.now() > now ? now : now, status: offline ? 'queued' : 'sending', replyTo: reply }
+    const m = { id, from: 'me', text, at: now, replyTo: reply }
     setExtra((x) => [...x.filter((y) => y.id !== id), m])
     setDraft('')
     setReply(null)
-    if (offline) return
-    setTimeout(() => {
-      setExtra((x) => x.map((y) => (y.id === id ? { ...y, status: /fail/i.test(text) ? 'failed' : undefined, justSent: true } : y)))
-    }, 900)
   }
 
   const react = (m, emoji) => {
@@ -186,15 +143,8 @@ export default function Thread({ params }) {
     setActionMsg(null)
   }
 
-  const block = () => setBlocked(true)
-
-  // Back online, the outbox goes on its own and quietly: Waiting to send -> Sending -> Delivered, with no toast
-  const flushOutbox = () => {
-    setExtra((x) => x.map((y) => (y.status === 'queued' ? { ...y, status: 'sending', flushing: true } : y)))
-    setTimeout(() => {
-      setExtra((x) => x.map((y) => (y.flushing ? { ...y, status: /fail/i.test(y.text) ? 'failed' : undefined, flushing: false, justSent: true } : y)))
-    }, 900)
-  }
+  const block = () => { setBlockedPerson({ id: thread.id, name: thread.title }, true); setBlockAsk(false); toast.show({ message: `${thread.title} is blocked in this demo.` }) }
+  const unblock = () => { setBlockedPerson({ id: thread.id, name: thread.title }, false); toast.show({ message: `${thread.title} is unblocked.` }) }
 
   // The bar has room for one short line: the role for a teacher, the size for a group
   const sub = student ? 'Classmate' : thread.kind === 'class' ? thread.subtitle.split(', ').slice(1).join(', ').replace(/ and \d+ teachers$/, '') : thread.subtitle.split(', ')[0]
@@ -217,7 +167,7 @@ export default function Thread({ params }) {
     body = (
       <div className="thread-log" role="log" aria-label={`Messages with ${thread.title}`}>
         <button type="button" className="thread-caption" aria-haspopup="dialog" onClick={() => setShield(true)}>
-          <span><Icon name="shield" size={14} />{MONITOR}</span>
+          <Icon name="shield" size={14} />{MONITOR} {DEMO_NOTE}
         </button>
         {items.length === 0 && <p className="thread-empty">Say hello to {thread.title.split(' ').slice(0, 2).join(' ')}.</p>}
         {items.map((it) => {
@@ -238,13 +188,13 @@ export default function Thread({ params }) {
       className="thread-screen"
       action={
         <>
-          <IconButton icon="ellipsis" label="More for this chat" onClick={() => setMenu(true)} />
+          <IconButton icon="ellipsis" label="More for this chat" onClick={() => setMenu(true)} data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" />
         </>
       }
     >
       {offline && (
-        <Notice tone="offline" action={<Button size="compact" onClick={() => reconnect(flushOutbox)} loading={reconnecting} loadingLabel="Trying again">Try again</Button>}>
-          You are offline. Messages you send will go when you are back online. Saved <Num>{SAVED_AT}</Num>.
+        <Notice tone="offline" action={<Button size="compact" onClick={() => reconnect()} loading={reconnecting} loadingLabel="Trying again">Try again</Button>}>
+          You are offline. Saved <Num>{SAVED_AT}</Num>.
         </Notice>
       )}
       {body}
@@ -252,7 +202,7 @@ export default function Thread({ params }) {
         {readOnly ? (
           <p className="composer-readonly">From {thread.title}. You cannot reply here.</p>
         ) : blocked ? (
-          <p className="composer-readonly">You blocked {thread.title}. <button type="button" className="text-link" onClick={() => setBlocked(false)}>Unblock</button></p>
+          <p className="composer-readonly">You blocked {thread.title}. <button type="button" className="text-link" onClick={unblock}>Unblock</button></p>
         ) : (
           <form className="composer" onSubmit={(e) => { e.preventDefault(); if (draft.trim()) send(draft.trim()) }}>
             {reply && (
@@ -262,7 +212,7 @@ export default function Thread({ params }) {
               </p>
             )}
             <div className="composer-row glass" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" data-liquid-frost="4">
-              <label className="vh" htmlFor="composer-field">Message {thread.title}</label>
+              <label className="vh" htmlFor="composer-field">Message {thread.title}. Demo only: messages are not sent.</label>
               <textarea
                 id="composer-field"
                 className="composer-field"
@@ -318,17 +268,18 @@ export default function Thread({ params }) {
         onClose={() => setMenu(false)}
         title={thread.title}
         actions={[
-          ...(student && !blocked ? [{ label: `Block ${thread.title}`, destructive: true, onSelect: () => setBlockAsk(true) }] : []),
+          ...(student && !blocked ? [{ label: `Block ${thread.title}`, destructive: true, onSelect: () => { setMenu(false); setBlockAsk(true) } }] : []),
           mutedUntil
-            ? { label: 'Unmute', onSelect: () => { setMutedUntil(null); toast.show({ message: `${thread.title} is unmuted.` }) } }
+            ? { label: 'Unmute', onSelect: () => { setMenu(false); setMutedUntil(null); toast.show({ message: `${thread.title} is unmuted.` }) } }
             : {
               label: 'Mute for 1 hour',
               onSelect: () => {
+                setMenu(false)
                 setMutedUntil(now + 3600000)
                 toast.show({ message: `${thread.title} is muted until ${formatTime(now + 3600000)}.`, actionLabel: 'Undo', onAction: () => setMutedUntil(null) })
               },
             },
-          { label: 'Report a problem with this chat', onSelect: () => setReport(true) },
+          { label: 'Report a problem with this chat', onSelect: () => { setMenu(false); setReport(true) } },
         ]}
       />
 
@@ -336,7 +287,7 @@ export default function Thread({ params }) {
         open={blockAsk}
         onClose={() => setBlockAsk(false)}
         title={`Block ${thread.title}?`}
-        message="They will not be able to message you. You can unblock them in Settings."
+        message="This demo does not block messages on a server. You can unblock them in Settings."
         confirmLabel={`Block ${thread.title}`}
         cancelLabel="Keep chatting"
         onConfirm={block}
@@ -346,12 +297,11 @@ export default function Thread({ params }) {
         <div className="record-sheet">
           <p className="t-title-s">{MONITOR}</p>
           <p className="t-soft">{thread.kind === 'class' ? 'Everyone in your class and your class teachers can see this group.' : `Only you and ${thread.title} are in this chat.`}</p>
-          <p className="t-soft">If a message worries you, tap it and choose Report. The safeguarding team will help.</p>
-          <Button variant="secondary" full onClick={() => { setShield(false); navigate('/messages/kavitha') }}>Talk to your class teacher</Button>
+          <p className="t-title-s">If a message worries you, tell a trusted teacher in person.</p>
         </div>
       </Sheet>
 
-      <ReportSheet open={report} onClose={() => setReport(false)} who={thread.title} onBlock={student && !blocked ? () => setBlockAsk(true) : null} />
+      <ReportSheet open={report} onClose={() => setReport(false)} />
     </Screen>
   )
 }

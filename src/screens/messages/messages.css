@@ -1,19 +1,28 @@
 /* Messages inbox and thread. */
 
 /* Inbox rows (Messages): the name, then the time and a small chevron; unread is a dot in the leading margin */
-.msg-row { padding-block: 2px; }
+.msg-row { padding-block: 0; }
+.msg-row .row-hit { padding-block: 8px; } /* 79: Messages' row, two preview lines and no air to spare */
 .msg-row-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
-.msg-row-name { flex: 1; min-width: 0; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 400; white-space: nowrap; }
+.msg-row-name { flex: 1; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-footnote); font-weight: 400; white-space: nowrap; }
 .msg-row-chev { flex: none; align-self: center; color: var(--ink-tertiary); margin-right: -4px; }
+.msg-list .msg-row { padding-left: 26px; } /* room for the unread dot, clear of the avatar, as Messages leaves it */
+.msg-list .msg-row::after { left: calc(26px + var(--row-inset, 0px)); }
 .msg-row.is-unread::before {
-  content: ''; position: absolute; z-index: 1; left: 5px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
+  /* Centred on the row, where the avatar now sits */
+  content: ''; position: absolute; z-index: 1; left: 9px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
   border-radius: 50%; background: var(--brand); pointer-events: none;
 }
 .msg-row.is-unread .row-meta { color: var(--ink); }
+.msg-row.is-unread .msg-row-name { font-weight: var(--fw-strong); }
+.msg-list .msg-row .row-meta { min-height: calc(2 * var(--lh-subhead)); } /* two preview lines always, as Messages: one row height */
 .msg-row .row-body { min-width: 0; flex: 1; }
+.msg-list .msg-row .row-lead { align-self: center; }
 
 /* Compose sheet */
+.messages-inbox-screen .seg-track { background: var(--inbox-segment-bg); }
+
 .compose { display: flex; flex-direction: column; gap: var(--space-4); padding-bottom: var(--space-4); }
 .compose-note { display: flex; gap: var(--space-2); color: var(--ink-soft); }
 .compose-note .icon { flex: none; margin-top: 2px; }
@@ -32,13 +41,14 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 19rem; min-height: 44px; margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
-  background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; cursor: pointer;
+  align-self: stretch; width: 100%; min-height: 44px; text-wrap: wrap; margin: calc(-1 * var(--space-2)) 0 0; padding: var(--space-1) 0; border: 0; border-radius: 12px;
+  background: none; color: var(--ink-soft); font: inherit; font-size: 0.75rem; line-height: 1rem; letter-spacing: -0.01em; text-align: center; cursor: pointer;
 }
-.thread-caption .icon { display: inline; margin-right: 4px; vertical-align: -2px; }
+.thread-caption .icon { display: inline-block; vertical-align: -2px; margin-right: 4px; } /* centred, as Messages centres its notices; the shield leads the first line */
 .thread-caption:active { background: var(--fill); }
 /* "Today 10.12": the day in semibold, the time regular, centred */
 .thread-sep { align-self: center; margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.thread-caption + .thread-sep { margin-top: var(--space-2); }
 .thread-sep strong { font-weight: var(--fw-strong); }
 .thread-new { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; color: var(--brand); font-size: var(--fs-footnote); font-weight: var(--fw-strong); }
 .thread-new::before, .thread-new::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.5; }
@@ -54,22 +64,26 @@
 .msg-name { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); margin: 0 0 -2px 16px; }
 .msg-role { font-weight: 400; }
 .msg-bubble {
-  --bubble: #E9E9EB; /* opaque, so the tail can overlap it without a seam */
+  --bubble: #E4E4E9; /* opaque, so the tail can overlap it without a seam; a step darker than Apple's on-white grey, to hold on the grey page */
   position: relative; isolation: isolate; display: block; padding: 7px 12px; color: var(--ink);
   /* A 36px bubble inside a 44px target: the transparent border is part of the button, not of what it draws */
   border: 4px solid transparent; border-radius: 22px; background: var(--bubble); background-clip: padding-box;
   font: inherit; line-height: 1.375rem; text-align: left; cursor: pointer; overflow-wrap: anywhere; min-height: 44px; user-select: text;
 }
 .msg--mine .msg-bubble { --bubble: var(--brand-solid); color: var(--on-brand); }
-[data-theme='dark'] .msg:not(.msg--mine) .msg-bubble { --bubble: #2C3036; }
+[data-theme='dark'] .msg:not(.msg--mine) .msg-bubble { --bubble: #2C2C2E; } /* neutral, as Messages: no slate cast */
 /* Tight inside a group, as Messages stacks a run of bubbles */
 .msg + .msg:not(.is-first) { margin-top: -10px; }
-/* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
-.msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 20px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -7px; width: 20px; background: var(--bubble); border-bottom-right-radius: 16px 14px; }
-.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -9px; width: 9px; background: var(--paper); border-bottom-right-radius: 10px; }
-.msg--mine.is-last .msg-bubble::before { right: -7px; width: 20px; background: var(--bubble); border-bottom-left-radius: 16px 14px; }
-.msg--mine.is-last .msg-bubble::after { right: -9px; width: 9px; background: var(--paper); border-bottom-left-radius: 10px; }
+/* The last bubble of a group gets Messages' tail */
+.msg.is-last .msg-bubble::before {
+  /* The tail (Messages): one smooth curl out of the bubble's bottom corner, drawn as a shape, mirrored for sent */
+  content: ''; position: absolute; z-index: -1; bottom: 0; width: 11px; height: 15px; pointer-events: none; background: var(--bubble);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+}
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -3.5px; }
+.msg--mine.is-last .msg-bubble::before { right: -3.5px; transform: scaleX(-1); }
+.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 11px; }
+.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 11px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
 .msg.is-failed .msg-bubble { box-shadow: inset 0 0 0 2px var(--danger); }
@@ -78,10 +92,10 @@
 .msg-meta { display: inline-flex; align-items: center; gap: var(--space-1); margin: -1px 12px 0; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; }
 .msg-retry { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 44px; margin-top: var(--space-1); padding: 0 var(--space-2); border: 0; background: none; color: var(--danger); font: inherit; font-weight: 600; cursor: pointer; }
 /* A reaction sits on the bubble's top corner, as a Messages tapback: the leading corner on yours, the trailing on theirs */
-.msg-reactions { position: absolute; z-index: 1; top: -10px; display: flex; gap: var(--space-1); }
-.msg--mine .msg-reactions { left: -8px; }
-.msg:not(.msg--mine) .msg-reactions { right: -8px; }
-.msg.has-react { margin-top: 14px !important; }
+.msg-reactions { position: absolute; z-index: 1; top: -15px; display: flex; gap: var(--space-1); }
+.msg--mine .msg-reactions { left: -12px; }
+.msg:not(.msg--mine) .msg-reactions { right: -12px; }
+.msg.has-react { margin-top: 20px !important; }
 .msg-chip { display: inline-flex; align-items: center; gap: 2px; min-height: 26px; padding: 2px 8px; border-radius: 13px; background: var(--card); box-shadow: 0 0 0 2px var(--paper), 0 1px 3px rgb(0 0 0 / 0.12); font-size: var(--fs-subhead); }
 
 /* Skeleton bubbles */
@@ -91,15 +105,22 @@
 
 /* Composer (iOS 26): a floating glass capsule above the tab bar, the send button a blue circle inside it.
    The thread scrolls under it; nothing paints a band behind it. */
-.composer-wrap { position: sticky; bottom: calc(var(--tabbar-space) + var(--space-2)); padding: var(--space-2) 0 0; z-index: 2; }
+.composer-wrap { position: sticky; bottom: calc(var(--tabbar-space) + var(--space-2)); padding: var(--space-2) 0 0; z-index: var(--z-tabbar); } /* above the bottom scroll edge */
 /* A short chat still keeps the composer at the bottom, where Messages pins it: the screen fills the view above the tab bar */
 .thread-screen { display: flex; flex-direction: column; min-height: calc(100dvh - var(--tabbar-space) - var(--space-2)); margin-bottom: calc(var(--space-2) - var(--space-6)); }
 .thread-screen > .screen-body { flex: 1; display: flex; flex-direction: column; }
 .thread-screen .composer-wrap { margin-top: auto; }
+/* Phone: the tab bar steps away in a conversation, so the composer rests on the bottom edge, full width */
+@media (max-width: 1023.98px) {
+  .thread-screen .composer-wrap { bottom: max(var(--safe-bottom), var(--space-2)); }
+  .thread-screen { min-height: calc(100dvh - var(--space-2)); }
+  body:has(.thread-screen)::after { height: calc(max(var(--safe-bottom), var(--space-2)) + 44px + var(--space-4)); }
+}
 @media (min-width: 1024px) {
   /* No tab bar on a laptop: the composer rests near the bottom, and the chat keeps a readable width */
   .thread-screen { min-height: 100dvh; margin-bottom: calc(-1 * (var(--tabbar-space) + var(--space-6))); }
-  .thread-screen > .screen-body { width: 100%; max-width: 46rem; margin-inline: auto; }
+  .thread-screen > .screen-body { width: 100%; max-width: 40rem; margin-inline: auto; }
+  .thread-screen .msg-col { max-width: min(80%, 28rem); } /* a long line stays a comfortable measure on a wide screen */
   .thread-screen .composer-wrap { bottom: 0; padding-bottom: var(--space-4); }
 }
 .composer-row { display: flex; align-items: flex-end; gap: var(--space-2); min-height: 44px; padding: 0 0 0 16px; border-radius: 22px; }
@@ -120,7 +141,7 @@
 @keyframes send-ready { from { transform: scale(calc(1 - 0.2 * var(--motion))); } }
 .composer-send:not([aria-disabled]):active { transform: scale(calc(1 - 0.1 * var(--motion))); transition-duration: 90ms; }
 .composer-reply { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin: 0 0 var(--space-2); padding-left: var(--space-3); border-radius: 10px; background: var(--subtle); color: var(--ink-soft); }
-.composer-readonly { margin: 0; color: var(--ink-soft); text-align: center; padding: var(--space-2) 0; }
+.composer-readonly { margin: 0; color: var(--ink-soft); text-align: center; padding: var(--space-2) 0; font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* Message actions sheet */
 .msg-actions { display: flex; flex-direction: column; gap: var(--space-4); padding-bottom: var(--space-2); }
@@ -133,7 +154,7 @@
   position: relative; isolation: isolate; max-width: 85%; padding: 7px 12px 8px; border-radius: 18px;
   background: var(--bubble); color: var(--ink); line-height: 1.375rem; overflow-wrap: anywhere;
 }
-[data-theme='dark'] .msg-actions-bubble { --bubble: #3A3A3C; --cut: var(--raised); } /* the dark sheet is #2A2E33, so the thread's #2C3036 would vanish */
+[data-theme='dark'] .msg-actions-bubble { --bubble: #3A3A3C; --cut: var(--raised); } /* the dark sheet is #2C2C2F, so the thread's #2C2C2E would vanish */
 .msg-actions-msg.is-mine .msg-actions-bubble { --bubble: var(--brand-solid); color: var(--on-brand); }
 .msg-actions-bubble::before, .msg-actions-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 20px; pointer-events: none; }
 .msg-actions-bubble::before { left: -7px; width: 20px; background: var(--bubble); border-bottom-right-radius: 16px 14px; }
@@ -155,3 +176,61 @@
 .report-done-icon { color: var(--good); }
 .thread-screen .bar-title { min-width: 0; overflow: hidden; justify-self: stretch; text-align: left; }
 .thread-screen .bar { grid-template-columns: auto minmax(0, 1fr) auto; }
+
+/* Messages on Mac: each column scrolls without moving the other. */
+.messages-detail-pane { display: none; }
+@media (max-width: 1023px) {
+  .messages-split.has-thread > .messages-list-pane { display: none; }
+  .messages-split.has-thread > .messages-detail-pane { display: block; }
+}
+@media (min-width: 1024px) {
+  .messages-split { display: grid; grid-template-columns: 26.5rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
+  .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
+  .messages-list-pane { border-inline-end: 1px solid var(--divider); }
+  .messages-list-pane .screen { --pad-l: var(--space-9); --pad-r: var(--space-4); } /* the title on every laptop page's 56px edge; a phone-wide list beside it */
+  .messages-list-pane .bar-lead { display: none; }
+  .messages-list-pane .messages-inbox-heading { min-height: 44px; margin-bottom: var(--space-3); margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 14.5px); } /* the title sits where every other laptop title sits; search 16 under it */
+  /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */
+  .messages-list-pane .messages-inbox-heading .icon-btn { background: var(--glass-solid); box-shadow: var(--glass-rim), 0 1px 3px rgb(0 0 0 / 0.06); color: var(--ink); } /* the same glass circle as the thread's … */
+  .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }
+  .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .messages-list-pane .large-title--pushed { display: block; }
+  .messages-list-pane .msg-row.is-selected { background: none; }
+  .messages-list-pane .msg-row.is-selected::before { content: ''; position: absolute; z-index: 0; inset: 4px 8px; width: auto; height: auto; margin: 0; border-radius: 10px; background: var(--fill-strong); } /* inset, as a Mac list selects: a quiet plate, so the sent bubbles stay the one blue */
+  .messages-list-pane .msg-row.is-selected .row-hit { position: relative; z-index: 1; }
+  .messages-list-pane .msg-row.is-selected .avatar { background: var(--card); }
+  .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }
+  .messages-detail-pane { display: block; }
+  .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }
+  .messages-detail-pane .thread-screen { min-height: 100%; margin-bottom: 0; --pad-l: max(var(--space-7), calc((100% - 40rem) / 2)); --pad-r: max(var(--space-7), calc((100% - 40rem) / 2)); }
+  /* The header, the bubbles and the composer share one column; the header sits on the list title's line */
+  .messages-detail-pane .thread-screen > .screen-body { max-width: none; }
+  .messages-detail-pane .thread-screen > .bar { top: 0; margin-top: calc(74.5px - (var(--thread-header-h) / 2 + var(--safe-top))); }
+  .messages-detail-pane .thread-screen .bar-back { display: none; }
+  .messages-detail-pane .thread-screen > .bar { column-gap: 0; } /* no back button: the avatar starts on the bubbles' edge */
+}
+
+.messages-inbox-heading { display: flex; align-items: center; justify-content: space-between; min-height: 3.5rem; margin-bottom: var(--space-2); gap: var(--space-2); }
+
+/* Light: a chat sits on white, as Messages does, so received bubbles (#E9E9EB) read clearly */
+:root:not([data-theme='dark']) .thread-screen { --paper: var(--card); background: var(--paper); }
+:root:not([data-theme='dark']) .thread-screen .msg-bubble { --bubble: #E9E9EB; }
+:root:not([data-theme='dark']) .thread-screen .msg--mine .msg-bubble { --bubble: var(--brand-solid); }
+:root:not([data-theme='dark']) body:has(.thread-screen)::after { background: color-mix(in srgb, var(--card) 94%, transparent); }
+:root:not([data-theme='dark']) .thread-screen .msg-chip { background: #E9E9EB; }
+/* On the white page the floating glass needs its own edge: a hairline and a soft lift */
+:root:not([data-theme='dark']) .thread-screen :is(.composer-row[data-lg], .bar .icon-btn[data-lg]) { box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.12), 0 2px 10px rgb(20 20 40 / 0.08); } /* a tapback in the received grey, ringed in the page's white */
+
+
+/* The inbox is Messages' own surface, not a Settings group: a flat list on the page, rows to the edge, separators
+   inset to the text. In light mode the page is white, as Messages' is. */
+.msg-list { background: none; box-shadow: none; border-radius: 0; overflow: visible; margin-inline: calc(-1 * var(--pad-l)) calc(-1 * var(--pad-r)); }
+.msg-list .msg-row { padding-right: var(--pad-r); }
+:root:not([data-theme='dark']) .route:has(.messages-inbox-screen) { --paper: var(--card); background: var(--card); }
+:root:not([data-theme='dark']) body:has(.messages-inbox-screen)::after { background: color-mix(in srgb, var(--card) 94%, transparent); }
+@media (min-width: 1024px) {
+  /* Laptop: the avatars line up under the title's 56px edge; the unread dot sits in the margin before them */
+  .messages-list-pane .msg-list { margin-left: -26px; margin-right: calc(-1 * var(--pad-r)); }
+}
+
+.msg-list .row--zoom { background-color: var(--paper); } /* the zoom snapshot's fill is the page here, never a raised slab */

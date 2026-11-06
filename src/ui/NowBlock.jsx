@@ -19,7 +19,7 @@ function shortTitle(item) {
 function meta(item) {
   if (!item) return ''
   if (item.kind === 'event') return item.place === 'online' ? 'Online' : 'At school'
-  return `${item.teacher}, ${item.place}`
+  return `${item.teacher}\u00a0· ${item.place}`
 }
 
 // Today's one first-paint moment, once per session: the lesson bar fills to the minute (the number is never faked)
@@ -87,10 +87,10 @@ function NextLine({ model, offline, onJoin, joiningId }) {
   return (
     <p className="now-next">
       <span className="now-next-label">{model.state === 'lesson' || model.state === 'break' ? 'Next' : 'Then'}</span>
-      <span className="now-next-title">{shortTitle(next)}{model.item?.subjectId === next.subjectId && model.item.endsAt === next.startsAt ? ' again' : ''}</span>
+      <span className="now-next-title">{shortTitle(next)}</span>
       {open ? (
         <Button variant="on-now" size="compact" loading={joiningId === next.id} loadingLabel="Joining" aria-label={`Join ${next.title}`} onClick={() => onJoin?.(next)} className="now-next-join">Join</Button>
-      ) : model.state === 'lesson' && next.startsAt === model.item.endsAt ? null : (
+      ) : (
         <Time value={next.start} className="now-next-time" />
       )}
     </p>
@@ -183,7 +183,7 @@ function useChangeover(key) {
  * forcedEmpty: the model came from nowModel(now, { forceEmpty: true }).
  * showNext: end the block with the next lesson (a break always does).
  */
-export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false }) {
+export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false, onDetails }) {
   const nameId = useId()
   const H = `h${headingLevel}`
   const content = useChangeover(error ? 'error' : `${model?.state}|${model?.item?.id ?? ''}`)
@@ -217,21 +217,28 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
     return (
       <section className="now now--rail" aria-labelledby={nameId} data-subject={item.subjectId}>
         <span id={nameId} className="vh">{name}</span>
+        {/* One band: the lesson on the left, its countdown on the right (the rail's filled stop already says now) */}
         <div className="now-rail-top">
-          <Tag tone="inverse">Now</Tag>
+          <div className="now-rail-name">
+            <p className="now-title">{shortTitle(item)}</p>
+            <p className="now-meta">{meta(item)}</p>
+          </div>
           <Countdown minutes={model.minutes} mode="left" />
         </div>
-        <p className="now-title t-title-m">{shortTitle(item)}</p>
-        <p className="now-meta">{meta(item)}</p>
         <Elapsed key={item.id} item={item} minutesLeft={model.minutes} progress={model.progress} />
         <JoinButton item={item} join={model.join} offline={offline} joining={joining} onJoin={onJoin} />
+        {onDetails && (
+          <button type="button" className="now-next now-details" onClick={onDetails} aria-haspopup="dialog" aria-label={`Show ${item.title} details`}>
+            <span className="now-next-title">Details</span><Icon name="chevron-right" size={18} />
+          </button>
+        )}
       </section>
     )
   }
 
   if (state === 'noschool' || state === 'after') {
     const nd = model.nextDay
-    const skipped = state === 'noschool' && nd?.skipped?.length ? nd.skipped.filter((d) => d.iso !== model.iso) : []
+    const skipped = state === 'noschool' && nd?.skipped?.length ? nd.skipped.filter((d) => d.iso !== model.iso && d.reason !== model.reason) : [] // the break already named above isn't repeated day by day
     return (
       <section className="now now--quiet" aria-labelledby={nameId}>
         <span id={nameId} className="vh">{name}</span>

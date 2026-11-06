@@ -2,7 +2,13 @@
 // Phone: one column. Laptop: the strip across the top, the day on the left (the block, Later today), the shelves on the right.
 import { useEffect, useState } from 'react'
 import { Screen, Link, useDemo, useJoin, useTabRetap, announce, schoolNow, SAVED_AT } from '../../app'
-import { NowBlock, NowBlockSkeleton, Time, Num, Avatar, RollNum, LoadingState, OfflineNotice, haptic } from '../../ui'
+import { NowBlock, NowBlockSkeleton } from '../../ui/NowBlock.jsx'
+import { Time, Num } from '../../ui/Num.jsx'
+import { Avatar } from '../../ui/Avatar.jsx'
+import { RollNum } from '../../ui/Motion.jsx'
+import { LoadingState } from '../../ui/States.jsx'
+import { OfflineNotice } from '../../ui/Notice.jsx'
+import { haptic } from '../../ui/haptic.js'
 import { nowModel } from '../../lib/schedule.js'
 import { formatLongDate, formatTime } from '../../lib/time.js'
 import { student } from '../../data/student.js'
@@ -91,7 +97,7 @@ function AccountButton() {
 }
 
 export default function Today() {
-  const { state, offline, now, today, retry, retrying } = useDemo()
+  const { state, offline, now, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const { joiningId, join } = useJoin()
   const [refreshedAt, setRefreshedAt] = useState(null)
 
@@ -126,7 +132,7 @@ export default function Today() {
   } else {
     day = (
       <>
-        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} className="today-notice" />}
+        {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} className="today-notice" onRetry={reconnect} retrying={reconnecting} />}
         <NowBlock model={model} offline={offline} onJoin={join} joiningId={joiningId} showNext />
         <LessonShelf model={model} nowMs={now} offline={offline} />
       </>
@@ -136,8 +142,9 @@ export default function Today() {
   return (
     <Screen title="Today" subtitle={formatLongDate(now)} className="screen--today" action={<AccountButton />}>
       <p className="today-greeting">{greeting(model, loading)}</p>
-      {model && !error && model.state !== 'noschool' && <DayStrip model={model} />}
       <div className="today-cols">
+        {/* The strip belongs to the day: on a laptop it sits over the day's column, and the side column starts level with the block */}
+        {model && !error && model.state !== 'noschool' && <div className="today-strip"><DayStrip model={model} /></div>}
         <div className="today-day">{day}</div>
         {!loading && <div className="today-side"><Shelves nowMs={now} todayIso={today} /></div>}
       </div>

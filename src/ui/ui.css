@@ -499,6 +499,7 @@
 .now-count-stack > :last-child { color: var(--on-now-soft); font-weight: 500; }
 .now-elapsed { margin: var(--space-4) 0 var(--space-3); }
 .now-bar { position: relative; display: block; height: 5px; border-radius: var(--radius-capsule); background: var(--now-track); overflow: hidden; }
+.now-bar-tick { position: absolute; top: 0; bottom: 0; left: calc(var(--at) * 100%); width: 3px; margin-left: -1.5px; background: var(--now-bg); } /* cut through track and fill alike */
 .now-elapsed-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--on-now-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .now-bar-fill {
   position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: inherit; background: var(--now-fill);

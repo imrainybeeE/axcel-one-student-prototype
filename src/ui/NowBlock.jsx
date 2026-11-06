@@ -19,7 +19,7 @@ function shortTitle(item) {
 function meta(item) {
   if (!item) return ''
   if (item.kind === 'event') return item.place === 'online' ? 'Online' : 'At school'
-  return `${item.teacher}\u00a0· ${item.place}`
+  return `${item.teacher}\u00a0· ${item.place}${item.double ? '\u00a0· Double' : ''}`
 }
 
 // Today's one first-paint moment, once per session: the lesson bar fills to the minute (the number is never faked)
@@ -40,8 +40,9 @@ function useIntro() {
  * last line sits on the numeral's baseline, as a timer's unit does, so nothing hangs on a line of its own.
  */
 function Countdown({ minutes, mode }) {
-  const h = Math.floor(minutes / 60)
-  const m = minutes % 60
+  // Time left in a lesson stays in minutes (a double runs to 90), so the number never stacks into hours
+  const h = mode === 'left' && minutes < 100 ? 0 : Math.floor(minutes / 60)
+  const m = minutes - h * 60
   const big = (n) => <Num wide className="now-count-n"><RollNum value={n} /></Num>
   const unit = (u) => <span className="now-count-unit">{u}</span>
   const last = (u) => (mode === 'left' ? <span className="now-count-stack"><span>{u}</span><span>left</span></span> : unit(u))
@@ -73,6 +74,8 @@ function Elapsed({ item, minutesLeft, progress }) {
         style={{ '--p': p }}
       >
         <span className="now-bar-fill" />
+        {/* A double period: a notch where one period hands over to the next, so the bell between them still shows */}
+        {item.periods?.slice(1).map((pd) => <span key={pd.start} className="now-bar-tick" style={{ '--at': (pd.startMin - item.startMin) / total }} />)}
       </span>
       <span className="now-elapsed-ends" aria-hidden="true"><Time value={item.start} /><Time value={item.end} /></span>
     </div>

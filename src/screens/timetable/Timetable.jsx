@@ -133,10 +133,15 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
             first={first}
             last={last}
           >
-            <button type="button" className="rail-text tt-open" aria-haspopup="dialog" onClick={() => onOpen(it)}>
-              <span className="rail-title">{it.title}{isNext && <> <span className="tt-next">Next</span></>}</span>
+            {/* One card per lesson, as tall as it is long, washed in its subject's colour. A double period is one card
+                with a quiet line where the bell goes between its periods. */}
+            <button type="button" className="rail-text tt-open tt-card" style={{ '--mins': it.endMin - it.startMin }} aria-haspopup="dialog" onClick={() => onOpen(it)}>
+              <span className="rail-title">{it.title}{it.double && <span className="tt-double">Double</span>}{isNext && <> <span className="tt-next">Next</span></>}</span>
               <span className="rail-meta">{place(it)}</span>
               {status !== 'done' && wait && <span className="rail-meta join-wait"><Icon name="clock" size={20} />{wait}</span>}
+              {it.periods?.slice(1).map((pd) => (
+                <span key={pd.start} className="tt-card-bell" style={{ '--at': (pd.startMin - it.startMin) / (it.endMin - it.startMin) }} aria-hidden="true"><Time value={pd.start} /></span>
+              ))}
             </button>
             {status === 'done' ? <span className="vh">, done</span> : <JoinSmall item={it} nowMs={nowMs} offline={offline} {...joinProps} />}
           </RailItem>
@@ -148,7 +153,9 @@ function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
 
 /** The week: stacked days on a phone, five columns on a laptop. */
 function Week({ days, today, nowMs, onOpen, laptop }) {
-  const starts = [...new Set(days.flatMap((day) => day.lessons.map((item) => item.startMin)))].sort((a, b) => a - b)
+  const starts = [...new Set(days.flatMap((day) => day.lessons.flatMap((item) => (item.periods || [item]).map((pd) => pd.startMin))))].sort((a, b) => a - b)
+  // On a laptop a double period fills the grid rows of both its periods, so every start time still lines up
+  const rows = (it) => `${starts.indexOf(it.startMin) + 2} / span ${Math.max(1, starts.filter((m) => m >= it.startMin && m < it.endMin).length)}`
   return (
     <div className={laptop ? 'tt-week-scroll' : undefined} data-scroll-x={laptop || undefined}>
     <div className={laptop ? 'tt-week tt-week--grid' : 'tt-week'}>
@@ -167,10 +174,11 @@ function Week({ days, today, nowMs, onOpen, laptop }) {
                   key={it.id}
                   data-subject={it.subjectId}
                   className={`tt-week-row${statusOf(it, day.iso, today, nowMs) === 'done' ? ' is-done' : ''}`}
-                  style={laptop ? { gridColumn: column + 1, gridRow: starts.indexOf(it.startMin) + 2 } : undefined}
+                  style={laptop ? { gridColumn: column + 1, gridRow: rows(it) } : undefined}
                   onClick={it.kind === 'event' ? undefined : () => onOpen(it)}
-                  lead={<span className="tt-week-time"><Time value={it.start} /></span>}
+                  lead={<span className="lead-time tt-week-time"><Time value={it.start} /><Time value={it.end} className="lead-time-end" /></span>}
                   title={it.kind === 'event' ? it.title : laptop ? it.short : it.title}
+                  titleExtra={it.double ? <span className="tt-double">Double</span> : null}
                   meta={it.kind === 'event' ? 'School activity' : laptop ? it.teacherShort : place(it)}
                 />
               ))}
@@ -195,6 +203,10 @@ function LessonSheet({ item, onClose, nowMs, offline, joinProps }) {
           </p>
           <p className="tt-sheet-day">{formatLongDate(item.startsAt)}</p>
           <ul className="list" role="list">
+            {item.double && (
+              <Row lead={<Icon name="clock" />} leadKind="icon" title={item.periods.length === 2 ? 'Double period' : `${item.periods.length} periods`}
+                meta={item.periods.map((pd) => `${pd.start} to ${pd.end}`).join(', then ')} />
+            )}
             <Row lead={<Icon name="user" />} leadKind="icon" title={item.teacher} meta="Teacher" />
             <Row lead={<Icon name={item.online ? 'video' : 'pin'} />} leadKind="icon" title={item.online ? 'Online, Google Meet' : (item.room || 'On campus')} meta={item.online ? 'Join from here' : (item.room ? 'Room' : 'Location')} />
           </ul>

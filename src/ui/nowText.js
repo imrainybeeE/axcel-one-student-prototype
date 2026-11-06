@@ -12,7 +12,7 @@ export function backLine(nextDay) {
 /** What a screen reader hears as the block's stable name. Updated quietly each minute, never announced. */
 export function nowName(model) {
   const { state, item } = model
-  if (state === 'lesson') return `${item.title}, ${model.minutes} ${model.minutes === 1 ? 'minute' : 'minutes'} left, ends ${item.end}`
+  if (state === 'lesson') return `${item.title}${item.double ? ', double lesson' : ''}, ${model.minutes} ${model.minutes === 1 ? 'minute' : 'minutes'} left, ends ${item.end}`
   if (state === 'break') return `${item.title}, ${model.minutes} minutes left, until ${item.end}.${model.following ? ` ${model.following.title} is next.` : ''}`
   if (state === 'before') return `First lesson, ${item.title} at ${item.start}, in ${speakDuration(model.minutes)}`
   if (state === 'between') return `Next, ${item.title} at ${item.start}, in ${speakDuration(model.minutes)}`

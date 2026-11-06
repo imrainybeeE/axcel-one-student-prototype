@@ -36,8 +36,28 @@ function toItem(raw, iso, online, index) {
 }
 
 /**
+ * Back-to-back periods of one lesson (a double, or longer) become one item, as a student thinks of them: same
+ * subject, teacher, room, place and join link, with no gap between. It spans all its periods and lists them in
+ * periods ([{ start, end, startMin, endMin, startsAt, endsAt }]); double is true for two or more.
+ * Periods split by a break, or with a different teacher, room or link, stay separate.
+ */
+const sameLesson = (a, b) => a.kind === 'lesson' && b.kind === 'lesson' && a.endMin === b.startMin
+  && a.subjectId === b.subjectId && a.teacher === b.teacher && a.room === b.room && a.online === b.online && a.meet === b.meet
+const periodOf = (i) => ({ start: i.start, end: i.end, startMin: i.startMin, endMin: i.endMin, startsAt: i.startsAt, endsAt: i.endsAt })
+function joinPeriods(items) {
+  const out = []
+  for (const it of items) {
+    const prev = out[out.length - 1]
+    if (prev && sameLesson(prev, it)) {
+      out[out.length - 1] = { ...prev, end: it.end, endMin: it.endMin, endsAt: it.endsAt, periods: [...prev.periods, periodOf(it)], double: true }
+    } else out.push(it.kind === 'lesson' ? { ...it, periods: [periodOf(it)], double: false } : it)
+  }
+  return out
+}
+
+/**
  * One school date: { iso, kind: 'school' | 'weekend' | 'holiday', online, reason, items, lessons }.
- * reason is the holiday's title or null.
+ * reason is the holiday's title or null. A double period is one item (see joinPeriods).
  */
 export function getDay(iso) {
   const dow = dayOfWeek(iso)
@@ -46,7 +66,7 @@ export function getDay(iso) {
   if (dow === 0 || dow === 6) return { iso, dow, kind: 'weekend', online: false, reason: null, items: [], lessons: [] }
   const [y, m, d] = iso.split('-').map(Number)
   const plan = dayPlan(new Date(y, m - 1, d), iso)
-  const items = plan.items.map((raw, i) => toItem(raw, iso, plan.online, i))
+  const items = joinPeriods(plan.items.map((raw, i) => toItem(raw, iso, plan.online, i)))
   return { iso, dow, kind: items.length ? 'school' : 'weekend', online: plan.online, reason: null, items, lessons: items.filter((i) => i.kind !== 'break') }
 }
 

@@ -263,6 +263,7 @@ export default function Timetable() {
     const next = nextSchoolDay(selected)
     body = (
       <EmptyState
+        mood={day.kind !== 'school' ? 'happy' : 'calm'}
         title={day.kind === 'holiday' ? `No school: ${day.reason}.` : `No lessons on ${formatWeekday(isoToMs(selected))}.`}
         action={next?.iso ? <Button variant="secondary" onClick={() => updateQuery({ day: next.iso })}>Show {formatWeekday(isoToMs(next.iso))}</Button> : null}
       >

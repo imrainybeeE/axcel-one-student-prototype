@@ -183,6 +183,33 @@ function useChangeover(key) {
  * forcedEmpty: the model came from nowModel(now, { forceEmpty: true }).
  * showNext: end the block with the next lesson (a break always does).
  */
+// The end of the school day gets one burst per visit to the app, not one on every return to Today
+const cheered = { after: false }
+
+/** Dia in the quiet card's corner; with cheer, a burst of the logo's squares from it once it has settled in. */
+function CheerDia({ mood, cheer }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (!cheer || cheered.after) return
+    const t = setTimeout(() => {
+      cheered.after = true
+      import('./burst.js').then((m) => m.burst(ref.current?.querySelector('.dia')))
+    }, 450)
+    return () => clearTimeout(t)
+  }, [cheer])
+  return <div ref={ref} className="now-dia"><Dia mood={mood} size={64} /></div>
+}
+
+/** The header's wave, small, along the quiet card's foot: the day's over, the page can relax. Decorative. */
+function QuietWaves() {
+  return (
+    <svg className="now-waves" viewBox="0 0 320 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path className="now-waves-fill" d="M40 70C140 66 210 46 262 26 290 15 306 8 330 4V70Z" />
+      <path className="now-waves-line" d="M20 64C126 60 204 38 256 18 286 7 306 1 330 -3" />
+    </svg>
+  )
+}
+
 export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false, onDetails }) {
   const nameId = useId()
   const H = `h${headingLevel}`
@@ -242,8 +269,9 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
     return (
       <section className="now now--quiet" aria-labelledby={nameId}>
         <span id={nameId} className="vh">{name}</span>
-        <Dia mood="calm" size={64} className="now-dia" />
-        <H className="now-title t-title-now">{state === 'after' ? 'School is finished.' : 'No school today'}</H>
+        <QuietWaves />
+        <CheerDia mood={state === 'after' || model.weekend || model.day?.kind === 'holiday' ? 'happy' : 'calm'} cheer={state === 'after'} />
+        <H className="now-title t-title-now">{state === 'after' ? 'School’s out for today.' : 'No school today'}</H>
         {state === 'noschool' && (
           <p className="now-reason">
             {model.reason ? `${model.reason}.` : model.weekend ? 'Enjoy the weekend.' : 'Nothing is on your timetable today.'}

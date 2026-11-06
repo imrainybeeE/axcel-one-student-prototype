@@ -3,7 +3,7 @@ import { Link } from '../app/Link.jsx'
 import { Icon } from './Icon.jsx'
 import { Num, Time } from './Num.jsx'
 import { Tag } from './Tag.jsx'
-import { zoomName } from '../app/zoom.js'
+import { zoomName, ZOOM_SHARE } from '../app/zoom.js'
 import { UnderlayContext } from '../app/underlay.js'
 
 /** Section heading (Title S) with an optional 44 px trailing link. */
@@ -101,5 +101,5 @@ export function Row({
   )
   // A zooming row and the screen it opens share a name, so React morphs one into the other (not under an edge swipe,
   // where the screen it opened is still mounted on top and the name would be taken twice)
-  return zoom && to && !under ? <ViewTransition name={zoomName(to)} share="zoom" default="none">{row}</ViewTransition> : row
+  return zoom && to && !under ? <ViewTransition name={zoomName(to)} share={ZOOM_SHARE} default="none">{row}</ViewTransition> : row
 }

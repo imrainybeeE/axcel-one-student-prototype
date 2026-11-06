@@ -15,6 +15,7 @@ import { student } from '../../data/student.js'
 import { LessonShelf, Shelves, ShelfSkeleton } from './Shelves.jsx'
 import { LessonMini } from '../../ui/LessonMini.jsx'
 import { useOutOfView, lessonMiniActive } from '../../ui/miniBarHooks.js'
+import { Waves } from './Waves.jsx'
 import './today.css'
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -147,6 +148,7 @@ export default function Today() {
 
   return (
     <Screen title="Today" subtitle={formatLongDate(now)} className="screen--today" action={<AccountButton />}>
+      <Waves />
       <p className="today-greeting">{greeting(model, loading)}</p>
       <div className="today-cols">
         {/* The strip belongs to the day: on a laptop it sits over the day's column, and the side column starts level with the block */}

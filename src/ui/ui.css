@@ -240,6 +240,7 @@
 [data-theme='dark'] .tile--zero { --tile-bg: #636366; }
 .tile--absent { --tile-bg: #E5483D; }
 .tile--gear { --tile-bg: #8E8E93; }
+.tile--report { --tile-bg: #E0436B; } /* Report a problem: its own colour, not Settings' grey */
 .tile--book { --tile-bg: #5856D6; }
 
 /* Narrow containers (320px phones, 200% text): the time stacks above the title */
@@ -299,8 +300,19 @@
 /* ============ Avatars, merit diamonds, progress, disclosure ============ */
 .avatar {
   display: inline-grid; place-items: center; flex: none; border-radius: var(--radius-dot);
-  background: var(--fill); color: var(--ink-soft); font-weight: var(--fw-title); font-size: 0.9375rem; letter-spacing: 0.02em;
+  --av: var(--brand-solid);
+  background: color-mix(in srgb, var(--av) 15%, var(--card)); color: var(--av); font-weight: var(--fw-title); font-size: 0.9375rem; letter-spacing: 0.02em;
 }
+/* Initials in the deep colour on its own pale wash (6:1 or more); in dark, white on the full colour */
+.avatar[data-hue='0'] { --av: var(--subj-physics); }
+.avatar[data-hue='1'] { --av: var(--subj-maths); }
+.avatar[data-hue='2'] { --av: var(--subj-esl); }
+.avatar[data-hue='3'] { --av: var(--subj-bm); }
+.avatar[data-hue='4'] { --av: var(--subj-chemistry); }
+.avatar[data-hue='5'] { --av: var(--subj-gp); }
+.avatar[data-hue='6'] { --av: var(--subj-art); }
+.avatar[data-hue='7'] { --av: var(--subj-english); }
+[data-theme='dark'] .avatar { background: var(--av); color: #FFFFFF; }
 .diamond { display: inline-block; flex: none; width: 12px; height: 12px; margin: 0 2px; border-radius: 2px; transform: rotate(45deg); }
 .diamond--attitude { background: var(--merit-attitude); }
 .diamond--skills { background: var(--merit-skills); }
@@ -446,7 +458,7 @@
   .dia[data-mood="offline"] .dia-sq--b { animation: dia-drift-b 3.4s ease-in-out infinite alternate; }
   .dia[data-mood="error"] .dia-sq--b { animation: dia-wobble 2.6s var(--ease) infinite; }
   .dia[data-mood="loading"] .dia-body { animation: dia-turn 1.8s var(--spring-snappy) infinite; }
-  .dia[data-mood="happy"] .dia-body { animation: dia-hop 1.4s var(--spring-bouncy) infinite; }
+  .dia[data-mood="happy"] .dia-body { animation: dia-hop 1.4s var(--spring-bouncy) 2, dia-float 3.6s ease-in-out 2.8s infinite; } /* two hops, then it floats */
 }
 .dia[data-scatter] .dia-sq--t { transform: translate(var(--sx1), var(--sy1)) rotate(var(--sr1)); }
 .dia[data-scatter] .dia-sq--l { transform: translate(var(--sx2), var(--sy2)) rotate(var(--sr2)); }
@@ -512,7 +524,12 @@
 .now-join { min-height: 50px; border-radius: 10px; } /* concentric: card 26 - padding 16 */
 .now-join-wrap[data-live] .btn > span { animation: swap-in var(--dur-2) var(--ease) both; }
 .now--quiet .now-dia { position: absolute; top: var(--space-4); right: var(--space-4); }
+/* The header's wave along the card's foot, under everything in it */
+.now-waves { position: absolute; z-index: -1; right: 0; bottom: 0; width: 72%; height: 3.5rem; pointer-events: none; }
+.now-waves-fill { fill: var(--logo-blue); opacity: 0.22; }
+.now-waves-line { fill: none; stroke: #FF7F2F; stroke-opacity: 0.75; stroke-width: 2; vector-effect: non-scaling-stroke; }
 .now--quiet .now-title { padding-right: 72px; }
+.now--quiet:not(:has(.now-reason)) .now-title { min-height: 3rem; } /* with no reason line, the divider still clears Dia */
 .now--quiet .dia-sq--b { fill: #FFFFFF; opacity: 0.35; }
 .now-line { display: flex; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-3); color: var(--on-now-soft); }
 .now-line .icon { margin-top: 2px; }

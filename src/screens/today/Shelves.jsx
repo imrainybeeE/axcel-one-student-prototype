@@ -2,10 +2,11 @@
 // Later today (lessons as covers in their subject's colour), Messages, Coming up, and You (Record and Attendance).
 import { ViewTransition } from 'react'
 import { Link, useUnreadThreads } from '../../app'
-import { zoomName } from '../../app/zoom.js'
+import { zoomName, ZOOM_SHARE } from '../../app/zoom.js'
 import { Time, Num } from '../../ui/Num.jsx'
 import { Icon } from '../../ui/Icon.jsx'
 import { Avatar } from '../../ui/Avatar.jsx'
+import { Dia } from '../../ui/Dia.jsx'
 import { laterItems, isJoinOpen } from '../../lib/schedule.js'
 import { formatMessageTime, formatWeekdayShort, formatDuration, isoToMs, schoolInstant } from '../../lib/time.js'
 import { threads } from '../../data/messages.js'
@@ -21,7 +22,7 @@ const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.tit
 /** A card that grows into the screen it opens (the zoom transition), as Row does. */
 function ZoomLink({ to, className, children, ...rest }) {
   return (
-    <ViewTransition name={zoomName(to)} share="zoom" default="none">
+    <ViewTransition name={zoomName(to)} share={ZOOM_SHARE} default="none">
       <Link to={to} zoom className={className} {...rest}>{children}</Link>
     </ViewTransition>
   )
@@ -118,7 +119,7 @@ function MessagesShelf({ nowMs }) {
           })}
         </ul>
       ) : (
-        <p className="shelf-quiet">You’re all caught up.</p>
+        <div className="shelf-quiet"><Dia mood="happy" size={30} className="shelf-dia" /><p>You’re all caught up.</p></div>
       )}
     </section>
   )
@@ -165,7 +166,6 @@ function RecordTile() {
       to="/record"
       className="stat-tile card-link"
       data-tone="award"
-      data-award={record.currentAward?.name.toLowerCase()}
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

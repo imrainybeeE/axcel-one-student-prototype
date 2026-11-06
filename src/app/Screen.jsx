@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState, ViewTransition } from 'react'
 import { useBack, useRoute } from './router.js'
 import { announce } from './announce.js'
 import { IconButton } from '../ui/Button.jsx'
-import { zoomName } from './zoom.js'
+import { zoomName, ZOOM_SHARE } from './zoom.js'
 import { UnderlayContext } from './underlay.js'
 
 let announcedKey = 0
@@ -93,7 +93,7 @@ export function Screen({ title, action, titleContent, tall = false, width = 'wid
     </div>
   )
   // The screen is one half of a zoom pair with the row that opened it (zoom.js); under an edge swipe it is not
-  return under ? frame : <ViewTransition name={zoomName(loc.path)} share="zoom" default="none">{frame}</ViewTransition>
+  return under ? frame : <ViewTransition name={zoomName(loc.path)} share={ZOOM_SHARE} default="none">{frame}</ViewTransition>
 }
 
 /** A titled placeholder for screens that are not built yet. */

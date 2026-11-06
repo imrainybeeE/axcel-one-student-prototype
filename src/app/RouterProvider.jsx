@@ -35,14 +35,21 @@ export function RouterProvider({ routes, children }) {
     }
     if (next.type === 'pop') zoomBackFrom(locRef.current.idx)
     if (next.type !== 'none') beginRouteTransition()
+    // A laptop split screen (Messages) keeps its page and swaps only the pane: nothing slides, no bar morphs across
+    const wide = window.matchMedia('(min-width: 1024px)').matches
+    const split = matchRoute(routes, locRef.current.path)?.route.split
+    const samePage = wide && split && split === matchRoute(routes, next.path)?.route.split
+    // A zoom into (or out of) one pane of a split screen: the rest of that page fades rather than pops (CSS)
+    const zoomSplit = wide && zoomState.pending && matchRoute(routes, zoomState.pending === 'in' ? next.path : locRef.current.path)?.route.split
     const vt = zoomState.pending === 'in' ? 'nav-zoom' : zoomState.pending === 'out' ? 'nav-unzoom'
-      : next.type === 'push' ? 'nav-forward' : next.type === 'pop' ? 'nav-back' : next.type === 'tab' ? 'nav-tab' : 'nav-none'
+      : samePage ? 'nav-pane' : next.type === 'push' ? 'nav-forward' : next.type === 'pop' ? 'nav-back' : next.type === 'tab' ? 'nav-tab' : 'nav-none'
     setPendingTo(next.path + next.search)
     startTransition(() => {
       addTransitionType(vt)
+      if (zoomSplit) addTransitionType('nav-zoom-split')
       setLoc(next)
     })
-  }, [])
+  }, [routes])
 
   // The provider's navigate, exposed through the module-level api
   useEffect(() => {

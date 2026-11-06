@@ -26,7 +26,7 @@ export default function More() {
         </Group>
         <Group title="Help">
           <Row to="/handbook" lead={<span className="tile tile--book"><Icon name="book" filled size={18} /></span>} leadKind="icon" title="Handbook" chevron />
-          <Row to="/report" lead={<span className="tile tile--gear"><Icon name="flag" filled size={18} /></span>} leadKind="icon" title="Report a problem" chevron />
+          <Row to="/report" lead={<span className="tile tile--report"><Icon name="flag" filled size={18} /></span>} leadKind="icon" title="Report a problem" chevron />
         </Group>
         <Group label="App" className="more-settings">
           <Row to="/settings" lead={<span className="tile tile--gear"><Icon name="gear" filled size={18} /></span>} leadKind="icon" title="Settings" chevron />

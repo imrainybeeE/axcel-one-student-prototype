@@ -1,6 +1,45 @@
 /* Today. Layout and Today-only details; every shared component styles itself in src/ui/ui.css,
    subject colours and the day strip live in src/styles/spice.css. */
 
+/* ============ The waves behind the title ============ */
+/* The header's own layer: from the top of the screen to just under the greeting, fading out before the first card */
+.screen--today { isolation: isolate; }
+.waves {
+  position: absolute; z-index: -1; inset: 0 0 auto; height: var(--waves-h, 17rem); overflow: hidden; pointer-events: none;
+  background: linear-gradient(180deg, var(--waves-wash), transparent);
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent);
+  mask-image: linear-gradient(180deg, #000 58%, transparent);
+  --waves-dot: rgb(66 133 244 / 0.34);
+  --waves-wash: #E8F2FD;
+}
+/* The live app's dot grid, in the top right corner only */
+.waves::before {
+  content: ''; position: absolute; top: 0; right: 0; width: min(46%, 22rem); height: 70%;
+  background: radial-gradient(circle, var(--waves-dot) 1.35px, transparent 1.7px) 0 0 / 22px 22px;
+  -webkit-mask-image: radial-gradient(100% 100% at 100% 0, #000 30%, transparent 75%);
+  mask-image: radial-gradient(100% 100% at 100% 0, #000 30%, transparent 75%);
+}
+.waves-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.waves-stop-a { stop-color: #2F73DE; }
+.waves-stop-b { stop-color: #4285F4; }
+.waves-stop-c { stop-color: #A9CEFF; stop-opacity: 0.2; }
+.waves-sweep { fill: #9CC1FF; opacity: 0.22; }
+.waves-soft { fill: #A5C7FA; opacity: 0.3; }
+.waves-wave { fill: url(#waves-fill); opacity: 0.62; }
+.waves-orange { fill: none; stroke: url(#waves-line); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.waves-white { fill: none; stroke: #FFFFFF; stroke-opacity: 0.7; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.waves-drift { animation: waves-drift 7s ease-in-out infinite alternate; }
+.waves-drift--back { animation-duration: 9s; animation-direction: alternate-reverse; }
+@keyframes waves-drift { from { transform: translateY(8px); } to { transform: translateY(-10px); } }
+@media (prefers-reduced-motion: reduce) { .waves-drift { animation: none; } }
+[data-theme='dark'] .waves { --waves-dot: rgb(120 170 255 / 0.2); --waves-wash: #0F1D30; }
+[data-theme='dark'] .waves-wave { opacity: 0.42; }
+[data-theme='dark'] .waves-sweep, [data-theme='dark'] .waves-soft { fill: #2F73DE; opacity: 0.16; }
+[data-theme='dark'] .waves-white { stroke-opacity: 0.3; }
+@media (min-width: 1024px) { .waves { --waves-h: 13rem; } }
+/* Phone: the corner sweeps a little stronger, as the wave is narrower there */
+@media (max-width: 1023px) { .waves-sweep { opacity: 0.32; } }
+
 .screen--today .large-title-sub { font-weight: 500; } /* the date leads; the greeting under it is the quieter line of one block */
 .today-greeting { margin-top: -6px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); max-width: 26rem; } /* one quiet block with the date above it */
 .today-cols { margin-top: var(--space-2); }
@@ -37,25 +76,25 @@
 .shelf-row:not(:has(> :nth-child(3))) > .shelf-item { flex: 1 1 0; width: auto; }
 .shelf-one .shelf-item--wide { width: auto; }
 .shelf-quiet { display: flex; align-items: center; gap: var(--space-2); min-height: 52px; padding: 0 var(--space-4); background: var(--card); border-radius: var(--radius); color: var(--ink-soft); }
-.shelf-quiet .icon { flex: none; color: #2F9E45; }
+.shelf-dia { flex: none; margin: -4px 2px -4px -6px; }
 :is(.cover-link, .event-card, .msg-card, .stat-tile, .shelf-head a):hover { color: var(--ink); }
 @media (hover: hover) and (pointer: fine) {
   .shelf-head a:hover .shelf-chev { transform: translateX(2px); }
   :is(.event-card, .msg-card, .stat-tile):hover { background: color-mix(in srgb, var(--card) 94%, var(--ink)); }
-  .cover-link:hover .cover { background: color-mix(in srgb, var(--card) 94%, var(--ink)); }
+  .cover-link:hover .cover { --cover-tint: 16%; }
 }
 
-/* Covers: each later lesson as one white card (time, subject, who and when), its subject a small dot, so the
-   shelf stays calm beside the one coloured block on the page (the now block) */
+/* Covers: each later lesson as one card (time, subject, who and when) washed in its subject's colour, its time in that colour */
 .cover-link { display: block; border-radius: var(--radius-compact); color: var(--ink); text-decoration: none; } /* the focus ring follows the cover's corners */
 .cover {
   position: relative; display: flex; flex-direction: column; min-height: 5.25rem;
-  padding: 14px var(--space-4); border-radius: var(--radius-compact); background: var(--card); color: var(--ink); /* the same 16 inset as every card */
+  padding: 14px var(--space-4); border-radius: var(--radius-compact); color: var(--ink); /* the same 16 inset as every card */
+  background: color-mix(in srgb, var(--subj-mark, var(--subj-event)) var(--cover-tint, 10%), var(--card)); /* a wash of the subject's colour, so the shelf reads as the day's subjects */
   transition: background-color var(--dur-2) var(--ease);
 }
-.cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1.625rem; letter-spacing: 0; }
+.cover-time { color: var(--subj-mark, var(--ink)); font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1.625rem; letter-spacing: 0; }
 .cover-icon { position: absolute; top: 12px; right: 12px; color: var(--ink-soft); }
-/* The subject, led by a 6px dot in its colour: the only colour the card carries */
+/* The subject, led by a 6px dot in its colour */
 .cover-title { display: flex; align-items: center; gap: 6px; min-width: 0; margin-top: var(--space-1); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); white-space: nowrap; }
 .cover-title::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--subj-mark, var(--subj-event)); }
 .cover-double { flex: none; margin-left: 2px; padding: 0 5px; border-radius: 5px; background: var(--fill); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: 1.125rem; font-weight: 500; }
@@ -81,13 +120,13 @@
 .event-card-title { margin-top: var(--space-2); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: calc(2 * var(--lh-subhead)); } /* date, then what (two lines kept), then the grey detail on one line in every card */
 .event-card-meta { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
-/* You: Record and Attendance as two tiles, each a coloured title, a figure and one small mark */
+/* You: Record and Attendance as two tiles, each a title in its colour (the award's amber, attendance's green), a figure and one small mark */
 .stat-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); }
 .stat-tile {
   display: flex; flex-direction: column; padding: 12px 14px 14px var(--space-4);
   background: var(--card); border-radius: var(--radius-compact); color: var(--ink); text-decoration: none;
 }
-.stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
+.stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--tone, var(--ink-soft)); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .stat-chev { color: var(--ink-tertiary); }
 .stat-fig { display: flex; align-items: last baseline; gap: 4px; min-width: 0; margin-top: var(--space-3); }
 .stat-n { font-size: 2.125rem; line-height: 1; font-weight: var(--fw-heavy); letter-spacing: -0.01em; }
@@ -122,3 +161,5 @@
   .shelf-row > :nth-child(n + 4) { display: none; }
   .shelf-item, .shelf-item--wide { width: auto; }
 }
+[data-theme='dark'] .cover { --cover-tint: 16%; }
+@media (hover: hover) and (pointer: fine) { [data-theme='dark'] .cover-link:hover .cover { --cover-tint: 22%; } }

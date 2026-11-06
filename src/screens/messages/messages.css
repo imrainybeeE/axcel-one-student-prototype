@@ -39,7 +39,7 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 21.25rem; min-height: 44px; text-wrap: balance; margin: calc(-1 * var(--space-2)) 0 calc(-1 * var(--space-3)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
+  align-self: center; max-width: 22.5rem; min-height: 44px; text-wrap: balance; margin: calc(-1 * var(--space-2)) 0 calc(-1 * var(--space-3)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
   background: none; color: var(--ink-soft); font: inherit; font-size: 0.75rem; line-height: 1rem; text-align: center; cursor: pointer;
 }
 .thread-caption .icon { display: inline-block; vertical-align: -2px; margin-right: 4px; } /* centred, as Messages centres its notices; the shield leads the first line */
@@ -193,10 +193,9 @@
   .messages-list-pane .messages-inbox-heading .btn--plain > span:not(.icon) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .messages-list-pane .large-title--pushed { display: block; }
   .messages-list-pane .msg-row.is-selected { background: none; }
-  .messages-list-pane .msg-row.is-selected::before { content: ''; position: absolute; z-index: 0; inset: 4px 8px; width: auto; height: auto; margin: 0; border-radius: 10px; background: var(--brand-solid); } /* inset, as a Mac sidebar selects */
+  .messages-list-pane .msg-row.is-selected::before { content: ''; position: absolute; z-index: 0; inset: 4px 8px; width: auto; height: auto; margin: 0; border-radius: 10px; background: var(--fill-strong); } /* inset, as a Mac list selects: a quiet plate, so the sent bubbles stay the one blue */
   .messages-list-pane .msg-row.is-selected .row-hit { position: relative; z-index: 1; }
-  .messages-list-pane .msg-row.is-selected :is(.row-title, .row-meta, .msg-row-time, .msg-row-chev) { color: #FFFFFF; }
-  .messages-list-pane .msg-row.is-selected .avatar { background: rgb(255 255 255 / 0.22); color: #FFFFFF; }
+  .messages-list-pane .msg-row.is-selected .avatar { background: var(--card); }
   .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }
   .messages-detail-pane { display: block; }
   .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }

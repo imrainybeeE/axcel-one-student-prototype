@@ -90,7 +90,7 @@
 /* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
 .day-strip-now {
   position: absolute; top: 50%; left: 0;
-  width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; /* a small marker at the split, not a scrubber's knob */
   border-radius: var(--radius-dot);
   background: var(--subj-mark, var(--ink));
   /* Segments are sized by minutes with 3px gaps between them, so the dot skips the gaps before its lesson */

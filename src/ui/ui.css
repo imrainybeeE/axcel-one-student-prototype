@@ -341,31 +341,31 @@
 .seg-legend { margin-bottom: var(--space-2); font-weight: var(--fw-strong); }
 .seg-track {
   position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-  padding: 3px; border-radius: 12px; background: var(--fill);
-}
+  padding: 2px; border-radius: 10px; background: var(--fill);
+} /* iOS 26: a 32px control, 2px inset */
 .seg-thumb {
-  position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / var(--n));
+  position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / var(--n));
   transform: translateX(calc(var(--i) * 100%));
   transition: transform var(--dur-spring-snappy) var(--spring-snappy);
 }
 .seg-thumb-fill {
-  display: block; width: 100%; height: 100%; border-radius: 9px;
+  display: block; width: 100%; height: 100%; border-radius: 8px;
   background: var(--card);
-  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.1);
+  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 2px rgb(0 0 0 / 0.06);
   animation: seg-squish var(--dur-spring-snappy) var(--ease);
 }
-[data-theme="dark"] .seg-thumb-fill { background: #545458; box-shadow: 0 2px 6px rgb(0 0 0 / 0.25); }
+[data-theme="dark"] .seg-thumb-fill { background: #545458; box-shadow: 0 1px 2px rgb(0 0 0 / 0.2); }
 @keyframes seg-squish { 40% { transform: scale(calc(1 + 0.06 * var(--motion)), calc(1 - 0.08 * var(--motion))); } }
 .seg-item {
   position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 32px; padding: 0 var(--space-2); border-radius: 9px;
+  min-height: 28px; padding: 0 var(--space-2); border-radius: 8px;
   color: var(--ink); font-size: var(--fs-subhead); font-weight: 500; text-align: center; cursor: pointer;
   transition: opacity var(--dur-2) var(--ease);
 }
 .seg--tall .seg-item { min-height: var(--space-9); border-radius: 18px; }
 .seg--tall .seg-track { border-radius: 21px; }
 .seg--tall .seg-thumb-fill { border-radius: 18px; }
-.seg-item input { position: absolute; inset: -6px 0; width: 100%; height: calc(100% + 12px); margin: 0; opacity: 0; cursor: pointer; } /* a 44px target around the 32px segment */
+.seg-item input { position: absolute; inset: -8px 0; width: 100%; height: calc(100% + 16px); margin: 0; opacity: 0; cursor: pointer; } /* a 44px target around the 28px segment */
 .seg-item:has(input:checked) { font-weight: var(--fw-strong); }
 .seg-item:not(:has(input:checked)):active { opacity: 0.55; transition-duration: 0s; }
 .seg-item:has(input:focus-visible) { outline: 2px solid var(--focus-outer); outline-offset: 0; box-shadow: inset 0 0 0 2px var(--focus-inner); }
@@ -546,7 +546,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .sheet-grabber:active span { width: 44px; background: var(--ink-faint); }
 .sheet-head {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
-  align-items: center; gap: var(--space-2); min-height: var(--space-9); padding: 0 calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
+  align-items: center; gap: var(--space-2); min-height: 48px; padding: 4px calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
 } /* the close circle (inside its 4px clear ring) sits on the body's 16px edge */
 .sheet-head-lead { justify-self: start; }
 /* The close button: a 36px glass circle inside a 44px target with a dark cross, as iOS 26 sheets have it
@@ -849,7 +849,11 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .rail-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
 .rail-done { color: var(--ink-faint); }
 .rail-trailing { flex: none; }
-.rail-item--gap .rail-time, .rail-item--gap .rail-body { padding-block: var(--space-2); }
+.rail-item--gap .rail-time, .rail-item--gap .rail-body { padding-block: 2px; } /* a break is a 44px row: it marks time, it isn't a lesson */
+/* Lessons already over are compact (56): the eye goes to now and next */
+.rail-item.is-done :is(.rail-time, .rail-body) { padding-block: 6px; }
+.rail-item.is-done .rail-stop { top: 18px; }
+.rail-item.is-done.is-first .rail-track::before { top: 18px; }
 .rail-item--gap .rail-title { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); color: var(--ink-soft); }
 
 /* A disabled compact button beside a row keeps the row's title readable: its reason may wrap */

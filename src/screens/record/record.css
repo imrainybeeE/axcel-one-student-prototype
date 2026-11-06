@@ -3,9 +3,9 @@
 /* Lead (Fitness): the status line in the award colour, one big figure, a thin line to the next award */
 .record-hero { display: flex; flex-direction: column; padding: var(--space-4); }
 .record-hero-status { color: var(--tone); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
-.record-hero-fig { display: flex; align-items: last baseline; gap: 4px; margin-top: var(--space-2); }
+.record-hero-fig { display: flex; align-items: last baseline; gap: 6px; margin-top: var(--space-2); }
 .record-hero-n { font-size: var(--fs-time-xl); line-height: 1; font-weight: var(--fw-time-xl); letter-spacing: -0.02em; }
-.record-hero-unit { color: var(--ink-soft); font-size: var(--fs-body); font-weight: var(--fw-strong); } /* one unit style on every hero: points and % alike */
+.record-hero-unit { color: var(--ink-soft); font-size: var(--fs-body); font-weight: 500; } /* one unit style on every hero: points and % alike */
 .record-hero-bar { display: block; height: 5px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }
 .record-hero-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tone-solid); transform-origin: left; transform: scaleX(var(--p)); }
 .record-hero-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }

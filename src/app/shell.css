@@ -26,15 +26,15 @@
 @media (min-width: 1024px) {
   .main { margin-left: var(--sidebar-w); padding-bottom: var(--space-8); }
   .main--bare { margin-left: 0; }
-  /* A wide page starts 56px from the sidebar and runs to its measure; a narrow page (one column of reading)
-     sits centred in the window, so it never leaves a third of the screen empty on one side */
+  /* One grid on every page: content starts 56px from the sidebar and runs to its measure, never centred in the
+     window, so a large title never moves when you switch pages */
   .screen--wide {
     --pad-l: var(--space-9);
     --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-wide))); /* vw, not %: the bar inherits this and must resolve it against the page, not itself */
   }
   .screen--narrow {
-    --pad-l: max(var(--space-9), calc((100vw - var(--sidebar-w) - var(--content-max)) / 2));
-    --pad-r: max(var(--space-8), calc((100vw - var(--sidebar-w) - var(--content-max)) / 2));
+    --pad-l: var(--space-9);
+    --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-max)));
   }
 }
 
@@ -281,7 +281,7 @@
   }
 }
 .sidebar-logo { display: inline-flex; align-self: flex-start; margin: 0 var(--space-3) var(--space-6); border-radius: var(--radius-control); }
-.sidebar-logo img { height: 28px; width: auto; }
+.sidebar-logo img { height: 24px; width: auto; }
 [data-theme="dark"] .sidebar-logo { background: #FFFFFF; padding: var(--space-1) var(--space-2); margin-left: var(--space-1); }
 .sidebar-group { list-style: none; display: flex; flex-direction: column; gap: 2px; }
 .sidebar-group + .sidebar-group { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--divider); }

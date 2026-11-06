@@ -1,7 +1,8 @@
 /* Today. Layout and Today-only details; every shared component styles itself in src/ui/ui.css,
    subject colours and the day strip live in src/styles/spice.css. */
 
-.today-greeting { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); max-width: 26rem; } /* one quiet block with the date above it */
+.screen--today .large-title-sub { font-weight: 500; } /* the date leads; the greeting under it is the quieter line of one block */
+.today-greeting { margin-top: -6px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); max-width: 26rem; } /* one quiet block with the date above it */
 .today-cols { margin-top: var(--space-2); }
 .today-day > * + * { margin-top: var(--space-3); }
 /* One rhythm: 24 from the now block to the shelf under it, 32 between every section after that */
@@ -146,7 +147,7 @@
   .today-day { grid-column: 1; grid-row: 2; }
   /* Both columns' first cards start on one line: the Messages card level with the Now block, its heading above */
   .today-side { grid-column: 2; grid-row: 2; margin-top: calc(-1 * (var(--lh-title-3) + var(--space-2) + 3px)); } /* 3: the shelf head's link box */
-  .today-updated { text-align: left; width: calc((100% - var(--space-8)) * 1.1 / 2.1); } /* under the day's column */
+  .today-updated { margin-left: auto; text-align: center; width: calc((100% - var(--space-8)) * 1 / 2.1); } /* where the page ends: under the side column, the longer one */
   /* On a laptop the block is wider than a phone: more room inside, and Join only as wide as it needs */
   .screen--today .now { padding: var(--space-6); }
   .screen--today .now-next { margin-inline: calc(-1 * var(--space-6)); padding-inline: var(--space-6); margin-bottom: calc(-1 * var(--space-4)); }

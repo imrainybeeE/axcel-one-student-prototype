@@ -30,10 +30,16 @@ function when(e) {
   return e.end && !e.end.includes('-') ? `${e.time} to ${e.end}` : e.time
 }
 
-/** The grey line, time first as Calendar: "10.50 to 11.35 · 8 Orion", or "Public holiday · No school". */
+/** The grey line, time first as Calendar: "10.50 to 11.35 · 8 Orion", or "Public holiday · No school".
+    Each part is its own piece with the dot before it; a dot that would start a line is clipped away (see .meta-parts),
+    so a wrap never leaves a dot dangling at either end. */
+function metaParts(e) {
+  if (NO_SCHOOL.has(e.category)) return [e.end && e.end !== e.start ? when(e) : categories[e.category]?.label, 'No school']
+  return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean)
+}
 function meta(e) {
-  if (NO_SCHOOL.has(e.category)) return e.end && e.end !== e.start ? `${when(e)}\u00a0· No school` : `${categories[e.category]?.label}\u00a0· No school`
-  return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean).join('\u00a0· ')
+  const parts = metaParts(e)
+  return <span className="meta-parts" aria-label={parts.join(', ')}><span>{parts.map((p) => <span key={p}>{p}</span>)}</span></span>
 }
 
 function weekLabel(iso, today) {

@@ -5,7 +5,7 @@
 .record-hero-status { color: var(--tone); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .record-hero-fig { display: flex; align-items: last baseline; gap: 4px; margin-top: var(--space-2); }
 .record-hero-n { font-size: var(--fs-time-xl); line-height: 1; font-weight: var(--fw-time-xl); letter-spacing: -0.02em; }
-.record-hero-unit { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 500; }
+.record-hero-unit { color: var(--ink-soft); font-size: var(--fs-body); font-weight: var(--fw-strong); } /* one unit style on every hero: points and % alike */
 .record-hero-bar { display: block; height: 5px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }
 .record-hero-bar i { display: block; height: 100%; border-radius: inherit; background: var(--tone-solid); transform-origin: left; transform: scaleX(var(--p)); }
 .record-hero-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
@@ -82,9 +82,8 @@
 
 /* Attendance lead: the % sits close to its figure, and one thin split bar says the term at a glance */
 .att-fig { gap: 1px; }
-.att-fig .record-hero-unit { font-family: var(--font-num); font-stretch: 112%; font-size: 1.625rem; font-weight: var(--fw-heavy); color: var(--ink); }
-.att-split { display: flex; height: 4px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill-strong); overflow: hidden; } /* one track, the term filled along it */
-.att-split i { flex: var(--len) 1 0; }
+.att-split { display: flex; gap: 2px; height: 4px; margin-top: var(--space-4); border-radius: var(--radius-capsule); background: var(--fill-strong); overflow: hidden; } /* one track, the term filled along it */
+.att-split i { flex: var(--len) 1 0; border-radius: 2px; } /* each part ends round, as the track does */
 .att-split-present { background: var(--tone-solid); }
 .att-split-late { background: #E8920C; }
 .att-split-absent { background: none; }
@@ -95,5 +94,5 @@
 .att-how .disclosure-chevron { color: var(--ink-tertiary); }
 .att-how .disclosure-body { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); padding-bottom: var(--space-4); }
 
-.att-status-line { color: var(--ink-soft); font-weight: 400; } /* green stays on the bar */
+.att-status-line { color: var(--ink-soft); } /* the same short label as Record's; green stays on the bar */
 .record-entries > .settings-note { padding-inline: 0; margin-top: 0; } /* under its heading, on the gutter */

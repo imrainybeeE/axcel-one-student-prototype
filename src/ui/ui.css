@@ -241,6 +241,7 @@
 }
 .tile .icon { width: 19px; height: 19px; }
 .tile--award { --tile-bg: #E8920C; }
+.tile--record { --tile-bg: var(--brand-solid); } /* in More, Record is a place, in the app's blue; the medal's metal is for the award itself */
 .tile--attendance { --tile-bg: #2F9E45; }
 .tile--late { --tile-bg: #E8920C; }
 .tile--absent { --tile-bg: #E5483D; }
@@ -394,7 +395,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .field-error { display: flex; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-2); color: var(--danger); font-weight: 500; }
 .field-error .icon { margin-top: 2px; }
 
-.search { position: relative; }
+.search { position: relative; margin-inline: -3px; } /* the clear 3px hit border sits outside the margin, so the field's fill lines up with the cards */
 /* iOS's slim 38pt field, inside a 44pt hit area (a clear 3px border the fill doesn't paint) */
 .search-icon { position: absolute; left: 12px; top: 13.5px; width: 17px; height: 17px; color: var(--ink-soft); pointer-events: none; }
 .search-input { min-height: 44px; border: 3px solid transparent; background-clip: padding-box; border-radius: 15px; padding-left: 32px; padding-right: var(--space-7); appearance: none; -webkit-appearance: none; }
@@ -543,8 +544,8 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .sheet-grabber:active span { width: 44px; background: var(--ink-faint); }
 .sheet-head {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
-  align-items: center; gap: var(--space-2); min-height: var(--space-9); padding: 0 var(--space-2);
-}
+  align-items: center; gap: var(--space-2); min-height: var(--space-9); padding: 0 calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
+} /* the close circle (inside its 4px clear ring) sits on the body's 16px edge */
 .sheet-head-lead { justify-self: start; }
 /* The close button: a 36px glass circle inside a 44px target with a dark cross, as iOS 26 sheets have it
    (the same glass as the bar's back button; the rim is inset so it sits on the 36px circle, not the 44px target) */
@@ -829,7 +830,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--subj, var(--brand-line)) 20%, transparent);
 }
 .rail-body { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); padding-block: var(--space-3); min-width: 0; }
-.rail-item.is-now .rail-body { display: block; padding-block: 0; }
+.rail-item.is-now .rail-body { display: block; padding-block: 0; margin-top: -10px; } /* the card's title shares its time's line, as every row's title does */
 .rail-text { min-width: 0; }
 .rail-title { overflow-wrap: anywhere; font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-head); }
 .rail-title .tag { vertical-align: 1px; }
@@ -855,4 +856,4 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now--rail .now-elapsed { margin: var(--space-3) 0 var(--space-3); }
 
 /* A two-line switch label breaks evenly, never leaving one word behind */
-.choice-label { text-wrap: balance; }
+.choice-label, .choice-desc { text-wrap: balance; }

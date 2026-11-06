@@ -18,8 +18,9 @@ export default function Attendance() {
         {offline && <OfflineNotice what="your attendance" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>Your attendance did not load. Check that you are online, then try again. Your attendance from <Num>{SAVED_AT}</Num> is below.</ErrorState>}
         <section className="record-hero att-hero card" aria-labelledby="att-pc" data-tone="good">
-          <h2 id="att-pc" className="record-hero-status att-status-line">In school <Num>{s.present + s.late}</Num> of <Num>{s.days}</Num> days in {term.name}</h2>
+          <h2 id="att-pc" className="record-hero-status att-status-line">{term.name}</h2>
           <p className="record-hero-fig att-fig"><Num wide className="record-hero-n">{Math.round(s.percent)}</Num><span className="record-hero-unit">%</span></p>
+          <p className="record-hero-note">In school <Num>{s.present + s.late}</Num> of <Num>{s.days}</Num> days</p>
           {/* The term at a glance, as Health splits a total: present, late and absent in proportion */}
           <span className="att-split" aria-hidden="true">
             {[['present', s.present], ['late', s.late], ['absent', s.absent]].filter(([, n]) => n > 0).map(([k, n]) => <i key={k} className={`att-split-${k}`} style={{ '--len': n }} />)}

@@ -21,7 +21,7 @@ export default function More() {
           </span>
         </section>
         <Group title="Your school year">
-          <Row to="/record" zoom lead={<span className="tile tile--award" data-award={r.currentAward?.name.toLowerCase()}><Icon name="award" filled size={18} /></span>} leadKind="icon" title="Record" trailing={r.nextAward ? <span><Num>{r.toNext}</Num> to {r.nextAward.name}</span> : null} chevron />
+          <Row to="/record" zoom lead={<span className="tile tile--record"><Icon name="award" filled size={18} /></span>} leadKind="icon" title="Record" trailing={r.nextAward ? <span><Num>{r.toNext}</Num> to {r.nextAward.name}</span> : null} chevron />
           <Row to="/attendance" zoom lead={<span className="tile tile--attendance"><Icon name="check" size={18} /></span>} leadKind="icon" title="Attendance" trailing={<Num>{`${Math.round(a.percent)}%`}</Num>} chevron />
         </Group>
         <Group title="Help">

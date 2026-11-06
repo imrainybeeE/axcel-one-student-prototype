@@ -37,16 +37,13 @@
 .cal-dots { display: flex; gap: 3px; height: 6px; }
 .cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
-.cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
-/* A day with nothing on it is a quiet line under its date, never an empty white field */
-.list:has(> .cal-none:only-child) { background: none; box-shadow: none; }
-.list > .cal-none:only-child { padding: 0; }
+.cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-4); text-align: center; } /* an empty day: one quiet line, centred in its card */
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
   .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
-  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 58fr) minmax(17rem, 42fr); column-gap: var(--space-8, 40px); align-items: start; }
+  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
   .cal-laptop .cal-cell { min-height: 68px; }
@@ -58,3 +55,10 @@
 
 .cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
 @media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }
+
+/* Meta parts joined by a dot that only ever sits between two parts on one line: each part carries its dot in front,
+   the line box is pulled left by one dot, and the overflow clip hides the dot of whichever part starts a line */
+.meta-parts { display: block; overflow: hidden; }
+.meta-parts > span { display: block; margin-left: -0.9em; }
+.meta-parts > span > span { display: inline-block; max-width: calc(100% - 0.9em); vertical-align: top; }
+.meta-parts > span > span::before { content: '·'; display: inline-block; width: 0.9em; text-align: center; }

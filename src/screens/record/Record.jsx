@@ -4,6 +4,7 @@ import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
   Segmented, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
+  MiniBar, MiniTile, useOutOfView,
 } from '../../ui'
 import { entries, summary, areas } from '../../data/record.js'
 import { formatLongDate, isoToMs } from '../../lib/time.js'
@@ -114,6 +115,7 @@ export default function Record() {
   const [how, setHow] = useState(false)
   const [showAll, setShowAll] = useState(false)
   const s = summary()
+  const miniShown = useOutOfView(() => document.querySelector('.record-hero'), { enabled: state !== 'loading' && state !== 'empty' })
 
   if (state === 'loading') {
     return (
@@ -205,8 +207,25 @@ export default function Record() {
           <>{summaryCol}{entriesCol}</>
         )}
       </div>
+      <RecordMini s={s} shown={miniShown} />
       <EntrySheet entry={open} onClose={() => setOpen(null)} />
       <HowSheet open={how} onClose={() => setHow(false)} />
     </Screen>
+  )
+}
+
+/** The capsule: the points and the award, in the award's metal; tap to go back to the summary. */
+function RecordMini({ s, shown }) {
+  const award = s.currentAward?.name
+  const sub = s.nextAward ? `${s.nextAward.points - s.points} more for ${s.nextAward.name}` : award ? `${award} award` : `${s.merits} from merits`
+  return (
+    <MiniBar
+      shown={shown}
+      onOpen={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      label={`${s.points} points, ${sub}. Show the summary`}
+      tile={<span className="mini-tile-award tile--award" data-award={award?.toLowerCase()}><MiniTile kind="icon" icon="award-fill" tone="var(--tile-bg)" /></span>}
+      title={`${s.points} points`}
+      sub={sub}
+    />
   )
 }

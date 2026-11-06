@@ -13,7 +13,8 @@ import { nowModel } from '../../lib/schedule.js'
 import { formatLongDate, formatTime } from '../../lib/time.js'
 import { student } from '../../data/student.js'
 import { LessonShelf, Shelves, ShelfSkeleton } from './Shelves.jsx'
-import { NowMini } from './NowMini.jsx'
+import { LessonMini } from '../../ui/LessonMini.jsx'
+import { useOutOfView, lessonMiniActive } from '../../ui/miniBarHooks.js'
 import './today.css'
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -113,6 +114,11 @@ export default function Today() {
   const error = state === 'error'
   const model = loading ? null : nowModel(now, { forceEmpty: state === 'empty' })
   const updated = offline || error ? SAVED_AT : formatTime(Math.max(now, refreshedAt || 0))
+  // The capsule shows once the block's Join (or its bar) has gone under the nav bar, so the two never show at once
+  const miniShown = useOutOfView(() => {
+    const hero = document.querySelector('.screen--today .now')
+    return hero?.querySelector('.now-join-wrap') || hero?.querySelector('.now-elapsed') || hero
+  }, { enabled: !loading && !error && lessonMiniActive(model) })
 
   let day
   if (loading) {
@@ -151,7 +157,9 @@ export default function Today() {
       <p className="today-updated">
         {offline || error ? <>Saved <Num>{updated}</Num></> : <>Updated <Num><RollNum value={updated} /></Num></>}
       </p>
-      {!loading && !error && <NowMini model={model} offline={offline} joiningId={joiningId} onJoin={join} />}
+      {!loading && !error && (
+        <LessonMini model={model} offline={offline} joiningId={joiningId} onJoin={join} shown={miniShown} onOpen={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+      )}
     </Screen>
   )
 }

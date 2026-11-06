@@ -186,13 +186,15 @@
 }
 @supports (corner-shape: superellipse(1)) { .tabbar { corner-shape: superellipse(1.6); border-radius: 31px; } }
 /* Scrolled down (iOS 26): the pill closes into one glass circle at the leading edge, the selected tab slides into it
-   and the others slip away; it never just shrinks */
-.tabbar[data-min]:not([data-pressing]) { clip-path: inset(0 calc(100% - var(--tabbar-h)) 0 0 round 31px); }
-.tabbar[data-min]:not([data-pressing]) .tab[aria-current] { transform: translateX(calc(var(--tabbar-h) / 2 - 4px - (var(--i) + 0.5) * 20cqw)); }
-.tabbar[data-min]:not([data-pressing]) .tabbar-lens-fill { opacity: 0; }
-.tabbar[data-min]:not([data-pressing]) .tab:not([aria-current]) { opacity: 0; transform: scale(0.6); pointer-events: none; }
-.tabbar[data-min]:not([data-pressing]) .tab-label { opacity: 0; }
-.tabbar[data-min]:not([data-pressing]) .tab-plate { transform: translateY(7px); }
+   and the others slip away; it never just shrinks.
+   Tapping the circle opens the bar again without changing tab. */
+.tabbar[data-min] { clip-path: inset(0 calc(100% - var(--tabbar-h)) 0 0 round 31px); }
+.tabbar[data-min] .tab[aria-current] { transform: translateX(calc(var(--tabbar-h) / 2 - 4px - (var(--i) + 0.5) * 20cqw)); cursor: pointer; }
+.tabbar[data-min] .tabbar-lens-fill { opacity: 0; }
+.tabbar[data-min] .tab:not([aria-current]) { opacity: 0; transform: scale(0.6); pointer-events: none; }
+.tabbar[data-min] .tab-label { opacity: 0; }
+.tabbar[data-min] .tab-plate { transform: translateY(7px); }
+.tabbar[data-min] .tab:active .tab-plate { transform: translateY(7px) scale(calc(1 - 0.1 * var(--motion))); transition-duration: 90ms; }
 /* The pill clips itself (clip-path), so its lift lives on a shadow-only twin underneath that closes with it */
 .tabbar-shade {
   position: fixed; z-index: var(--z-tabbar); pointer-events: none;

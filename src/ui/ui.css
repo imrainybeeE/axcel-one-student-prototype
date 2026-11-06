@@ -412,7 +412,7 @@
 .join-wait .icon { flex: none; }
 /* Numerals inside running secondary text stay in the text face; Archivo is for standalone figures */
 :is(p, h2, .notice, .row-meta, .today-updated, .day-strip-ends, .join-wait, .rail-meta, .lead-date-label, .progress-numbers, .choice-desc, .status-line, .now-meta, .now-line, .now-elapsed-ends, .now-next,
-    .stat-sub, .cover-sub, .cover-meta, .event-card-meta, .now-mini-sub, .thread-sep, .msg-meta,
+    .stat-sub, .cover-sub, .cover-meta, .event-card-meta, .mini-bar-sub, .thread-sep, .msg-meta,
     .record-hero-status, .record-hero-ends, .record-hero-note, .row-trail .record-num) .num, .num:is(.msg-card-time, .msg-row-time) {
   font-family: var(--font); font-weight: inherit; font-stretch: normal; font-variant-numeric: tabular-nums;
 }

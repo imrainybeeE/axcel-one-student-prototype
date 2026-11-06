@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { TABS, SIDEBAR_GROUPS } from './nav.js'
 import { assetPath, goToTab, navigate, useRoute, withDemoParams } from './router.js'
 import { useUnreadThreads } from './store.js'
-import { useScrolledDown } from './hooks.js'
+import { expandTabBar, useTabBarMinimised } from './hooks.js'
 import { haptic } from '../ui/haptic.js'
 import { Icon } from '../ui/Icon.jsx'
 import { Badge } from '../ui/Tag.jsx'
@@ -21,14 +21,17 @@ function useUnreadCount() {
 /**
  * Phone and tablet tab bar (under 1024 px): a floating glass pill with five links, exactly one aria-current.
  * A glass lens sits under the active tab. Press and the lens grows under the finger; slide across the bar and it
- * follows; let go on a tab to go there (press-drag-release, as iOS 26). Scrolling down minimises the pill.
+ * follows; let go on a tab to go there (press-drag-release, as iOS 26). Scrolling down minimises the pill to one
+ * circle holding the current tab; tap the circle (or scroll up) and the whole bar opens again, as Music's does.
  */
 export function TabBar() {
   const { tab, route, loc } = useRoute()
   const unread = useUnreadCount()
   // In a chat the bar steps away and the composer takes the whole row, as Messages keeps one floating layer
   const inThread = /^\/messages\/[^/]+/.test(loc.path)
-  const minimised = useScrolledDown()
+  const minimised = useTabBarMinimised()
+  // A new screen starts with the whole bar showing
+  useEffect(() => { expandTabBar() }, [loc.path])
   const nav = useRef(null)
   const fill = useRef(null)
   const press = useRef(null) // { at, x, captured }
@@ -65,6 +68,7 @@ export function TabBar() {
   }
   const onPointerDown = (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return
+    if (minimised) return // the circle is one button: a tap opens the bar, there is nothing to slide across
     const i = indexAt(e.clientX)
     press.current = { at: i, x: e.clientX }
     nav.current.style.setProperty('--px', `${e.clientX - nav.current.getBoundingClientRect().left}px`)
@@ -94,7 +98,7 @@ export function TabBar() {
 
   return (
     <>
-    <span className="tabbar-shade" data-min={(minimised && pressAt == null) || undefined} data-away={inThread || undefined} aria-hidden="true" />
+    <span className="tabbar-shade" data-min={minimised || undefined} data-away={inThread || undefined} aria-hidden="true" />
     <nav
       ref={nav}
       className="tabbar glass"
@@ -114,6 +118,7 @@ export function TabBar() {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerEnd}
       onPointerCancel={onPointerEnd}
+      onFocus={(e) => { if (minimised && e.target.matches?.(':focus-visible')) expandTabBar() }}
     >
       <span className="tabbar-lens" aria-hidden="true"><span ref={fill} className="tabbar-lens-fill" /></span>
       {TABS.map((t) => {
@@ -130,6 +135,8 @@ export function TabBar() {
             onClick={(e) => {
               if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
               e.preventDefault()
+              // Minimised, the circle opens the bar and goes nowhere; the next tap picks a tab
+              if (minimised && active) { haptic(); expandTabBar(); return }
               goToTab(t.id, tab, route)
             }}
           >

@@ -18,4 +18,7 @@ export { Skeleton, SkeletonRows, LoadingState, EmptyState, ErrorState } from './
 export { Avatar, MeritDiamond, MeritLabel, ProgressBar, Disclosure } from './Avatar.jsx'
 export { Dia } from './Dia.jsx'
 export { RollNum, TextSwap } from './Motion.jsx'
+export { MiniBar, MiniTile, MiniAction } from './MiniBar.jsx'
+export { LessonMini } from './LessonMini.jsx'
+export { useOutOfView, lessonMiniActive } from './miniBarHooks.js'
 export { haptic } from './haptic.js'

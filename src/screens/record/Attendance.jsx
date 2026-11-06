@@ -1,12 +1,13 @@
 // Public prototype shows aggregate attendance only; daily dates and absence reasons stay private.
 import { Screen, useDemo, SAVED_AT } from '../../app'
-import { Group, Row, Num, Icon, Disclosure, SkeletonRows, LoadingState, ErrorState, OfflineNotice } from '../../ui'
+import { Group, Row, Num, Icon, Disclosure, SkeletonRows, LoadingState, ErrorState, OfflineNotice, MiniBar, MiniTile, useOutOfView } from '../../ui'
 import { attendanceSummary, term } from '../../data/attendance.js'
 import './record.css'
 
 export default function Attendance() {
   const { state, offline, retry, retrying, reconnect, reconnecting } = useDemo()
   const s = attendanceSummary()
+  const miniShown = useOutOfView(() => document.querySelector('.att-hero'), { enabled: state !== 'loading' })
 
   if (state === 'loading') {
     return <Screen title="Attendance"><LoadingState label="Getting your attendance" onRetry={retry}><SkeletonRows count={5} lead="date" /></LoadingState></Screen>
@@ -38,6 +39,14 @@ export default function Attendance() {
         </div>
         <p className="t-faint settings-note att-foot">Daily attendance details are hidden in this demo.</p>
       </div>
+      <MiniBar
+        shown={miniShown}
+        onOpen={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        label={`${term.name} attendance, ${Math.round(s.percent)}%, in school ${s.present + s.late} of ${s.days} days. Show the summary`}
+        tile={<MiniTile tone="#2F9E45" value={<Num wide>{Math.round(s.percent)}</Num>} unit="%" />}
+        title={`${term.name} attendance`}
+        sub={<>In school <Num>{s.present + s.late}</Num> of <Num>{s.days}</Num> days</>}
+      />
     </Screen>
   )
 }

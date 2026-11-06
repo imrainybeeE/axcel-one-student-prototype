@@ -802,13 +802,13 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now--rail { margin-block: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-3); border-radius: var(--radius); }
 /* The rail's block: Today's parts at rail width (a smaller countdown beside the label, the same bar and Join) */
 /* Subject over teacher on the left; the countdown on the right, across both lines */
-.now-rail-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); align-items: start; }
+.now-rail-top { display: grid; grid-template-columns: minmax(0, 1fr) 72px; column-gap: var(--space-3); align-items: start; }
 .now-rail-name { display: contents; }
 .now-rail-name .now-title { grid-column: 1; grid-row: 1; min-width: 0; }
 .now-rail-name .now-meta { grid-column: 1; grid-row: 2; }
-.now-rail-top > .now-count { grid-column: 2; grid-row: 1 / span 2; align-self: end; } /* the big numeral spans the subject and the teacher, on the teacher line's baseline */
-.now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-heavy); }
-.now--rail .now-count { margin-top: 0; margin-bottom: -3px; } /* -3: the numeral's baseline onto the teacher line's */
+.now-rail-top > .now-count { grid-column: 2; grid-row: 1 / span 2; align-self: start; }
+.now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-display); }
+.now--rail .now-count { margin: 0; width: 72px; }
 
 .now--rail .now-count-n { font-size: 2.5rem; }
 
@@ -876,8 +876,9 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now--rail > .now-elapsed { grid-column: 1; margin: 0 !important; }
 .now--rail > .now-elapsed + .now-details { grid-column: 2; width: auto; margin: 0 -8px 0 0; padding: 0 8px; border-top: 0; display: inline-flex; align-items: center; gap: 2px; color: var(--on-now); }
 .now--rail > .now-elapsed:last-child { margin-bottom: var(--space-3) !important; }
-/* The countdown's unit: one quiet line ("min left"), under the numeral on Today, beside it on the rail */
+/* The countdown's unit: one quiet line ("min left") under the numeral. */
 .now-count-stack { flex-direction: row; gap: 0.25em; font-size: var(--fs-footnote); line-height: 1rem; }
 .now-count-stack > :last-child { font-weight: var(--fw-strong); color: inherit; }
 .now:not(.now--rail) .now-count-line { flex-direction: column; align-items: flex-end; gap: 4px; }
-.now--rail .now-count-stack { flex-direction: column; gap: 0; line-height: 0.9375rem; } /* beside the numeral on the narrow rail: "min" over "left", so the teacher line keeps its width */
+.now--rail .now-count-line { flex-direction: column; align-items: flex-end; gap: 2px; }
+.now--rail .now-count-stack { flex-direction: row; gap: 0.25em; margin-left: 0; font-size: 0.75rem; line-height: 0.875rem; white-space: nowrap; }

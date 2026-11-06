@@ -21,6 +21,8 @@
 .msg-list .msg-row .row-lead { align-self: center; }
 
 /* Compose sheet */
+.messages-inbox-screen .seg-track { background: var(--inbox-segment-bg); }
+
 .compose { display: flex; flex-direction: column; gap: var(--space-4); padding-bottom: var(--space-4); }
 .compose-note { display: flex; gap: var(--space-2); color: var(--ink-soft); }
 .compose-note .icon { flex: none; margin-top: 2px; }
@@ -39,13 +41,14 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 22.5rem; min-height: 44px; text-wrap: balance; margin: calc(-1 * var(--space-2)) 0 calc(-1 * var(--space-3)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
-  background: none; color: var(--ink-soft); font: inherit; font-size: 0.75rem; line-height: 1rem; text-align: center; cursor: pointer;
+  align-self: stretch; width: 100%; min-height: 44px; text-wrap: wrap; margin: calc(-1 * var(--space-2)) 0 0; padding: var(--space-1) 0; border: 0; border-radius: 12px;
+  background: none; color: var(--ink-soft); font: inherit; font-size: 0.75rem; line-height: 1rem; letter-spacing: -0.01em; text-align: center; cursor: pointer;
 }
 .thread-caption .icon { display: inline-block; vertical-align: -2px; margin-right: 4px; } /* centred, as Messages centres its notices; the shield leads the first line */
 .thread-caption:active { background: var(--fill); }
 /* "Today 10.12": the day in semibold, the time regular, centred */
 .thread-sep { align-self: center; margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.thread-caption + .thread-sep { margin-top: var(--space-2); }
 .thread-sep strong { font-weight: var(--fw-strong); }
 .thread-new { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; color: var(--brand); font-size: var(--fs-footnote); font-weight: var(--fw-strong); }
 .thread-new::before, .thread-new::after { content: ''; flex: 1; height: 1px; background: currentColor; opacity: 0.5; }
@@ -74,13 +77,13 @@
 /* The last bubble of a group gets Messages' tail */
 .msg.is-last .msg-bubble::before {
   /* The tail (Messages): one smooth curl out of the bubble's bottom corner, drawn as a shape, mirrored for sent */
-  content: ''; position: absolute; z-index: -1; bottom: 0; width: 16px; height: 22px; pointer-events: none; background: var(--bubble);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 22'%3E%3Cpath d='M16 0H6C6 11 4.6 18 0.8 21.2Q0 22 1.4 22H16Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 22'%3E%3Cpath d='M16 0H6C6 11 4.6 18 0.8 21.2Q0 22 1.4 22H16Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+  content: ''; position: absolute; z-index: -1; bottom: 0; width: 11px; height: 15px; pointer-events: none; background: var(--bubble);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
 }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -6px; }
-.msg--mine.is-last .msg-bubble::before { right: -6px; transform: scaleX(-1); }
-.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 0; } /* the tail is this corner, drawn out into one curve */
-.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 0; }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -3.5px; }
+.msg--mine.is-last .msg-bubble::before { right: -3.5px; transform: scaleX(-1); }
+.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 11px; }
+.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 11px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
 .msg.is-failed .msg-bubble { box-shadow: inset 0 0 0 2px var(--danger); }
@@ -183,7 +186,7 @@
 @media (min-width: 1024px) {
   .messages-split { display: grid; grid-template-columns: 26.5rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
   .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
-  .messages-list-pane { box-shadow: 1px 0 0 var(--divider); } /* one quiet line between the two white panes */
+  .messages-list-pane { border-inline-end: 1px solid var(--divider); }
   .messages-list-pane .screen { --pad-l: var(--space-9); --pad-r: var(--space-4); } /* the title on every laptop page's 56px edge; a phone-wide list beside it */
   .messages-list-pane .bar-lead { display: none; }
   .messages-list-pane .messages-inbox-heading { min-height: 44px; margin-bottom: var(--space-3); margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 14.5px); } /* the title sits where every other laptop title sits; search 16 under it */

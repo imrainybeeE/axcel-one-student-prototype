@@ -47,10 +47,10 @@
 
 /* Covers: each later lesson as one white card (time, subject, who and when), its subject a small dot, so the
    shelf stays calm beside the one coloured block on the page (the now block) */
-.cover-link { display: block; border-radius: 18px; color: var(--ink); text-decoration: none; } /* the focus ring follows the cover's corners */
+.cover-link { display: block; border-radius: var(--radius-compact); color: var(--ink); text-decoration: none; } /* the focus ring follows the cover's corners */
 .cover {
   position: relative; display: flex; flex-direction: column; min-height: 5.25rem;
-  padding: 14px var(--space-4); border-radius: 18px; background: var(--card); color: var(--ink); /* the same 16 inset as every card */
+  padding: 14px var(--space-4); border-radius: var(--radius-compact); background: var(--card); color: var(--ink); /* the same 16 inset as every card */
   transition: background-color var(--dur-2) var(--ease);
 }
 .cover-time { font-family: var(--font-num); font-stretch: 112%; font-weight: var(--fw-heavy); font-size: 1.375rem; line-height: 1.625rem; letter-spacing: 0; }
@@ -74,7 +74,7 @@
 .msg-card-text { grid-column: 3 / -1; grid-row: 2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 
 /* Coming up: a big date, the event, its time */
-.event-card { display: flex; flex-direction: column; height: 100%; padding: 14px var(--space-4); background: var(--card); border-radius: 18px; color: var(--ink); text-decoration: none; }
+.event-card { display: flex; flex-direction: column; height: 100%; padding: 14px var(--space-4); background: var(--card); border-radius: var(--radius-compact); color: var(--ink); text-decoration: none; }
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
 .event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
@@ -85,7 +85,7 @@
 .stat-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); }
 .stat-tile {
   display: flex; flex-direction: column; padding: 12px 14px 14px var(--space-4);
-  background: var(--card); border-radius: var(--radius); color: var(--ink); text-decoration: none;
+  background: var(--card); border-radius: var(--radius-compact); color: var(--ink); text-decoration: none;
 }
 .stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .stat-chev { color: var(--ink-tertiary); }
@@ -108,7 +108,7 @@
 
 /* Loading: the shelf's real shape */
 .shelf-row--skel { overflow: hidden; }
-.cover-skel { display: block; height: 5.25rem; border-radius: 18px; }
+.cover-skel { display: block; height: 5.25rem; border-radius: var(--radius-compact); }
 
 /* ============ The mini "now" capsule ============ */
 .now-mini {
@@ -160,4 +160,3 @@
   .shelf-item, .shelf-item--wide { width: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .now-mini, .now-mini-in { transition-duration: var(--dur-1); } }
-

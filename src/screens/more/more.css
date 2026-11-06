@@ -8,10 +8,11 @@
 .row--destructive .row-title { color: var(--danger); }
 .list:has(> .row--destructive:only-child) { border-radius: var(--radius-btn); } /* a single action row is a button: 14px, never a capsule */
 .row--destructive .row-body { align-items: center; }
+.more-settings > .list { border-radius: var(--radius-btn); }
 
 /* Appearance (Display & Brightness): two small phones, a round check under each, then Automatic */
 .appear { padding: var(--space-3) var(--space-4) var(--space-1); }
-.appear-pick { display: flex; justify-content: center; gap: var(--space-8); }
+.appear-pick { display: grid; grid-template-columns: repeat(2, minmax(44px, 1fr)); }
 .appear-opt { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); min-width: 64px; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
 .appear-phone {
   position: relative; width: 46px; height: 88px; border-radius: 10px; overflow: hidden; zoom: 0.82; /* 38x72: a hint of each look, not the page's main event */

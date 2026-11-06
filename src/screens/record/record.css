@@ -88,7 +88,8 @@
 .att-split-late { background: #E8920C; }
 .att-split-absent { background: none; }
 /* How absences are counted: a row in its own card, as Settings shows an explanation */
-.att-how { padding-inline: var(--space-4); }
+.record-current-award > .list { border-radius: var(--radius-compact); }
+.att-how { padding-inline: var(--space-4); border-radius: var(--radius-btn); }
 .att-how .disclosure { border-bottom: 0; }
 .att-how .disclosure summary { min-height: var(--row-min); color: var(--ink); font-weight: 400; }
 .att-how .disclosure-chevron { color: var(--ink-tertiary); }

@@ -56,7 +56,7 @@ function Measures({ s }) {
 
 function Ladder({ s }) {
   return (
-    <Group title="Current award">
+    <Group title="Current award" className="record-current-award">
       <Row
         lead={<span className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
         leadKind="icon"

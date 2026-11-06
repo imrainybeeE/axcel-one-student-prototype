@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import './segmented.css'
 
 /**
  * Segmented control: a fieldset of radios (arrow keys move the choice natively).

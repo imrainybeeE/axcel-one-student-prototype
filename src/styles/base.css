@@ -76,10 +76,7 @@ h1[tabindex="-1"]:focus, [tabindex="-1"]:focus:not(:focus-visible) { outline: no
 .t-title-3 { font-family: var(--font-display); font-stretch: 102%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-display); letter-spacing: -0.005em; }
 .t-time-l { font-size: var(--fs-time-l); line-height: var(--lh-time-l); }
 .t-title-s { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-head); }
-.t-body { font-size: var(--fs-body); line-height: var(--lh-body); font-weight: var(--fw-body); }
-.t-subhead { font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 .t-footnote { font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
-.t-strong { font-weight: var(--fw-strong); }
 .t-soft { color: var(--ink-soft); }
 .t-faint { color: var(--ink-faint); }
 h1, h2, h3, .t-title-l, .t-title-m, .t-title-now { text-wrap: balance; }
@@ -99,9 +96,7 @@ p, .row-meta, .row-title, .cover-title, .event-card-meta { text-wrap: pretty; }
   overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
   white-space: nowrap;
 }
-.nowrap { white-space: nowrap; }
 .clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 
 /* ---------- Reduced motion: replace movement with short fades, never 0ms ---------- */
 @media (prefers-reduced-motion: reduce) {

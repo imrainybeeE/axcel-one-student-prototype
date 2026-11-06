@@ -1,13 +1,14 @@
 // Messages inbox, as Apple Messages: search, one filter row, then one list newest first.
 // Unread is a leading blue dot and a darker preview. New message opens the compose sheet.
 import { useState } from 'react'
-import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT } from '../../app'
+import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT, useLaptop } from '../../app'
 import {
   IconButton,
   Segmented, SearchField, Row, Group, Avatar, Num, Button, Sheet, Icon,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
+import '../../data/messageHistory.js' // the threads' earlier messages
 import { kindWord, lastOf, whenLabel } from './messageTime.js'
 import Thread from './Thread.jsx'
 import './messages.css'
@@ -54,6 +55,7 @@ function ComposeSheet({ open, onClose }) {
 export default function Messages({ params = {} }) {
   const { state, offline, now, retry, retrying, reconnect, reconnecting } = useDemo()
   const unread = useUnreadThreads()
+  const wide = useLaptop()
   const [filter, setFilter] = useState('all')
   const [q, setQ] = useState('')
   const [compose, setCompose] = useState(false)
@@ -91,7 +93,7 @@ export default function Messages({ params = {} }) {
             <Row
               key={t.id}
               to={`/messages/${t.id}`}
-              zoom={selected !== t.id} /* the open thread's screen holds that zoom name; two mounted at once would clash */
+              zoom={!wide && selected !== t.id} /* phone only: on a laptop the list stays beside the thread; and the open thread's screen holds that zoom name */
               className={`msg-row${isNew ? ' is-unread' : ''}${selected === t.id ? ' is-selected' : ''}`}
               aria-current={selected === t.id ? 'page' : undefined}
               lead={<Avatar initials={t.initials} kind={t.kind === 'class' ? 'group' : t.kind === 'announcement' ? 'announcement' : 'person'} />}

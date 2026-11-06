@@ -1,0 +1,41 @@
+/* Rail: loaded with its component, not on first paint */
+/* ============ Rail ============ */
+.rail { list-style: none; margin: 0; padding: 0; }
+.rail-item { display: grid; grid-template-columns: var(--rail-time) var(--rail-track) minmax(0, 1fr); column-gap: var(--space-2); }
+.rail-time { display: flex; flex-direction: column; align-items: flex-end; padding-block: var(--space-3); text-align: right; font-size: var(--fs-subhead); line-height: 1.375rem; } /* 15 on the title's 22 line, so start sits on the title's baseline */
+.rail-start { font-weight: 600; }
+.rail-end { color: var(--ink-faint); font-family: var(--font); font-stretch: normal; font-size: var(--fs-footnote); font-weight: 400; }
+.rail-track { position: relative; }
+/* One unbroken line: square, opaque segments that overlap by a pixel, so no row join shows a seam */
+.rail-track::before { content: ""; position: absolute; left: calc(50% - 1px); top: 0; bottom: -1px; width: 2px; background: color-mix(in srgb, var(--subj-mark, var(--brand-line)) 35%, var(--paper)); }
+.rail-item.is-done .rail-track::before { background: color-mix(in srgb, var(--ink-faint) 25%, var(--paper)); }
+.rail-item.is-first .rail-track::before { top: 24px; border-radius: 1px 1px 0 0; }
+.rail-item.is-last .rail-track::before { bottom: auto; height: 24px; border-radius: 0 0 1px 1px; }
+.rail-item--gap .rail-track::before { background: repeating-linear-gradient(to bottom, var(--ink-faint) 0 3px, transparent 3px 7px); opacity: 0.5; }
+.rail-stop {
+  position: absolute; left: 50%; top: 24px; width: 10px; height: 10px; margin: -5px 0 0 -5px;
+  border-radius: var(--radius-dot); background: var(--surface); border: 2px solid var(--subj-mark, var(--brand-line));
+}
+.rail-item.is-done .rail-stop { background: var(--ink-faint); border-color: var(--ink-faint); opacity: 0.6; }
+.rail-item.is-now .rail-stop {
+  width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--subj, var(--brand-line)); border-color: var(--subj, var(--brand-line));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--subj, var(--brand-line)) 20%, transparent);
+}
+.rail-body { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); padding-block: var(--space-3); min-width: 0; }
+.rail-item.is-now .rail-body { display: block; padding-block: 0; margin-top: -10px; } /* the card's title shares its time's line, as every row's title does */
+.rail-text { min-width: 0; }
+.rail-title { overflow-wrap: anywhere; font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-head); }
+.rail-title .tag { vertical-align: 1px; }
+/* The past is greyed, not labelled (as Fantastical): title, times and stop all step back */
+.rail-item.is-done .rail-title { color: var(--ink-soft); font-weight: 500; }
+.rail-item.is-done .rail-start { color: var(--ink-soft); }
+.rail-meta { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.rail-tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-1); }
+.rail-done { color: var(--ink-faint); }
+.rail-trailing { flex: none; }
+.rail-item--gap .rail-time, .rail-item--gap .rail-body { padding-block: 2px; } /* a break is a 44px row: it marks time, it isn't a lesson */
+/* Lessons already over are compact (56): the eye goes to now and next */
+.rail-item.is-done :is(.rail-time, .rail-body) { padding-block: 6px; }
+.rail-item.is-done .rail-stop { top: 18px; }
+.rail-item.is-done.is-first .rail-track::before { top: 18px; }
+.rail-item--gap .rail-title { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); color: var(--ink-soft); }

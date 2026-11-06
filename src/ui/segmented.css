@@ -1,0 +1,40 @@
+/* Segmented control: loaded with its component, not on first paint */
+/* ============ Segmented control: a fill track, a raised capsule thumb that slides and squishes ============ */
+.seg { min-width: 0; }
+.seg-legend { margin-bottom: var(--space-2); font-weight: var(--fw-strong); }
+.seg-track {
+  position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  padding: 2px; border-radius: 10px; background: var(--fill);
+} /* iOS 26: a 32px control, 2px inset */
+.seg-thumb {
+  position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / var(--n));
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy);
+}
+.seg-thumb-fill {
+  display: block; width: 100%; height: 100%; border-radius: 8px;
+  background: var(--card);
+  box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.04), 0 1px 2px rgb(0 0 0 / 0.06);
+  animation: seg-squish var(--dur-spring-snappy) var(--ease);
+}
+[data-theme="dark"] .seg-thumb-fill { background: #545458; box-shadow: 0 1px 2px rgb(0 0 0 / 0.2); }
+@keyframes seg-squish { 40% { transform: scale(calc(1 + 0.06 * var(--motion)), calc(1 - 0.08 * var(--motion))); } }
+.seg-item {
+  position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 28px; padding: 0 var(--space-2); border-radius: 8px;
+  color: var(--ink); font-size: var(--fs-subhead); font-weight: 500; text-align: center; cursor: pointer;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.seg--tall .seg-item { min-height: var(--space-9); border-radius: 18px; }
+.seg--tall .seg-track { border-radius: 21px; }
+.seg--tall .seg-thumb-fill { border-radius: 18px; }
+.seg-item input { position: absolute; inset: -8px 0; width: 100%; height: calc(100% + 16px); margin: 0; opacity: 0; cursor: pointer; } /* a 44px target around the 28px segment */
+.seg-item:has(input:checked) { font-weight: var(--fw-strong); }
+.seg-item:not(:has(input:checked)):active { opacity: 0.55; transition-duration: 0s; }
+.seg-item:has(input:focus-visible) { outline: 2px solid var(--focus-outer); outline-offset: 0; box-shadow: inset 0 0 0 2px var(--focus-inner); }
+.seg-sub { font-family: var(--font-num); font-stretch: 112%; font-variant-numeric: tabular-nums; font-size: var(--fs-time-l); line-height: var(--lh-time-l); font-weight: var(--fw-time); color: var(--ink); }
+.seg-item:has(input:checked) .seg-sub { color: var(--brand); }
+[data-theme="dark"] .seg-item:has(input:checked) .seg-sub { color: var(--ink); }
+@media (forced-colors: active) {
+  .seg-item:has(input:checked) { outline: 2px solid Highlight; }
+}

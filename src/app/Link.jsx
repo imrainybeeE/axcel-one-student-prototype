@@ -18,10 +18,12 @@ export function Link({ to, type = 'push', replace, zoom = false, onClick, childr
         onClick?.(e)
         if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
         e.preventDefault()
-        // A zoom opens the screen inside the current tab's stack, so Back returns to the card it came from
+        // On a phone a zoom opens the screen inside the current tab's stack, so Back returns to the card it came from;
+        // on a laptop the sidebar shows the section the screen belongs to
         const zooming = zoom && type === 'push' && !replace
         if (zooming) zoomFrom()
-        navigate(to, { type, replace, tab: zooming ? tab : undefined })
+        const keepTab = zooming && !window.matchMedia('(min-width: 1024px)').matches
+        navigate(to, { type, replace, tab: keepTab ? tab : undefined })
       }}
       {...rest}
     >

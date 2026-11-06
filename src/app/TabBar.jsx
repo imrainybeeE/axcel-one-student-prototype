@@ -154,7 +154,7 @@ export function Sidebar() {
   return (
     <nav className="sidebar glass" aria-label="Main">
       <span className="sidebar-logo">
-        <img src={assetPath('brand/logo-horizontal.png')} alt="Axcel One" width="134" height="28" />
+        <img src={assetPath('brand/logo-268.png')} srcSet={`${assetPath('brand/logo-268.png')} 2x, ${assetPath('brand/logo-402.png')} 3x`} alt="Axcel One" width="134" height="28" loading="lazy" decoding="async" />{/* lazy: the sidebar is hidden on phones, so they never fetch it */}
       </span>
       {SIDEBAR_GROUPS.map((group, gi) => (
         <ul key={gi} className="sidebar-group" role="list">

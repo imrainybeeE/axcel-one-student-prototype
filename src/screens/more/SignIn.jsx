@@ -2,7 +2,8 @@
 // never prefilled, paste allowed, errors under the card with role=alert. Demo: any password works except "wrong".
 import { useId, useRef, useState } from 'react'
 import { assetPath, navigate, useDemo } from '../../app'
-import { Button, Icon } from '../../ui'
+import { Button } from '../../ui/Button.jsx'
+import { Icon } from '../../ui/Icon.jsx'
 import './more.css'
 
 export default function SignIn() {
@@ -33,7 +34,7 @@ export default function SignIn() {
   }
   return (
     <div className="signin">
-      <img src={assetPath('brand/logo-horizontal.png')} alt="Axcel One" width="192" height="40" className="signin-logo" />
+      <img src={assetPath('brand/logo-576.png')} alt="Axcel One" width="192" height="40" className="signin-logo" />
       <h1 className="t-title-l signin-title">Sign in</h1>
       <p className="t-soft">Prototype only. Do not enter your Axcel One password.</p>
       <form onSubmit={submit} noValidate className="signin-form">

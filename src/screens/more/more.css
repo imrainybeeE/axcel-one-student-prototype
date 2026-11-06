@@ -41,7 +41,6 @@
 /* Settings rows: one line, 44 tall at least, the value grey before the chevron */
 .screen-more .row-trail .num { font-family: var(--font); font-weight: 400; font-stretch: normal; }
 /* A group's footer, as Settings: small, grey, indented, close under the card */
-.settings-note { margin-top: var(--space-2) !important; padding-inline: var(--space-4); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 /* Report (Mail compose): the text in one card, Send in the bar */
 .report-send { font-weight: var(--fw-strong); }
 .report-card { padding: 4px var(--space-4); }
@@ -49,7 +48,7 @@
 .report-field { display: block; width: 100%; min-height: 10rem; padding: 10px 0; border: 0; background: none; color: var(--ink); font: inherit; line-height: var(--lh-body); resize: none; outline: none; }
 .report-field::placeholder { color: var(--ink-soft); }
 /* Sent: one calm mark and a short line; the back button is the way out */
-.report-done { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-9) var(--space-4) var(--space-6); }
+.report-done { display: flex; flex-direction: column; gap: var(--space-3); align-items: center; text-align: center; padding: var(--space-9) var(--space-4) var(--space-6); }
 .report-done-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #2F9E45; color: #FFFFFF; }
 .report-done-title { margin-top: var(--space-4); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-title); }
 .report-done-text { margin: var(--space-1) 0 var(--space-5); color: var(--ink-soft); max-width: 18rem; }

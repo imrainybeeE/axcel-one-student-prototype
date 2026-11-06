@@ -5,6 +5,7 @@ import { useCallback, useContext, useEffect, useId, useRef, useState } from 'rea
 import { Icon } from './Icon.jsx'
 import { rubber, project, springFrom } from './physics.js'
 import { UnderlayContext } from '../app/underlay.js'
+import './sheet.css'
 
 const openSheets = new Set() // close functions of open top-level sheets
 

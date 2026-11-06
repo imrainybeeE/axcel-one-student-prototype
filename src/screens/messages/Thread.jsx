@@ -5,6 +5,7 @@ import {
   LoadingState, ErrorState, useToast,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
+import '../../data/messageHistory.js' // the threads' earlier messages
 import { messageAt, separatorLabel, isStudent } from './messageTime.js'
 import { formatTime } from '../../lib/time.js'
 import { useBlocked, setBlockedPerson } from './blockedStore.js'

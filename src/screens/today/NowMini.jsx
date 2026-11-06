@@ -4,7 +4,9 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useScrolledDown } from '../../app'
 import { UnderlayContext } from '../../app/underlay.js'
-import { Time, Num, Icon, RollNum } from '../../ui'
+import { Time, Num } from '../../ui/Num.jsx'
+import { Icon } from '../../ui/Icon.jsx'
+import { RollNum } from '../../ui/Motion.jsx'
 
 const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.title)
 

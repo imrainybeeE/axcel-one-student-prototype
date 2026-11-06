@@ -24,8 +24,8 @@
 .appear-phone[data-look='dark'] { --ph-page: #161618; --ph-card: #232326; --ph-ink: #FFFFFF; --ph-bar: rgb(62 62 66 / 0.9); }
 .appear-phone i { position: absolute; left: 6px; right: 6px; display: block; border-radius: 3px; background: var(--ph-card); }
 .appear-phone i:nth-child(1) { top: 6px; height: 4px; left: 15px; right: 15px; border-radius: 2px; background: var(--ph-ink); } /* the island, centred */
-.appear-phone i:nth-child(2) { top: 19px; height: 19px; border-radius: 4px; background: var(--subj-physics); }
-.appear-phone i:nth-child(3) { top: 43px; height: 15px; border-radius: 4px; background: none; display: flex; gap: 3px; }
+.appear-phone i:nth-child(2) { top: 27px; height: 18px; border-radius: 4px; background: var(--subj-physics); }
+.appear-phone i:nth-child(3) { top: 49px; height: 13px; border-radius: 4px; background: none; display: flex; gap: 3px; }
 .appear-phone i:nth-child(3)::before, .appear-phone i:nth-child(3)::after { content: ''; flex: 1; border-radius: 4px; background: color-mix(in srgb, var(--subj-maths) 22%, var(--ph-card)); }
 .appear-phone i:nth-child(3)::after { background: color-mix(in srgb, var(--subj-gp) 22%, var(--ph-card)); }
 /* The waves behind Today's title, in the corner: a blue sweep edged with the orange line */
@@ -99,3 +99,7 @@
   .hb-tile + .hb-text { margin-top: var(--space-4); }
   .screen-more .screen-body > .stack, .screen-body > .stack:has(.appear-group) { max-width: 46rem; }
 }
+.screen-more .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 600; color: var(--ink-soft); } /* the choices lead; the labels only group them */
+/* Today's title and its day strip, over the blue lesson card */
+.appear-phone::after { content: ''; position: absolute; top: 13px; left: 6px; right: 6px; height: 10px;
+  background: linear-gradient(var(--ph-ink), var(--ph-ink)) 0 0 / 17px 4px no-repeat, linear-gradient(90deg, color-mix(in srgb, var(--ph-ink) 30%, transparent) 0 40%, var(--subj-physics) 40% 52%, color-mix(in srgb, var(--ph-ink) 14%, transparent) 52%) 0 8px / 100% 2px no-repeat; }

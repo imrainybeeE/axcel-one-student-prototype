@@ -19,7 +19,7 @@ function shortTitle(item) {
 function meta(item) {
   if (!item) return ''
   if (item.kind === 'event') return item.place === 'online' ? 'Online' : 'At school'
-  return `${item.teacher}\u00a0· ${item.place}${item.double ? '\u00a0· Double' : ''}`
+  return `${item.teacher}\u00a0· ${item.place}`
 }
 
 // Today's one first-paint moment, once per session: the lesson bar fills to the minute (the number is never faked)
@@ -250,7 +250,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
         {/* One band: the lesson on the left, its countdown on the right (the rail's filled stop already says now) */}
         <div className="now-rail-top">
           <div className="now-rail-name">
-            <p className="now-title">{shortTitle(item)}</p>
+            <p className="now-title">{shortTitle(item)}{item.double && <span className="now-double">Double</span>}</p>
             <p className="now-meta">{meta(item)}</p>
           </div>
           <Countdown minutes={model.minutes} mode="left" />
@@ -312,7 +312,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
       <div className="now-grid">
         <div className="now-main">
           {tag && <Tag tone="inverse">{tag}{starts && <> at <Time value={item.start} /></>}</Tag>}
-          <H className="now-title t-title-now" aria-label={item.title}>{shortTitle(item)}</H>
+          <H className="now-title t-title-now" aria-label={item.double ? `${item.title}, double lesson` : item.title}>{shortTitle(item)}{item.double && <span className="now-double" aria-hidden="true">Double</span>}</H>
           {!(isBreak && model.next) && (
             <p className="now-meta">{isBreak ? <>until <Time value={item.end} /></> : meta(item)}</p>
           )}

@@ -203,5 +203,6 @@
 }
 @media (prefers-reduced-motion: reduce) { .now-mini, .now-mini-in { transition-duration: var(--dur-1); } }
 
-[data-theme='dark'] .cover { --cover-tint: 16%; }
+[data-theme='dark'] .cover { --cover-tint: 9%; } /* a low wash on charcoal; the time and dot carry the colour */
 @media (hover: hover) and (pointer: fine) { [data-theme='dark'] .cover-link:hover .cover { --cover-tint: 22%; } }
+@media (max-width: 1023px) { .shelf-item:has(> .event-card) { width: 10.5rem; max-width: none; } } /* 168: a two-word event stays on one line */

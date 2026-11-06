@@ -80,8 +80,8 @@
   content: ''; position: absolute; z-index: -1; bottom: 0; width: 11px; height: 15px; pointer-events: none; background: var(--bubble);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 15'%3E%3Cpath d='M11 0H3.5C3.5 6.8 3 10.8 .8 13.1C.2 13.7 .35 14.4 1.2 14.4C3.2 14.4 4.7 13.9 6.1 13.1C7.4 14.3 9.1 15 11 15Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
 }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -3.5px; }
-.msg--mine.is-last .msg-bubble::before { right: -3.5px; transform: scaleX(-1); }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -2.5px; } /* the curl starts 1px under the bubble's edge: no step where they meet */
+.msg--mine.is-last .msg-bubble::before { right: -2.5px; transform: scaleX(-1); }
 .msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 11px; }
 .msg--mine.is-last .msg-bubble { border-bottom-right-radius: 11px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
@@ -233,3 +233,4 @@
 }
 
 .msg-list .row--zoom { background-color: var(--paper); } /* the zoom snapshot's fill is the page here, never a raised slab */
+.messages-inbox-screen .stack > .seg + * { margin-top: var(--space-3); } /* the filters belong to the list under them */

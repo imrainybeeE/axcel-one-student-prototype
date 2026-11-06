@@ -86,7 +86,7 @@
 .day-strip-seg.is-done { background: color-mix(in srgb, var(--ink) 34%, transparent); }
 /* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */
 /* The current lesson: solid up to the dot, a pale tint of its colour after it (a hard split) */
-.day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 28%, var(--paper)) 0); }
+.day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 45%, var(--paper)) 0); }
 /* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
 .day-strip-now {
   position: absolute; top: 50%; left: 0;

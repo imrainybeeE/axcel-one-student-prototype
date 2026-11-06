@@ -111,7 +111,7 @@
 .tt-rail .rail-item--lesson:not(.is-now) .rail-time { padding-block: 13px 4px; }
 .tt-card {
   position: relative; align-self: stretch; justify-content: flex-start;
-  min-height: max(3.5rem, calc(var(--mins) * 1.45px)); padding: 9px 12px 10px 15px; border-radius: var(--radius-compact);
+  height: calc(var(--mins) * 2.25px); min-height: 3.5rem; /* one scale: 25, 45 and 90 minutes are 56, 101 and 203px */ padding: 9px 12px 10px 15px; border-radius: var(--radius-compact);
   background: color-mix(in srgb, var(--subj-mark, var(--brand-line)) 11%, var(--card));
   box-shadow: inset 4px 0 0 var(--subj-mark, var(--brand-line));
   transition: background-color var(--dur-2) var(--ease), transform var(--dur-spring-snappy) var(--spring-snappy);

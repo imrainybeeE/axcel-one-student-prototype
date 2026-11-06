@@ -18,6 +18,7 @@
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
 .cal-week + .cal-week { margin-top: var(--space-4); }
 .cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
+.cal-month-bar + * { margin-top: -10px; } /* the month's name sits close over its weekdays */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
@@ -67,3 +68,4 @@
 .meta-parts > span { display: block; margin-left: -0.9em; }
 .meta-parts > span > span { display: inline-block; max-width: calc(100% - 0.9em); vertical-align: top; }
 .meta-parts > span > span::before { content: '·'; display: inline-block; width: 0.9em; text-align: center; }
+.cal-row .row-meta { font-size: var(--fs-footnote); line-height: var(--lh-footnote); } /* No school, who it is for: under the event, a step smaller */

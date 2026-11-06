@@ -6,6 +6,7 @@ import { Screen, useDemo, useRoute, updateQuery, useLaptop, useJoin, useTabRetap
 import {
   Rail, RailItem, NowBlock, Tag, Time, Num, Icon, Button, Sheet, Row,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
+  LessonMini, lessonMiniActive, useOutOfView,
 } from '../../ui'
 import { getDay, nowModel, isJoinOpen, joinOpensAt, nextSchoolDay } from '../../lib/schedule.js'
 import { addDays, dayOfWeek, formatLongDate, formatWeekday, isoToMs } from '../../lib/time.js'
@@ -233,10 +234,19 @@ export default function Timetable() {
   const model = selected === today ? nowModel(now) : null
   const joinProps = { joiningId, onJoin: join }
 
-  useTabRetap('timetable', () => {
+  // Back to now: today's rail, scrolled to the lesson on now (or the next one)
+  const nowRow = () => document.querySelector('.tt-rail .rail-item.is-now') || document.querySelector('.tt-rail .tt-next')?.closest('.rail-item')
+  const backToNow = () => {
     updateQuery({ day: null, view: null })
-    requestAnimationFrame(() => document.querySelector('.rail-item.is-now')?.scrollIntoView({ block: 'center', behavior: 'smooth' }))
-  })
+    requestAnimationFrame(() => nowRow()?.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }))
+  }
+  useTabRetap('timetable', backToNow)
+
+  // The capsule carries today's lesson whenever its row is not on screen: scrolled past, not reached yet, or on another day
+  const todayModel = state === 'loading' || state === 'empty' ? null : (model || nowModel(now))
+  const onToday = view === 'day' && selected === today
+  const rowAway = useOutOfView(nowRow, { both: true, enabled: onToday && lessonMiniActive(todayModel), key: `${view}${selected}${todayModel?.item?.id}` })
+  const miniShown = lessonMiniActive(todayModel) && (!onToday || rowAway)
 
   const strip = <WeekStrip days={weekDays} selected={selected} today={today} onPick={(iso) => updateQuery({ day: iso === today ? null : iso })} />
 
@@ -292,6 +302,16 @@ export default function Timetable() {
         )}
         {body}
       </div>
+      <LessonMini
+        model={todayModel}
+        offline={offline}
+        joiningId={joiningId}
+        onJoin={join}
+        shown={miniShown}
+        onOpen={backToNow}
+        openLabel="Show it in today's timetable"
+        lead={onToday ? null : 'Today'}
+      />
       <LessonSheet item={openItem} onClose={() => setOpenItem(null)} nowMs={now} offline={offline} joinProps={joinProps} />
     </Screen>
   )

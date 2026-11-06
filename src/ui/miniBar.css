@@ -1,0 +1,59 @@
+/* ============ The mini capsule (MiniBar.jsx), as Music's MiniPlayer ============ */
+.mini-bar {
+  position: fixed; z-index: var(--z-tabbar); inset-inline: 0; bottom: max(var(--safe-bottom), var(--space-2));
+  width: min(calc(100% - 2 * var(--tabbar-gap) - var(--safe-left) - var(--safe-right)), 30rem); height: var(--tabbar-h);
+  margin-inline: auto; border-radius: 31px;
+  /* Above the bar it is 52 tall (clipped 5 top and bottom) and sits 8 above it; beside the minimised bar it is the bar's height */
+  clip-path: inset(5px 0 5px 0 round 26px);
+  transform: translateY(calc(-1 * (var(--tabbar-h) + 3px) + 14px)) scale(0.96);
+  opacity: 0; pointer-events: none; visibility: hidden;
+  transition: transform var(--dur-spring-smooth) var(--spring-smooth), clip-path var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-2);
+}
+.mini-bar[data-shown] { opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; transform: translateY(calc(-1 * (var(--tabbar-h) + 3px))); }
+.mini-bar[data-min] { clip-path: inset(0 0 0 calc(var(--tabbar-h) + 8px) round 31px); transform: translateY(14px) scale(0.96); }
+.mini-bar[data-min][data-shown] { transform: none; }
+/* The bar steps away in a conversation; so does the capsule */
+body:has(.tabbar[data-away]) .mini-bar { display: none; }
+.mini-bar-in {
+  display: flex; align-items: center; gap: var(--space-2); height: 100%; padding: 0 9px 0 11px;
+  transition: padding var(--dur-spring-smooth) var(--spring-smooth);
+}
+.mini-bar[data-min] .mini-bar-in { padding-left: calc(var(--tabbar-h) + 8px + 11px); }
+.mini-bar-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
+.mini-bar-text { display: flex; flex-direction: column; min-width: 0; }
+.mini-bar-title { font-size: var(--fs-subhead); line-height: 1.1875rem; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-bar-sub { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* The leading square: one size and corner for every page, so the capsule reads as one thing wherever it is */
+.mini-tile {
+  position: relative; flex: none; display: grid; place-content: center; justify-items: center; line-height: 1;
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--mini-tone, var(--subj-a)); color: #FFFFFF; --icon-cut: var(--mini-tone, var(--subj-a));
+  font-size: 1.0625rem; font-weight: var(--fw-heavy);
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy);
+}
+.mini-tile-unit { margin-top: 1px; font-family: var(--font); font-stretch: normal; font-size: 0.625rem; font-weight: 600; opacity: 0.85; } /* 10: a figure keeps its unit, as the heroes' do */
+/* Date, as the Calendar icon: the weekday in the app's blue over the day */
+.mini-tile--date { background: var(--card); color: var(--ink); box-shadow: inset 0 0 0 0.5px var(--divider); gap: 1px; }
+.mini-tile-wd { font-family: var(--font); font-stretch: normal; font-size: 0.625rem; font-weight: 700; color: var(--brand); text-transform: uppercase; letter-spacing: 0.02em; }
+.mini-tile-day { font-size: 1.0625rem; font-weight: var(--fw-heavy); }
+.mini-tile--bare { background: none; }
+.mini-tile .badge { position: absolute; top: -4px; right: -5px; box-shadow: 0 0 0 1.5px var(--glass-solid); }
+
+.mini-bar-action {
+  flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--fill); color: var(--ink); cursor: pointer;
+  transition: transform var(--dur-spring-snappy) var(--spring-snappy);
+}
+.mini-bar-action[data-tone='subject'] { background: var(--subj-a); color: #FFFFFF; }
+.mini-bar-action:active, .mini-bar-main:active .mini-tile { transform: scale(calc(1 - 0.06 * var(--motion))); transition-duration: 90ms; }
+.mini-bar-action:disabled { opacity: 0.6; }
+
+@media (max-width: 1023.98px) {
+  /* Room under the last row for the capsule, so the page never ends hidden behind it */
+  body:has(.mini-bar) .main:not(.main--bare) { padding-bottom: calc(var(--tabbar-space) + var(--tabbar-h) + var(--space-4)); }
+}
+@media (min-width: 1024px) { .mini-bar { display: none; } }
+@media (max-height: 500px) { .mini-bar { display: none; } }
+@media (prefers-reduced-motion: reduce) { .mini-bar, .mini-bar-in { transition-duration: var(--dur-1); } }
+.mini-tile-award { display: contents; } /* carries the award metal (--tile-bg) to its tile */

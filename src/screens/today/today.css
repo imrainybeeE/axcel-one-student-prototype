@@ -102,37 +102,8 @@
 .shelf-row--skel { overflow: hidden; }
 .cover-skel { display: block; height: 5.25rem; border-radius: var(--radius-compact); }
 
-/* ============ The mini "now" capsule ============ */
-.now-mini {
-  position: fixed; z-index: var(--z-tabbar); inset-inline: 0; bottom: max(var(--safe-bottom), var(--space-2));
-  width: min(calc(100% - 2 * var(--tabbar-gap) - var(--safe-left) - var(--safe-right)), 30rem); height: var(--tabbar-h);
-  margin-inline: auto; border-radius: 31px;
-  /* Above the bar it is 52 tall (clipped 5 top and bottom) and sits 8 above it; beside the minimised bar it is the bar's height */
-  clip-path: inset(5px 0 5px 0 round 26px);
-  transform: translateY(calc(-1 * (var(--tabbar-h) + 3px) + 14px)) scale(0.96);
-  opacity: 0; pointer-events: none; visibility: hidden;
-  transition: transform var(--dur-spring-smooth) var(--spring-smooth), clip-path var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-2);
-}
-.now-mini[data-shown] { opacity: 1; pointer-events: auto; visibility: visible; transition-delay: 0s; transform: translateY(calc(-1 * (var(--tabbar-h) + 3px))); }
-.now-mini[data-min] { clip-path: inset(0 0 0 calc(var(--tabbar-h) + 8px) round 31px); transform: translateY(14px) scale(0.96); }
-.now-mini[data-min][data-shown] { transform: none; }
-.now-mini-in {
-  display: flex; align-items: center; gap: var(--space-2); height: 100%; padding: 0 9px 0 11px;
-  transition: padding var(--dur-spring-smooth) var(--spring-smooth);
-}
-.now-mini[data-min] .now-mini-in { padding-left: calc(var(--tabbar-h) + 8px + 11px); }
-.now-mini-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
-.now-mini-tile { flex: none; display: grid; place-content: center; justify-items: center; line-height: 1; width: 38px; height: 38px; border-radius: 10px; background: var(--subj-a); color: #FFFFFF; font-size: 1.0625rem; font-weight: var(--fw-heavy); transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
-.now-mini-unit { margin-top: 1px; font-family: var(--font); font-stretch: normal; font-size: 0.625rem; font-weight: 600; opacity: 0.85; } /* 10: the countdown keeps its unit, as the block's does */
-.now-mini-text { display: flex; flex-direction: column; min-width: 0; }
-.now-mini-title { font-size: var(--fs-subhead); line-height: 1.1875rem; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.now-mini-sub { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.now-mini-join { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--subj-a); color: #FFFFFF; cursor: pointer; transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
-.now-mini-join:active, .now-mini-main:active .now-mini-tile { transform: scale(calc(1 - 0.06 * var(--motion))); transition-duration: 90ms; }
-.now-mini-join:disabled { opacity: 0.6; }
 
 @media (min-width: 1024px) {
-  .now-mini { display: none; }
   .today-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
   .today-cols { grid-template-rows: auto 1fr; } /* the side column's height goes to the day's row, never into the strip's */
   .today-strip { grid-column: 1; grid-row: 1; }
@@ -151,4 +122,3 @@
   .shelf-row > :nth-child(n + 4) { display: none; }
   .shelf-item, .shelf-item--wide { width: auto; }
 }
-@media (prefers-reduced-motion: reduce) { .now-mini, .now-mini-in { transition-duration: var(--dur-1); } }

@@ -6,9 +6,10 @@ import { Screen, useDemo, useRoute, updateQuery, useLaptop, usePref, SAVED_AT } 
 import {
   Segmented, Group, Row, Num, Icon, IconButton, Button, Sheet, CheckRow,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
+  MiniBar, MiniTile, useOutOfView,
 } from '../../ui'
 import { events, categories } from '../../data/calendar.js'
-import { addDays, dayOfWeek, formatLongDate, isoToMs } from '../../lib/time.js'
+import { addDays, dayOfWeek, daysBetween, formatLongDate, isoToMs } from '../../lib/time.js'
 import { student } from '../../data/student.js'
 import './calendar.css'
 
@@ -40,6 +41,17 @@ function metaParts(e) {
 function meta(e) {
   const parts = metaParts(e)
   return <span className="meta-parts" aria-label={parts.join(', ')}><span>{parts.map((p) => <span key={p}>{p}</span>)}</span></span>
+}
+
+/** The capsule's line: "Tomorrow, Sat 14 Nov", "In 8 days, Fri 14 Nov", or for one under way, "Now, until Tue 10 Nov". */
+function soon(e, today) {
+  const date = (iso) => `${WD[dayOfWeek(iso)]} ${Number(iso.slice(8))} ${MONTHS[Number(iso.slice(5, 7)) - 1].slice(0, 3)}`
+  if (e.start <= today) {
+    const end = e.end && e.end.includes('-') ? e.end : null
+    return end && end > today ? `Now, until ${date(end)}` : `Today, ${when(e).replace(/^[A-Z](?=[a-z])/, (c) => c.toLowerCase())}`
+  }
+  const n = daysBetween(today, e.start)
+  return `${n === 1 ? 'Tomorrow' : `In ${n} days`}, ${date(e.start)}`
 }
 
 function weekLabel(iso, today) {
@@ -231,6 +243,13 @@ export default function Calendar() {
     body = <Upcoming list={upcoming} today={today} onOpen={setOpen} />
   }
 
+  // The capsule: the next event, once the first one (or the month grid) has scrolled away
+  const next = state === 'loading' || state === 'empty' ? null : upcoming[0]
+  const miniShown = useOutOfView(
+    () => document.querySelector(view === 'month' ? '.screen--cal .cal-grid' : '.screen--cal .cal-week .cal-row'),
+    { enabled: Boolean(next), key: view },
+  )
+
   return (
     <Screen
       title="Calendar"
@@ -252,6 +271,17 @@ export default function Calendar() {
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>New events did not load. Check that you are online, then try again. Events saved at <Num>{SAVED_AT}</Num> are below.</ErrorState>}
         {body}
       </div>
+      {next && (
+        <MiniBar
+          shown={miniShown}
+          onOpen={() => setOpen(next)}
+          haspopup="dialog"
+          label={`Next: ${next.title}, ${soon(next, today)}`}
+          tile={<MiniTile kind="date" weekday={WD[dayOfWeek(next.start > today ? next.start : today)]} value={Number((next.start > today ? next.start : today).slice(8))} />}
+          title={next.title}
+          sub={soon(next, today)}
+        />
+      )}
       <EventSheet e={open} onClose={() => setOpen(null)} today={today} />
       <Sheet open={showOpen} onClose={() => setShowOpen(false)} title="Show" trailing={<Button variant="plain" size="compact" onClick={() => setShowOpen(false)}>Done</Button>}>
         <div className="cal-sheet">

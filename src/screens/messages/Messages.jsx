@@ -6,6 +6,7 @@ import {
   IconButton,
   Segmented, SearchField, Row, Group, Avatar, Num, Button, Sheet, Icon,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
+  MiniBar, MiniTile, MiniAction, Badge, useOutOfView,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
 import '../../data/messageHistory.js' // the threads' earlier messages
@@ -137,6 +138,43 @@ export default function Messages({ params = {} }) {
       <ComposeSheet open={compose} onClose={() => setCompose(false)} />
     </>
   )
+  // The capsule, once the search and filters have scrolled away: the newest unread conversation, or New message
+  const ready = state !== 'loading' && state !== 'empty' && !selected
+  const miniShown = useOutOfView(() => document.querySelector('.messages-inbox-screen .seg'), { enabled: ready })
+  const newest = threads.filter((t) => unread.has(t.id)).sort((a, b) => lastOf(b).at - lastOf(a).at)[0]
+  let mini = null
+  if (ready && newest) {
+    const last = lastOf(newest)
+    const from = newest.kind === 'class' && last.from !== 'me' ? `${last.from.split(' ')[0]}: ` : ''
+    mini = (
+      <MiniBar
+        shown={miniShown}
+        onOpen={() => navigate(`/messages/${newest.id}`)}
+        label={`${newest.title}, new message: ${last.text}${unread.size > 1 ? `. ${unread.size} unread conversations` : ''}. Open`}
+        tile={(
+          <MiniTile kind="bare">
+            <Avatar initials={newest.initials} kind={newest.kind === 'class' ? 'group' : newest.kind === 'announcement' ? 'announcement' : 'person'} size={38} />
+            <Badge count={unread.size > 1 ? unread.size : 0} />
+          </MiniTile>
+        )}
+        title={newest.title}
+        sub={<>{from}{last.text}</>}
+        action={canCompose && <MiniAction icon="pen" label="New message" onClick={() => setCompose(true)} haspopup="dialog" />}
+      />
+    )
+  } else if (ready && canCompose) {
+    mini = (
+      <MiniBar
+        shown={miniShown}
+        onOpen={() => setCompose(true)}
+        haspopup="dialog"
+        label="New message"
+        tile={<MiniTile kind="icon" icon="pen" tone="var(--brand-solid)" />}
+        title="New message"
+        sub="You're all caught up"
+      />
+    )
+  }
   // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers)
   const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" /> : null
   return (
@@ -147,7 +185,7 @@ export default function Messages({ params = {} }) {
           <div className="messages-inbox-heading"><h2 className="t-title-l">Messages</h2>{composeAction}</div>
           <div className="screen-body">{inbox}</div>
         </div>
-      ) : <Screen title="Messages" width="narrow" className="messages-inbox-screen" action={composeAction}>{inbox}</Screen>}
+      ) : <Screen title="Messages" width="narrow" className="messages-inbox-screen" action={composeAction}>{inbox}{mini}</Screen>}
     </div>
     <div className="messages-detail-pane">
       {selected ? <Thread key={selected} params={params} /> : <div className="messages-detail-empty">Select a conversation</div>}

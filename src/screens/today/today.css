@@ -12,7 +12,7 @@
 .today-updated { margin-top: var(--space-7); text-align: center; color: var(--ink-faint); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 .today-notice { margin-bottom: var(--space-1); }
 /* The mini capsule floats above the tab bar: the last line stays clear of it */
-@media (max-width: 1023.98px) { .today-updated { margin-bottom: calc(var(--tabbar-h) + var(--space-2)); } }
+
 
 /* The account circle in the bar holds a 36px avatar */
 .account-btn { padding: 0; }

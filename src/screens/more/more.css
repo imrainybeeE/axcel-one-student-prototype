@@ -22,7 +22,7 @@
 .appear-phone[data-look='light'] { --ph-page: #F2F2F7; --ph-card: #FFFFFF; --ph-ink: #111113; --ph-bar: rgb(255 255 255 / 0.9); }
 .appear-phone[data-look='dark'] { --ph-page: #161618; --ph-card: #232326; --ph-ink: #FFFFFF; --ph-bar: rgb(62 62 66 / 0.9); }
 .appear-phone i { position: absolute; left: 6px; right: 6px; display: block; border-radius: 3px; background: var(--ph-card); }
-.appear-phone i:nth-child(1) { top: 9px; height: 4px; right: 22px; background: var(--ph-ink); }
+.appear-phone i:nth-child(1) { top: 6px; height: 4px; left: 15px; right: 15px; border-radius: 2px; background: var(--ph-ink); } /* the island, centred */
 .appear-phone i:nth-child(2) { top: 19px; height: 19px; border-radius: 4px; background: var(--subj-physics); }
 .appear-phone i:nth-child(3) { top: 43px; height: 15px; border-radius: 4px; }
 .appear-phone i:nth-child(4) { top: 76px; height: 6px; left: 7px; right: 7px; border-radius: 3px; background: var(--ph-bar); }

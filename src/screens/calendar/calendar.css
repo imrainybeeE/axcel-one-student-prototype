@@ -6,8 +6,8 @@
 .cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
 .cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #2F7FB8; } /* school days that run as usual: a calm blue, never a disabled grey */
 .cal-row[data-cat='meeting'] { --cat: #5856D6; }
-.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 12px; }
-.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 3px; border-radius: 1.5px; background: var(--cat); } /* as tall as the text it marks */
+.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 11px; }
+.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 2px; border-radius: 1px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
 .cal-row.is-today .lead-date .num { color: var(--brand); }
 .cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
@@ -24,7 +24,7 @@
 .cal-grid-row > span { display: block; }
 .cal-cell {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
-  width: 100%; min-height: 50px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  width: 100%; min-height: 46px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
 .cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
@@ -44,10 +44,11 @@
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
   .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
-  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
+  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; column-gap: var(--space-7) !important; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
   .cal-laptop .cal-cell { min-height: 56px; }
+  .screen--wide.screen--cal { --content-wide: 59rem; } /* 944: a 560 month, a 32 gutter and the 352 day; Show ends on the day's edge */
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }

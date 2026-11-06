@@ -165,7 +165,7 @@
 }
 .section-head > :is(h2, h3, legend) { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-strong); letter-spacing: 0; }
 .section-head .text-link { margin-block: -12px; }
-.group + .group { margin-top: var(--space-7); }
+.group + .group, .stack > * + .group { margin-top: 28px; } /* one rhythm: 28 from a card to the next heading */
 
 /* Every list is an inset card: one pattern for rows everywhere */
 .list {
@@ -331,7 +331,7 @@
   min-height: var(--tap); cursor: pointer; list-style: none; font-weight: var(--fw-strong); color: var(--brand);
 }
 .disclosure summary::-webkit-details-marker { display: none; }
-.disclosure-chevron { stroke-width: 2.2; transition: transform var(--dur-spring-snappy) var(--spring-snappy); } /* the same weight as every row chevron */
+.disclosure-chevron { color: var(--ink-soft); stroke-width: 2.2; transition: transform var(--dur-spring-snappy) var(--spring-snappy); } /* the same weight as every row chevron */
 .disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .disclosure-body { padding-bottom: var(--space-4); }
 .disclosure[open] .disclosure-body { animation: rise-in var(--dur-spring-smooth) var(--spring-smooth); }
@@ -562,7 +562,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .sheet-close:active { transform: scale(calc(1 - 0.08 * var(--motion))); background-color: var(--fill); transition-duration: 90ms; }
 @media (hover: hover) and (pointer: fine) { .sheet-close:hover { background-color: var(--fill); } }
 .sheet-head-trail { justify-self: end; }
-.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); } /* the sheet's kind, quieter than what it shows */
+.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; color: var(--ink-soft); } /* the sheet's kind, quieter than what it shows */
 .sheet-body {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
   padding: var(--space-2) var(--gutter-r) var(--space-6) var(--gutter-l);

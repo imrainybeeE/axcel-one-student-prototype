@@ -234,6 +234,7 @@ export default function Calendar() {
   return (
     <Screen
       title="Calendar"
+      className="screen--cal"
       action={
         <Button variant="plain" size="compact" icon="filter" onClick={() => setShowOpen(true)} aria-haspopup="dialog" aria-label={hidden ? 'Show, some events hidden' : 'Show'}>
           Show{hidden ? <span className="cal-hidden-dot" aria-hidden="true" /> : null}

@@ -107,3 +107,6 @@
 [data-theme='dark'] .day-strip-seg.is-break { background: none; }
 [data-theme='dark'] .day-strip-seg.is-done { background: rgb(255 255 255 / 0.55); }
 [data-theme='dark'] .day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 34%, var(--paper)) 0); }
+
+/* In a lesson the split itself says how far in (solid, then pale): no marker on top. In a break, the marker shows where the day is. */
+.day-strip-now:not([data-subject='break']) { opacity: 0; }

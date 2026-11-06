@@ -5,7 +5,7 @@
 .msg-row .row-hit { padding-block: 8px; } /* 79: Messages' row, two preview lines and no air to spare */
 .msg-row-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
 .msg-row-name { flex: 1; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 400; white-space: nowrap; }
+.msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-footnote); font-weight: 400; white-space: nowrap; }
 .msg-row-chev { flex: none; align-self: center; color: var(--ink-tertiary); margin-right: -4px; }
 .msg-list .msg-row { padding-left: 26px; } /* room for the unread dot, clear of the avatar, as Messages leaves it */
 .msg-list .msg-row::after { left: calc(26px + var(--row-inset, 0px)); }
@@ -221,3 +221,14 @@
 /* The inbox's controls sit close, as Messages stacks them: 16 between search, filter and list (search's fill is 3 inside its box) */
 .stack:has(> .search) > * + * { margin-top: var(--space-4); }
 .stack:has(> .search) > .search + * { margin-top: calc(var(--space-4) - 3px); }
+
+/* The inbox is Messages' own surface, not a Settings group: a flat list on the page, rows to the edge, separators
+   inset to the text. In light mode the page is white, as Messages' is. */
+.msg-list { background: none; box-shadow: none; border-radius: 0; overflow: visible; margin-inline: calc(-1 * var(--pad-l)) calc(-1 * var(--pad-r)); }
+.msg-list .msg-row { padding-right: var(--pad-r); }
+:root:not([data-theme='dark']) .route:has(.messages-inbox-screen) { --paper: var(--card); background: var(--card); }
+:root:not([data-theme='dark']) body:has(.messages-inbox-screen)::after { background: color-mix(in srgb, var(--card) 94%, transparent); }
+@media (min-width: 1024px) {
+  /* Laptop: the avatars line up under the title's 56px edge; the unread dot sits in the margin before them */
+  .messages-list-pane .msg-list { margin-left: -26px; margin-right: calc(-1 * var(--pad-r)); }
+}

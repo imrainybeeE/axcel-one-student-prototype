@@ -145,7 +145,7 @@ export default function Messages({ params = {} }) {
           <div className="messages-inbox-heading"><h2 className="t-title-l">Messages</h2>{composeAction}</div>
           <div className="screen-body">{inbox}</div>
         </div>
-      ) : <Screen title="Messages" width="narrow" action={composeAction}>{inbox}</Screen>}
+      ) : <Screen title="Messages" width="narrow" className="messages-inbox-screen" action={composeAction}>{inbox}</Screen>}
     </div>
     <div className="messages-detail-pane">
       {selected ? <Thread key={selected} params={params} /> : <div className="messages-detail-empty">Select a conversation</div>}

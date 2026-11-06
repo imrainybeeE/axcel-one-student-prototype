@@ -160,6 +160,7 @@
     background: color-mix(in srgb, var(--paper) 94%, transparent);
     -webkit-mask-image: linear-gradient(0deg, #000 70%, transparent);
     mask-image: linear-gradient(0deg, #000 70%, transparent);
+    view-transition-name: scrolledge; /* it stays over the moving screens, as the tab bar does */
   }
   @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
     body::after { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
@@ -311,9 +312,9 @@
    Pop: the reverse, with the leaving screen on top. The glass nav bar holds still and cross-fades its contents.
    Tab switches are instant (the lens is the motion). The floating tab bar never leaves the screen. */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-::view-transition-group(tabbar), ::view-transition-group(sidebar) { animation: none; }
-::view-transition-old(tabbar), ::view-transition-old(sidebar) { display: none; }
-::view-transition-new(tabbar), ::view-transition-new(sidebar) { animation: none; }
+::view-transition-group(tabbar), ::view-transition-group(sidebar), ::view-transition-group(scrolledge) { animation: none; }
+::view-transition-old(tabbar), ::view-transition-old(sidebar), ::view-transition-old(scrolledge) { display: none; }
+::view-transition-new(tabbar), ::view-transition-new(sidebar), ::view-transition-new(scrolledge) { animation: none; }
 /* Snapshots cannot draw an SVG backdrop filter, so plain glass stands in while a transition runs */
 html[data-vt] [data-lg] { -webkit-backdrop-filter: blur(16px) saturate(180%) !important; backdrop-filter: blur(16px) saturate(180%) !important; }
 html:active-view-transition-type(nav-forward, nav-back) .bar { view-transition-name: navbar; }

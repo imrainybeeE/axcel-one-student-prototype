@@ -2,7 +2,7 @@
 // Later today (lessons as covers in their subject's colour), Messages, Coming up, and You (Record and Attendance).
 import { ViewTransition } from 'react'
 import { Link, useUnreadThreads } from '../../app'
-import { zoomName } from '../../app/zoom.js'
+import { zoomName, ZOOM_SHARE } from '../../app/zoom.js'
 import { Time, Num } from '../../ui/Num.jsx'
 import { Icon } from '../../ui/Icon.jsx'
 import { Avatar } from '../../ui/Avatar.jsx'
@@ -22,7 +22,7 @@ const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.tit
 /** A card that grows into the screen it opens (the zoom transition), as Row does. */
 function ZoomLink({ to, className, children, ...rest }) {
   return (
-    <ViewTransition name={zoomName(to)} share="zoom" default="none">
+    <ViewTransition name={zoomName(to)} share={ZOOM_SHARE} default="none">
       <Link to={to} zoom className={className} {...rest}>{children}</Link>
     </ViewTransition>
   )

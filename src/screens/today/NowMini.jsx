@@ -1,6 +1,6 @@
 // The mini "now" capsule, as Music's MiniPlayer: when the now block scrolls away, a glass capsule keeps the lesson in
 // reach. It floats above the tab bar, and slides in beside it when the bar minimises. Tap it to go back to the block.
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useScrolledDown } from '../../app'
 import { UnderlayContext } from '../../app/underlay.js'
@@ -16,8 +16,10 @@ export function NowMini({ model, offline, joiningId, onJoin }) {
   const active = model && ['lesson', 'break', 'before', 'between'].includes(model.state)
   const raf = useRef(0)
   const under = useContext(UnderlayContext) // under an edge swipe its portal would float over the dragged screen
-  // Shown once the block's Join (or its bar) has gone under the nav bar, so the two never show at once
-  useEffect(() => {
+  // Shown once the block's Join (or its bar) has gone under the nav bar, so the two never show at once.
+  // A layout effect measuring on the next frame: React holds passive effects until a view transition ends, and the
+  // capsule must be there as Today returns (the router restores the scroll first), not pop in after
+  useLayoutEffect(() => {
     if (!active) return undefined
     const check = () => {
       raf.current = 0
@@ -26,7 +28,7 @@ export function NowMini({ model, offline, joiningId, onJoin }) {
       setShown(Boolean(mark) && mark.getBoundingClientRect().bottom < 100)
     }
     const on = () => { if (!raf.current) raf.current = requestAnimationFrame(check) }
-    check()
+    on()
     window.addEventListener('scroll', on, { passive: true })
     return () => { window.removeEventListener('scroll', on); cancelAnimationFrame(raf.current) }
   }, [active])

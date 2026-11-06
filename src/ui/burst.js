@@ -36,5 +36,13 @@ export function burst(from, { count = 32 } = {}) {
       { transform: `translate(${x * 1.35}px, ${y * 1.35 + 150}px) rotate(${45 + spin}deg) scale(0.8)`, opacity: 0 },
     ], { duration: 1400 + Math.random() * 600, easing: 'cubic-bezier(.12, .8, .3, 1)', fill: 'forwards' }).finished)
   }
-  Promise.allSettled(runs).then(() => layer.remove())
+  let done = false
+  Promise.allSettled(runs).then(() => { done = true; layer.remove() })
+  // The cheer belongs to its screen: leave that screen mid-burst and the squares fade, never carrying on over the next
+  const watch = () => {
+    if (done) return
+    if (from.isConnected) { requestAnimationFrame(watch); return }
+    layer.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' }).finished.then(() => layer.getAnimations({ subtree: true }).forEach((a) => a.finish()))
+  }
+  requestAnimationFrame(watch)
 }

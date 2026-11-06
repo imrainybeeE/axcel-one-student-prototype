@@ -27,10 +27,21 @@
 /* The tapped card is drawn at its own size (not stretched into a ghost) and hands over fast */
 ::view-transition-old(.zoom) { object-fit: none; object-position: top left; animation: vt-fade-out 90ms linear both; }
 ::view-transition-new(.zoom) { animation: vt-fade-in 140ms linear 40ms both; }
-html:active-view-transition-type(nav-zoom) ::view-transition-image-pair(.zoom) { animation: zoom-corners-open var(--dur-spring-smooth) var(--spring-smooth) both; }
-html:active-view-transition-type(nav-unzoom) ::view-transition-image-pair(.zoom) { animation: zoom-corners-close var(--dur-spring-smooth) var(--spring-smooth) both; }
-html:active-view-transition-type(nav-unzoom) ::view-transition-old(.zoom) { animation: vt-fade-out 200ms linear 200ms both; }
-html:active-view-transition-type(nav-unzoom) ::view-transition-new(.zoom) { animation: vt-fade-in 200ms linear 200ms both; }
+html:active-view-transition-type(nav-zoom)::view-transition-image-pair(.zoom) { animation: zoom-corners-open var(--dur-spring-smooth) var(--spring-smooth) both; }
+html:active-view-transition-type(nav-unzoom)::view-transition-image-pair(.zoom) { animation: zoom-corners-close var(--dur-spring-smooth) var(--spring-smooth) both; }
+/* Back mirrors it: the screen scales down with the card (filling its width, top first) and the card, at its own
+   size, takes over as they land */
+html:active-view-transition-type(nav-unzoom)::view-transition-old(.zoom) { object-fit: cover; object-position: top; animation: vt-fade-out 200ms linear 200ms both; }
+html:active-view-transition-type(nav-unzoom)::view-transition-new(.zoom) { object-fit: none; object-position: top left; animation: vt-fade-in 200ms linear 200ms both; }
+/* The bottom scroll edge and the floating tab bar stay on top of the morph, as on iOS */
+::view-transition-group(scrolledge) { z-index: 6; }
+::view-transition-group(tabbar) { z-index: 7; }
+/* Today's mini now capsule (a portal on <body>) floats over the moving screens too: it fades out as Today leaves and
+   in as it returns, instead of hiding under them and popping */
+.now-mini { view-transition-name: nowmini; }
+::view-transition-group(nowmini) { z-index: 7; }
+html:active-view-transition-type(nav-tab)::view-transition-old(nowmini) { display: none; } /* tab switches stay instant */
+html:active-view-transition-type(nav-tab)::view-transition-new(nowmini) { animation: none; }
 /* Both ends of the morph need a surface of their own in the snapshot */
 .row--zoom { background-color: var(--card); }
 html:active-view-transition-type(nav-zoom, nav-unzoom) .screen { background: var(--paper); min-height: 100dvh; }
@@ -38,6 +49,14 @@ html:active-view-transition-type(nav-zoom, nav-unzoom) .screen { background: var
 ::view-transition-new(.nav-zoom) { animation: vt-hold-hidden var(--dur-spring-smooth) linear both; }
 ::view-transition-old(.nav-unzoom-exit) { animation: vt-hold-hidden var(--dur-spring-smooth) linear both; }
 ::view-transition-new(.nav-unzoom) { transform-origin: 50% calc(var(--vt-new-y, 0px) + 50vh); animation: vt-return var(--dur-spring-smooth) var(--spring-smooth) both; }
+/* A zoom into one pane of a split screen (laptop Messages): the list beside it fades in as the card lands, and out
+   as Back starts, instead of popping */
+html:active-view-transition-type(nav-zoom-split)::view-transition-new(.nav-zoom) { animation: vt-fade-in 200ms linear 200ms both; }
+html:active-view-transition-type(nav-zoom-split)::view-transition-old(.nav-unzoom-exit) { animation: vt-fade-out 160ms linear both; }
+/* Back with no card left to land in: the screen shrinks and fades over the page returning behind it */
+html:active-view-transition-type(nav-zoom-lost)::view-transition-group(.nav-unzoom-exit) { z-index: 5; }
+html:active-view-transition-type(nav-zoom-lost)::view-transition-old(.nav-unzoom-exit) { transform-origin: 50% calc(var(--vt-old-y, 0px) + 50vh); animation: vt-zoom-lost var(--dur-3) var(--ease-out-quick) both; }
+@keyframes vt-zoom-lost { to { transform: scale(calc(1 - 0.12 * var(--motion))); opacity: 0; } }
 @keyframes zoom-corners-open { from { border-radius: var(--radius); } to { border-radius: 0; } }
 @keyframes zoom-corners-close { from { border-radius: 0; } to { border-radius: var(--radius); } }
 @keyframes vt-recede { to { transform: scale(calc(1 - 0.07 * var(--motion))); filter: brightness(0.86); } }

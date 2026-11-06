@@ -36,12 +36,6 @@ html:active-view-transition-type(nav-unzoom)::view-transition-new(.zoom) { objec
 /* The bottom scroll edge and the floating tab bar stay on top of the morph, as on iOS */
 ::view-transition-group(scrolledge) { z-index: 6; }
 ::view-transition-group(tabbar) { z-index: 7; }
-/* Today's mini now capsule (a portal on <body>) floats over the moving screens too: it fades out as Today leaves and
-   in as it returns, instead of hiding under them and popping */
-.now-mini { view-transition-name: nowmini; }
-::view-transition-group(nowmini) { z-index: 7; }
-html:active-view-transition-type(nav-tab)::view-transition-old(nowmini) { display: none; } /* tab switches stay instant */
-html:active-view-transition-type(nav-tab)::view-transition-new(nowmini) { animation: none; }
 /* Both ends of the morph need a surface of their own in the snapshot */
 .row--zoom { background-color: var(--card); }
 html:active-view-transition-type(nav-zoom, nav-unzoom) .screen { background: var(--paper); min-height: 100dvh; }

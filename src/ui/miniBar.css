@@ -22,7 +22,7 @@ body:has(.tabbar[data-away]) .mini-bar { display: none; }
 .mini-bar-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
 .mini-bar-text { display: flex; flex-direction: column; min-width: 0; }
 .mini-bar-title { font-size: var(--fs-subhead); line-height: 1.1875rem; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mini-bar-sub { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-bar-sub { color: color-mix(in srgb, var(--ink) 55%, var(--ink-soft)); /* glass over tinted cards: a step darker than secondary, to keep 4.5:1 */ font-size: var(--fs-footnote); line-height: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* The leading square: one size and corner for every page, so the capsule reads as one thing wherever it is */
 .mini-tile {

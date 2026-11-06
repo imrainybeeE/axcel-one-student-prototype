@@ -225,7 +225,7 @@
   --font-display: "Archivo", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif; /* titles: wide and heavy */
   --font-num: var(--font-display);
 
-  --fs-time-xl: 2.75rem;   --lh-time-xl: 1;          /* 48, the countdown and lead figures, Archivo 116 / 700 */
+  --fs-time-xl: 3.5rem;    --lh-time-xl: 1;          /* 56, the countdown and lead figures, Archivo 116 / 700 */
   --fs-time-l: 1.375rem;   --lh-time-l: 1.75rem;     /* 22/28 rail dates, totals */
   --fs-time-m: 1.0625rem;  --lh-time-m: 1.375rem;    /* 17/22 rail times, message times */
   --fs-title-l: 2.125rem;  --lh-title-l: 2.5625rem;  /* 34/41 large title, heavy */

@@ -10,6 +10,7 @@
 .cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 2px; border-radius: 1px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
 .cal-row.is-today .lead-date .num { color: var(--brand); }
+.cal-week .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); color: var(--ink-soft); } /* the week names organise; the events lead */
 .cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
 .cal-hidden-dot { display: inline-block; width: 8px; height: 8px; margin-left: 6px; border-radius: 50%; background: var(--brand); vertical-align: middle; }
 

@@ -24,8 +24,8 @@
 .diamond--attitude.record-split-seg { background: var(--merit-attitude); }
 .diamond--skills.record-split-seg { background: var(--merit-skills); }
 .diamond--knowledge.record-split-seg { background: var(--merit-knowledge); }
-.record-num { white-space: nowrap; color: var(--ink-soft); }
-.record-num .num { font-weight: 700; color: var(--ink); font-size: var(--fs-title-s); }
+.record-num { white-space: nowrap; color: var(--ink-soft); font-size: var(--fs-footnote); }
+.record-num .num { font-weight: var(--fw-strong); color: var(--ink); font-size: var(--fs-body); } /* the value leads; its unit is a quiet 13 */
 
 /* Section headings match the kit's (Where your points come from) */
 .record-awards h2, .record-entries > h2, .att-term-head { margin-bottom: var(--space-2); font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-strong); }

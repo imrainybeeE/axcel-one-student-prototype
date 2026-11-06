@@ -869,3 +869,15 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 
 /* A two-line switch label breaks evenly, never leaving one word behind */
 .choice-label, .choice-desc { text-wrap: balance; }
+
+/* The rail's live card in two bands: subject and countdown, then the bar with Details beside it (no footer row) */
+.now--rail { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); align-items: center; padding-bottom: 0; }
+.now--rail > * { grid-column: 1 / -1; }
+.now--rail > .now-elapsed { grid-column: 1; margin: 0 !important; }
+.now--rail > .now-elapsed + .now-details { grid-column: 2; width: auto; margin: 0 -8px 0 0; padding: 0 8px; border-top: 0; display: inline-flex; align-items: center; gap: 2px; color: var(--on-now); }
+.now--rail > .now-elapsed:last-child { margin-bottom: var(--space-3) !important; }
+/* The countdown's unit: one quiet line ("min left"), under the numeral on Today, beside it on the rail */
+.now-count-stack { flex-direction: row; gap: 0.25em; font-size: var(--fs-footnote); line-height: 1rem; }
+.now-count-stack > :last-child { font-weight: var(--fw-strong); color: inherit; }
+.now:not(.now--rail) .now-count-line { flex-direction: column; align-items: flex-end; gap: 4px; }
+.now--rail .now-count-stack { flex-direction: column; gap: 0; line-height: 0.9375rem; } /* beside the numeral on the narrow rail: "min" over "left", so the teacher line keeps its width */

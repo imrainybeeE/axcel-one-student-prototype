@@ -2,10 +2,11 @@
 // Later today (lessons as covers in their subject's colour), Messages, Coming up, and You (Record and Attendance).
 import { ViewTransition } from 'react'
 import { Link, useUnreadThreads } from '../../app'
-import { zoomName } from '../../app/zoom.js'
+import { zoomName, ZOOM_SHARE } from '../../app/zoom.js'
 import { Time, Num } from '../../ui/Num.jsx'
 import { Icon } from '../../ui/Icon.jsx'
 import { Avatar } from '../../ui/Avatar.jsx'
+import { Dia } from '../../ui/Dia.jsx'
 import { laterItems, isJoinOpen } from '../../lib/schedule.js'
 import { formatMessageTime, formatWeekdayShort, formatDuration, isoToMs, schoolInstant } from '../../lib/time.js'
 import { threads } from '../../data/messages.js'
@@ -21,7 +22,7 @@ const shortTitle = (it) => (it.short && it.title.length > 18 ? it.short : it.tit
 /** A card that grows into the screen it opens (the zoom transition), as Row does. */
 function ZoomLink({ to, className, children, ...rest }) {
   return (
-    <ViewTransition name={zoomName(to)} share="zoom" default="none">
+    <ViewTransition name={zoomName(to)} share={ZOOM_SHARE} default="none">
       <Link to={to} zoom className={className} {...rest}>{children}</Link>
     </ViewTransition>
   )
@@ -36,24 +37,12 @@ function ShelfHead({ to, children, id }) {
   )
 }
 
-/** Back-to-back lessons in one subject (a double period) read as one cover. */
-function mergeDoubles(items) {
-  const out = []
-  for (const it of items) {
-    const prev = out[out.length - 1]
-    if (prev && it.kind === 'lesson' && prev.kind === 'lesson' && prev.subjectId === it.subjectId && prev.endsAt === it.startsAt) {
-      out[out.length - 1] = { ...prev, end: it.end, endsAt: it.endsAt, double: true }
-    } else out.push(it)
-  }
-  return out
-}
-
 /**
  * After the block's Next line, the rest of today as cover art: each lesson a flat card in its subject's colour, its
  * start time large and how far away it is small. Breaks are left out; the strip above already shows them.
  */
 export function LessonShelf({ model, nowMs, offline }) {
-  const items = mergeDoubles(laterItems(model).filter((i) => i.kind !== 'break'))
+  const items = laterItems(model).filter((i) => i.kind !== 'break') // a double period is already one item
   if (!items.length) return null
   return (
     <section className="shelf shelf--later" aria-labelledby="shelf-later">
@@ -118,7 +107,7 @@ function MessagesShelf({ nowMs }) {
           })}
         </ul>
       ) : (
-        <p className="shelf-quiet">You’re all caught up.</p>
+        <div className="shelf-quiet"><Dia mood="happy" size={30} className="shelf-dia" /><p>You’re all caught up.</p></div>
       )}
     </section>
   )
@@ -142,7 +131,7 @@ function EventsShelf({ todayIso }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {upcoming.map((e) => (
           <li key={e.id} className="shelf-item">
-            <Link to={`/calendar?event=${e.id}`} className="event-card card-link">
+            <Link to={`/calendar?event=${e.id}`} className="event-card card-link" data-cat={e.category}>
               <span className="event-card-date">
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
@@ -164,8 +153,7 @@ function RecordTile() {
     <ZoomLink
       to="/record"
       className="stat-tile card-link"
-      data-tone="award"
-      data-award={record.currentAward?.name.toLowerCase()}
+      data-tone="record"
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

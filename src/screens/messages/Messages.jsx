@@ -81,7 +81,7 @@ export default function Messages({ params = {} }) {
     body = q ? (
       <EmptyState title={`No messages match ‘${q}’.`}>Try another word, or check the spelling.</EmptyState>
     ) : (
-      <EmptyState title={{ all: 'No messages yet.', unread: 'No unread messages.', groups: 'No group messages.', school: 'No school messages.' }[filter]}>{filter === 'unread' ? 'You are all caught up.' : null}</EmptyState>
+      <EmptyState mood={filter === 'unread' ? 'happy' : 'calm'} title={{ all: 'No messages yet.', unread: 'No unread messages.', groups: 'No group messages.', school: 'No school messages.' }[filter]}>{filter === 'unread' ? 'You are all caught up.' : null}</EmptyState>
     )
   } else {
     body = (
@@ -94,7 +94,7 @@ export default function Messages({ params = {} }) {
             <Row
               key={t.id}
               to={`/messages/${t.id}`}
-              zoom={!wide && selected !== t.id} /* phone only: on a laptop the list stays beside the thread; and the open thread's screen holds that zoom name */
+              zoom={!wide && !selected} /* phone only: on a laptop the list stays beside the thread; under an open thread the list is hidden, so its rows must not pair */
               className={`msg-row${isNew ? ' is-unread' : ''}${selected === t.id ? ' is-selected' : ''}`}
               aria-current={selected === t.id ? 'page' : undefined}
               lead={<Avatar initials={t.initials} kind={t.kind === 'class' ? 'group' : t.kind === 'announcement' ? 'announcement' : 'person'} />}

@@ -1,14 +1,20 @@
 import { Icon } from './Icon.jsx'
 import { Num } from './Num.jsx'
 
+// Eight of the subject colours, one per person: the same initials always get the same colour
+const HUES = 8
+const hueOf = (key) => [...key].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % HUES
+
 /**
- * 44 px circle with initials on the fill. No photos, no colours.
+ * 44 px circle with initials, washed in one of eight colours picked from the initials (school announcements are
+ * always the app's blue). No photos.
  * kind: 'person' (initials) | 'group' (people icon) | 'announcement' (megaphone).
  * Decorative: the row text carries the name.
  */
 export function Avatar({ initials, kind = 'person', size = 44 }) {
+  const hue = kind === 'announcement' ? 'brand' : hueOf(initials || kind)
   return (
-    <span className={`avatar avatar--${kind}`} style={{ width: size, height: size }} aria-hidden="true">
+    <span className={`avatar avatar--${kind}`} data-hue={hue} style={{ width: size, height: size }} aria-hidden="true">
       {kind === 'group' ? <Icon name="group" size={22} /> : kind === 'announcement' ? <Icon name="megaphone" size={22} /> : initials}
     </span>
   )

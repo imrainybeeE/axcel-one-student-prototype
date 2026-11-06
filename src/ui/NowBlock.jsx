@@ -40,8 +40,9 @@ function useIntro() {
  * last line sits on the numeral's baseline, as a timer's unit does, so nothing hangs on a line of its own.
  */
 function Countdown({ minutes, mode }) {
-  const h = Math.floor(minutes / 60)
-  const m = minutes % 60
+  // Time left in a lesson stays in minutes (a double runs to 90), so the number never stacks into hours
+  const h = mode === 'left' && minutes < 100 ? 0 : Math.floor(minutes / 60)
+  const m = minutes - h * 60
   const big = (n) => <Num wide className="now-count-n"><RollNum value={n} /></Num>
   const unit = (u) => <span className="now-count-unit">{u}</span>
   const last = (u) => (mode === 'left' ? <span className="now-count-stack"><span>{u}</span><span>left</span></span> : unit(u))
@@ -73,6 +74,8 @@ function Elapsed({ item, minutesLeft, progress }) {
         style={{ '--p': p }}
       >
         <span className="now-bar-fill" />
+        {/* A double period: a notch where one period hands over to the next, so the bell between them still shows */}
+        {item.periods?.slice(1).map((pd) => <span key={pd.start} className="now-bar-tick" style={{ '--at': (pd.startMin - item.startMin) / total }} />)}
       </span>
       <span className="now-elapsed-ends" aria-hidden="true"><Time value={item.start} /><Time value={item.end} /></span>
     </div>
@@ -183,6 +186,33 @@ function useChangeover(key) {
  * forcedEmpty: the model came from nowModel(now, { forceEmpty: true }).
  * showNext: end the block with the next lesson (a break always does).
  */
+// The end of the school day gets one burst per visit to the app, not one on every return to Today
+const cheered = { after: false }
+
+/** Dia in the quiet card's corner; with cheer, a burst of the logo's squares from it once it has settled in. */
+function CheerDia({ mood, cheer }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (!cheer || cheered.after) return
+    const t = setTimeout(() => {
+      cheered.after = true
+      import('./burst.js').then((m) => m.burst(ref.current?.querySelector('.dia')))
+    }, 450)
+    return () => clearTimeout(t)
+  }, [cheer])
+  return <div ref={ref} className="now-dia"><Dia mood={mood} size={64} /></div>
+}
+
+/** The header's wave, small, along the quiet card's foot: the day's over, the page can relax. Decorative. */
+function QuietWaves() {
+  return (
+    <svg className="now-waves" viewBox="0 0 320 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path className="now-waves-fill" d="M40 70C140 66 210 46 262 26 290 15 306 8 330 4V70Z" />
+      <path className="now-waves-line" d="M20 64C126 60 204 38 256 18 286 7 306 1 330 -3" />
+    </svg>
+  )
+}
+
 export function NowBlock({ model, offline = false, error = null, onJoin, joiningId = null, variant = 'full', headingLevel = 2, showNext = false, onDetails }) {
   const nameId = useId()
   const H = `h${headingLevel}`
@@ -220,7 +250,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
         {/* One band: the lesson on the left, its countdown on the right (the rail's filled stop already says now) */}
         <div className="now-rail-top">
           <div className="now-rail-name">
-            <p className="now-title">{shortTitle(item)}</p>
+            <p className="now-title">{shortTitle(item)}{item.double && <span className="now-double">Double</span>}</p>
             <p className="now-meta">{meta(item)}</p>
           </div>
           <Countdown minutes={model.minutes} mode="left" />
@@ -242,8 +272,9 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
     return (
       <section className="now now--quiet" aria-labelledby={nameId}>
         <span id={nameId} className="vh">{name}</span>
-        <Dia mood="calm" size={64} className="now-dia" />
-        <H className="now-title t-title-now">{state === 'after' ? 'School is finished.' : 'No school today'}</H>
+        <QuietWaves />
+        <CheerDia mood={state === 'after' || model.weekend || model.day?.kind === 'holiday' ? 'happy' : 'calm'} cheer={state === 'after'} />
+        <H className="now-title t-title-now">{state === 'after' ? 'School’s out for today.' : 'No school today'}</H>
         {state === 'noschool' && (
           <p className="now-reason">
             {model.reason ? `${model.reason}.` : model.weekend ? 'Enjoy the weekend.' : 'Nothing is on your timetable today.'}
@@ -281,7 +312,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
       <div className="now-grid">
         <div className="now-main">
           {tag && <Tag tone="inverse">{tag}{starts && <> at <Time value={item.start} /></>}</Tag>}
-          <H className="now-title t-title-now" aria-label={item.title}>{shortTitle(item)}</H>
+          <H className="now-title t-title-now" aria-label={item.double ? `${item.title}, double lesson` : item.title}>{shortTitle(item)}{item.double && <span className="now-double" aria-hidden="true">Double</span>}</H>
           {!(isBreak && model.next) && (
             <p className="now-meta">{isBreak ? <>until <Time value={item.end} /></> : meta(item)}</p>
           )}

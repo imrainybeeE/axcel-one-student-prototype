@@ -9,6 +9,10 @@ export const zoomState = { pending: null } // 'in' | 'out' while a zoom transiti
 
 const able = () => typeof document.startViewTransition === 'function' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+/** The share prop for both halves of a pair: they pair only in a zoom, so no other move (a tab switch, a push)
+ *  lifts a card and a screen that happen to share a path out of the page */
+export const ZOOM_SHARE = { 'nav-zoom': 'zoom', 'nav-unzoom': 'zoom', default: 'none' }
+
 /** The shared-element name for a path: "/messages/kavitha" -> "zoom-messages-kavitha". */
 export const zoomName = (path) => `zoom${String(path).split('?')[0].replace(/[^a-zA-Z0-9]+/g, '-')}`
 
@@ -45,6 +49,13 @@ export function routeCommitted() {
   const html = document.documentElement
   html.style.setProperty('--vt-new-y', `${window.scrollY}px`)
   const done = () => { delete html.dataset.vt; zoomState.pending = null }
+  // Back with no card left to land in (reading an unread card removes it): the screen shrinks away instead (CSS)
+  const now = document.activeViewTransition
+  if (now && zoomState.pending === 'out') {
+    now.ready.then(() => {
+      if (!document.getAnimations().some((a) => a.effect?.pseudoElement?.startsWith('::view-transition-group(zoom-'))) now.types.add('nav-zoom-lost')
+    }, () => {})
+  }
   // The transition object exists once React has started it; fall back to a timer where it does not
   requestAnimationFrame(() => {
     const vt = document.activeViewTransition

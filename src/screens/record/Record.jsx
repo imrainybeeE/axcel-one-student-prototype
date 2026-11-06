@@ -1,5 +1,5 @@
 // Record: personal account totals, category breakdown and current award level.
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
   Segmented, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
@@ -21,7 +21,7 @@ function Lead({ s, onHow }) {
   const from = prev ? prev.points : 0
   const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 0
   return (
-    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award" data-award={prev?.name.toLowerCase()}>
+    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="record">
       <h2 id="record-lead-title" className="record-hero-status">
         {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : 'Total'}
       </h2>
@@ -55,11 +55,37 @@ function Measures({ s }) {
   )
 }
 
+// The award gets one burst per visit to the app, the first time its medal comes into view
+const cheered = { award: false }
+const cheer = (el) => import('../../ui/burst.js').then((m) => m.burst(el))
+
 function Ladder({ s }) {
+  const medal = useRef(null)
+  useEffect(() => {
+    const el = medal.current
+    if (!el || cheered.award) return
+    let t
+    // One pending timer at most: every change of visibility restarts it, and only a fully shown medal starts it
+    const io = new IntersectionObserver(([e]) => {
+      clearTimeout(t)
+      if (e.intersectionRatio < 1) return
+      t = setTimeout(() => {
+        if (cheered.award) return
+        cheered.award = true
+        io.disconnect()
+        cheer(el)
+      }, 500)
+    }, { threshold: 1 })
+    io.observe(el)
+    return () => { clearTimeout(t); io.disconnect() }
+  }, [])
   return (
     <Group title="Current award" className="record-current-award">
+      {/* The row is a button too: press it for another burst from the medal */}
       <Row
-        lead={<span className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
+        onClick={() => cheer(medal.current)}
+        aria-label={`${s.currentAward.name} Award. Celebrate`}
+        lead={<span ref={medal} className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
         leadKind="icon"
         title={`${s.currentAward.name} Award`}
       />

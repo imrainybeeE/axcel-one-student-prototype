@@ -14,7 +14,7 @@
 .appear-pick { display: flex; justify-content: center; gap: var(--space-8); }
 .appear-opt { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: 0; border: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
 .appear-phone {
-  position: relative; width: 46px; height: 88px; border-radius: 10px; overflow: hidden;
+  position: relative; width: 46px; height: 88px; border-radius: 10px; overflow: hidden; zoom: 0.82; /* 38x72: a hint of each look, not the page's main event */
   background: var(--ph-page); box-shadow: 0 0 0 1px var(--divider), 0 2px 8px rgb(0 0 0 / 0.08);
   transition: transform var(--dur-spring-snappy) var(--spring-snappy);
 }

@@ -15,6 +15,7 @@
 
 /* Month */
 .cal-month { display: flex; flex-direction: column; gap: var(--space-3); }
+.cal-week + .cal-week { margin-top: var(--space-5); } /* 28 from a week's last row to the next week's name */
 .cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }

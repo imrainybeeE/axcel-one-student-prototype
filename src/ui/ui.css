@@ -244,6 +244,8 @@
 .tile--record { --tile-bg: var(--brand-solid); } /* in More, Record is a place, in the app's blue; the medal's metal is for the award itself */
 .tile--attendance { --tile-bg: #2F9E45; }
 .tile--late { --tile-bg: #E8920C; }
+.tile--zero { --tile-bg: #AEAEB2; } /* a status with nothing in it keeps its glyph, not its alarm colour */
+[data-theme='dark'] .tile--zero { --tile-bg: #636366; }
 .tile--absent { --tile-bg: #E5483D; }
 .tile--calendar { --tile-bg: #E5483D; }
 .tile--gear { --tile-bg: #8E8E93; }
@@ -799,10 +801,17 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 
 .now--rail { margin-block: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-3); border-radius: var(--radius); }
 /* The rail's block: Today's parts at rail width (a smaller countdown beside the label, the same bar and Join) */
-.now-rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
-.now-rail-name { min-width: 0; }
+/* Subject and countdown share the top line; the teacher and place run under both, full width */
+.now-rail-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--space-3); align-items: start; }
+.now-rail-name { display: contents; }
+.now-rail-name .now-title { grid-column: 1; grid-row: 1; min-width: 0; }
+.now-rail-name .now-meta { grid-column: 1 / -1; grid-row: 2; }
+.now-rail-top > .now-count { grid-column: 2; grid-row: 1; }
 .now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-heavy); }
-.now--rail .now-count { margin-top: -12px; } /* the numeral shares the subject's baseline */
+.now--rail .now-count { margin-top: -4px; } /* the numeral on the subject's baseline, 13px clear of the card's top */
+/* On the rail the unit runs on one line ("35 min left"), so the countdown is one line the height of the subject's */
+.now--rail .now-count-line, .now--rail .now-count-n { line-height: var(--lh-title-3); }
+.now--rail .now-count-stack { flex-direction: row; gap: 3px; margin-left: 3px; line-height: var(--lh-title-3); }
 .now--rail .now-count-n { font-size: 2rem; }
 
 .now--rail .now-elapsed { margin: var(--space-2) 0 var(--space-2); }

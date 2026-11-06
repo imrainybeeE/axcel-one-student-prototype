@@ -274,6 +274,7 @@ export default function Timetable() {
   return (
     <Screen
       title="Timetable"
+      className="screen--tt"
       width={view === 'week' ? 'wide' : 'narrow'}
       action={
         <Button variant="plain" size="compact" onClick={() => updateQuery({ view: view === 'week' ? null : 'week' })} aria-label={view === 'week' ? 'Show one day' : 'Show the week'}>

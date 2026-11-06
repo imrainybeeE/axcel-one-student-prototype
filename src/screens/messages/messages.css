@@ -71,15 +71,16 @@
 [data-theme='dark'] .msg:not(.msg--mine) .msg-bubble { --bubble: #2C2C2E; } /* neutral, as Messages: no slate cast */
 /* Tight inside a group, as Messages stacks a run of bubbles */
 .msg + .msg:not(.is-first) { margin-top: -10px; }
-/* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
-.msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 16px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -4px; width: 14px; background: var(--bubble); }
-.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -7px; width: 7px; background: var(--paper); border-bottom-right-radius: 7px 9px; }
-.msg--mine.is-last .msg-bubble::before { right: -4px; width: 14px; background: var(--bubble); } /* square inside (the bubble covers it); only the cut beside it shapes the curl */
-.msg--mine.is-last .msg-bubble::after { right: -7px; width: 7px; background: var(--paper); border-bottom-left-radius: 7px 9px; }
-/* The tail side's bottom corner is tight, so the curl grows out of a straight edge: no notch, no square foot */
-.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 10px; }
-.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 10px; }
+/* The last bubble of a group gets Messages' tail */
+.msg.is-last .msg-bubble::before {
+  /* The tail (Messages): one smooth curl out of the bubble's bottom corner, drawn as a shape, mirrored for sent */
+  content: ''; position: absolute; z-index: -1; bottom: 0; width: 16px; height: 18px; pointer-events: none; background: var(--bubble);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 18'%3E%3Cpath d='M16 0C13 2 8.5 3.5 8.5 9.5C8.5 13.5 5 16.8 0 18C6.5 18.4 12 17.2 16 14.5Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 18'%3E%3Cpath d='M16 0C13 2 8.5 3.5 8.5 9.5C8.5 13.5 5 16.8 0 18C6.5 18.4 12 17.2 16 14.5Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+}
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -8px; }
+.msg--mine.is-last .msg-bubble::before { right: -8px; transform: scaleX(-1); }
+.msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 6px; }
+.msg--mine.is-last .msg-bubble { border-bottom-right-radius: 6px; }
 .msg:has(.msg-avatar) { gap: 10px; } /* room for the tail beside the sender's photo */
 .msg-bubble:active { filter: brightness(0.94); }
 .msg.is-failed .msg-bubble { box-shadow: inset 0 0 0 2px var(--danger); }
@@ -180,10 +181,10 @@
   .messages-split.has-thread > .messages-detail-pane { display: block; }
 }
 @media (min-width: 1024px) {
-  .messages-split { display: grid; grid-template-columns: 23.5rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
+  .messages-split { display: grid; grid-template-columns: 26.5rem minmax(0, 1fr); height: 100dvh; overflow: hidden; }
   .messages-list-pane, .messages-detail-pane { min-width: 0; height: 100%; overflow-y: auto; overscroll-behavior: contain; }
   .messages-list-pane { box-shadow: 0.5px 0 0 color-mix(in srgb, var(--divider) 55%, transparent); } /* a hairline, not a wall */
-  .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
+  .messages-list-pane .screen { --pad-l: var(--space-9); --pad-r: var(--space-4); } /* the title on every laptop page's 56px edge; a phone-wide list beside it */
   .messages-list-pane .bar-lead { display: none; }
   .messages-list-pane .messages-inbox-heading { min-height: 44px; margin-bottom: var(--space-3); margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 14.5px); } /* the title sits where every other laptop title sits; search 16 under it */
   /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */

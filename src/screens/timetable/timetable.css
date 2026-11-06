@@ -80,7 +80,7 @@
 /* Keep the current lesson's details separate from Join. */
 .tt-now { width: 100%; min-width: 0; }
 .tt-now .now--rail { margin-bottom: var(--space-2); }
-@media (min-width: 1024px) { .tt-now { max-width: 30rem; } } /* 480: the live lesson in proportion to its rows */
+@media (min-width: 1024px) { .screen--narrow.screen--tt { --content-max: 36rem; } } /* 576: the week strip, Week and the lessons share one right edge */
 .tt-now > .btn { min-height: 44px; }
 
 /* The shared grid makes each start time line up across the week. */

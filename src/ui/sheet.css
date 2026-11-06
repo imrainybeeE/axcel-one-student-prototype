@@ -44,7 +44,7 @@
 .sheet-grabber:active span { width: 44px; background: var(--ink-faint); }
 .sheet-head {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
-  align-items: center; gap: var(--space-2); min-height: 48px; padding: 4px calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
+  align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
 } /* the close circle (inside its 4px clear ring) sits on the body's 16px edge */
 .sheet-head-lead { justify-self: start; }
 /* The close button: a 36px glass circle inside a 44px target with a dark cross, as iOS 26 sheets have it
@@ -60,10 +60,10 @@
 .sheet-close:active { transform: scale(calc(1 - 0.08 * var(--motion))); background-color: var(--fill); transition-duration: 90ms; }
 @media (hover: hover) and (pointer: fine) { .sheet-close:hover { background-color: var(--fill); } }
 .sheet-head-trail { justify-self: end; }
-.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; color: var(--ink-soft); } /* the sheet's kind, quieter than what it shows */
+.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 400; color: var(--ink-soft); } /* the sheet's kind, quieter than what it shows */
 .sheet-body {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
-  padding: var(--space-2) var(--gutter-r) var(--space-6) var(--gutter-l);
+  padding: 0 var(--gutter-r) var(--space-6) var(--gutter-l);
 }
 .sheet-footer { flex: none; padding: var(--space-3) var(--space-4); border-top: 1px solid var(--divider); }
 

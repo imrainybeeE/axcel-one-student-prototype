@@ -34,6 +34,7 @@
 /* The coloured text passes 4.5:1 on a white card; -solid is for marks (bars, dots) */
 [data-tone='award'] { --tone: #B25E00; --tone-solid: #E8920C; }
 [data-tone='good'] { --tone: #1E7A3C; --tone-solid: #2F9E45; }
+[data-tone='record'] { --tone: var(--brand); --tone-solid: var(--brand-solid); } /* Record is a place in the app's blue, as its tile in More */
 [data-theme='dark'] [data-tone='award'] { --tone: #FFB340; --tone-solid: #FF9F0A; }
 [data-theme='dark'] [data-tone='good'] { --tone: #4ED07A; --tone-solid: #30D158; }
 /* An award level wears its own metal, never the generic award orange: a Silver total in amber reads as the wrong medal */
@@ -44,7 +45,7 @@
 [data-theme='dark'] [data-tone='award'][data-award='gold'] { --tone: #F2C94C; --tone-solid: #E0B000; }
 [data-theme='dark'] [data-tone='award'][data-award='bronze'] { --tone: #E0A578; --tone-solid: #C98B5A; }
 .tile--award[data-award='silver'] { --tile-bg: #A2A7AF; }
-[data-theme='dark'] .tile--award[data-award='silver'] { --tile-bg: #48484A; }
+[data-theme='dark'] .tile--award[data-award='silver'] { --tile-bg: #A2A7AF; } /* metal is metal, in either theme */
 .tile--award[data-award='gold'] { --tile-bg: #D9A400; }
 .tile--award[data-award='bronze'] { --tile-bg: #B87A48; }
 
@@ -241,6 +242,11 @@
 .tile--absent { --tile-bg: #E5483D; }
 .tile--gear { --tile-bg: #8E8E93; }
 .tile--report { --tile-bg: #E0436B; } /* Report a problem: its own colour, not Settings' grey */
+/* The award is a medal, not a setting: a round metal disc with a bright rim, its ribbon in the glyph (the metal's
+   sheen is the one gradient a medal earns) */
+.tile--award { border-radius: 50%; corner-shape: round; background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--tile-bg) 62%, #FFFFFF), var(--tile-bg) 70%, color-mix(in srgb, var(--tile-bg) 88%, #000000));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tile-bg) 75%, #000000), 0 1px 1.5px rgb(0 0 0 / 0.12); }
+.tile--award .icon { filter: drop-shadow(0 0.5px 0.5px rgb(0 0 0 / 0.35)); }
 .tile--book { --tile-bg: #5856D6; }
 
 /* Narrow containers (320px phones, 200% text): the time stacks above the title */
@@ -303,7 +309,7 @@
   --av: var(--brand-solid);
   background: color-mix(in srgb, var(--av) 15%, var(--card)); color: var(--av); font-weight: var(--fw-title); font-size: 0.9375rem; letter-spacing: 0.02em;
 }
-/* Initials in the deep colour on its own pale wash (6:1 or more); in dark, white on the full colour */
+/* Initials in the deep colour on its own pale wash (6:1 or more); in dark, a light tint of the colour on a dark wash */
 .avatar[data-hue='0'] { --av: var(--subj-physics); }
 .avatar[data-hue='1'] { --av: var(--subj-maths); }
 .avatar[data-hue='2'] { --av: var(--subj-esl); }
@@ -312,7 +318,7 @@
 .avatar[data-hue='5'] { --av: var(--subj-gp); }
 .avatar[data-hue='6'] { --av: var(--subj-art); }
 .avatar[data-hue='7'] { --av: var(--subj-english); }
-[data-theme='dark'] .avatar { background: var(--av); color: #FFFFFF; }
+[data-theme='dark'] .avatar { background: color-mix(in srgb, var(--av) 26%, var(--card)); color: color-mix(in srgb, var(--av) 40%, #FFFFFF); } /* a wash, as in light: never a heavy solid disc */
 .diamond { display: inline-block; flex: none; width: 12px; height: 12px; margin: 0 2px; border-radius: 2px; transform: rotate(45deg); }
 .diamond--attitude { background: var(--merit-attitude); }
 .diamond--skills { background: var(--merit-skills); }
@@ -499,6 +505,7 @@
 .now-count-stack > :last-child { color: var(--on-now-soft); font-weight: 500; }
 .now-elapsed { margin: var(--space-4) 0 var(--space-3); }
 .now-bar { position: relative; display: block; height: 5px; border-radius: var(--radius-capsule); background: var(--now-track); overflow: hidden; }
+.now-bar-tick { position: absolute; top: 0; bottom: 0; left: calc(var(--at) * 100%); width: 3px; margin-left: -1.5px; background: var(--now-bg); } /* cut through track and fill alike */
 .now-elapsed-ends { display: flex; justify-content: space-between; margin-top: 7px; color: var(--on-now-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: var(--fw-strong); }
 .now-bar-fill {
   position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: inherit; background: var(--now-fill);
@@ -560,13 +567,13 @@
 .now--rail { margin-block: var(--space-2); padding: var(--space-3) var(--space-4) var(--space-3); border-radius: var(--radius); }
 /* The rail's block: Today's parts at rail width (a smaller countdown beside the label, the same bar and Join) */
 /* Subject over teacher on the left; the countdown on the right, across both lines */
-.now-rail-top { display: grid; grid-template-columns: minmax(0, 1fr) 72px; column-gap: var(--space-3); align-items: start; }
+.now-rail-top { display: grid; grid-template-columns: minmax(0, 1fr) 76px; column-gap: var(--space-3); align-items: start; }
 .now-rail-name { display: contents; }
 .now-rail-name .now-title { grid-column: 1; grid-row: 1; min-width: 0; }
 .now-rail-name .now-meta { grid-column: 1; grid-row: 2; }
 .now-rail-top > .now-count { grid-column: 2; grid-row: 1 / span 2; align-self: start; }
 .now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-display); }
-.now--rail .now-count { margin: 0; width: 72px; }
+.now--rail .now-count { margin: 0; width: 76px; }
 
 .now--rail .now-count-n { font-size: 2.5rem; }
 
@@ -598,3 +605,5 @@
 .now:not(.now--rail) .now-count-line { flex-direction: column; align-items: flex-end; gap: 4px; }
 .now--rail .now-count-line { flex-direction: column; align-items: flex-end; gap: 2px; }
 .now--rail .now-count-stack { flex-direction: row; gap: 0.25em; margin-left: 0; font-size: 0.75rem; line-height: 0.875rem; white-space: nowrap; }
+/* A double period: a small label beside the subject, on the lesson's own colour */
+.now-double { display: inline-block; margin-left: var(--space-2); padding: 1px 6px; border-radius: 6px; vertical-align: 0.3em; background: rgb(255 255 255 / 0.16); color: #FFFFFF; font-family: var(--font); font-stretch: normal; font-size: 0.75rem; line-height: 1rem; font-weight: 600; letter-spacing: 0; }

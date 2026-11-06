@@ -37,24 +37,12 @@ function ShelfHead({ to, children, id }) {
   )
 }
 
-/** Back-to-back lessons in one subject (a double period) read as one cover. */
-function mergeDoubles(items) {
-  const out = []
-  for (const it of items) {
-    const prev = out[out.length - 1]
-    if (prev && it.kind === 'lesson' && prev.kind === 'lesson' && prev.subjectId === it.subjectId && prev.endsAt === it.startsAt) {
-      out[out.length - 1] = { ...prev, end: it.end, endsAt: it.endsAt, double: true }
-    } else out.push(it)
-  }
-  return out
-}
-
 /**
  * After the block's Next line, the rest of today as cover art: each lesson a flat card in its subject's colour, its
  * start time large and how far away it is small. Breaks are left out; the strip above already shows them.
  */
 export function LessonShelf({ model, nowMs, offline }) {
-  const items = mergeDoubles(laterItems(model).filter((i) => i.kind !== 'break'))
+  const items = laterItems(model).filter((i) => i.kind !== 'break') // a double period is already one item
   if (!items.length) return null
   return (
     <section className="shelf shelf--later" aria-labelledby="shelf-later">
@@ -143,7 +131,7 @@ function EventsShelf({ todayIso }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {upcoming.map((e) => (
           <li key={e.id} className="shelf-item">
-            <Link to={`/calendar?event=${e.id}`} className="event-card card-link">
+            <Link to={`/calendar?event=${e.id}`} className="event-card card-link" data-cat={e.category}>
               <span className="event-card-date">
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
@@ -165,7 +153,7 @@ function RecordTile() {
     <ZoomLink
       to="/record"
       className="stat-tile card-link"
-      data-tone="award"
+      data-tone="record"
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

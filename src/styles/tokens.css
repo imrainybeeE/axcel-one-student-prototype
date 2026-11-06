@@ -31,6 +31,14 @@
   --merit-attitude: #1F6FCC;   /* three calm, cool-to-green hues; amber is kept for Late alone */
   --merit-skills: #148A9C;
   --merit-knowledge: #4A9424;
+
+  /* Calendar categories: one colour each, used by Calendar's bars and dots and Today's Coming up dates */
+  --cat-school: #006BCB;
+  --cat-event: #2F9E45;
+  --cat-exam: #E8920C;
+  --cat-holiday: #E5483D;
+  --cat-day: #2F7FB8;
+  --cat-meeting: #5856D6;
 }
 
 /* ---------- Light (default). genalpha is retired and aliased here so saved preferences still load ---------- */

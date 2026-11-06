@@ -40,8 +40,9 @@ function useIntro() {
  * last line sits on the numeral's baseline, as a timer's unit does, so nothing hangs on a line of its own.
  */
 function Countdown({ minutes, mode }) {
-  const h = Math.floor(minutes / 60)
-  const m = minutes % 60
+  // Time left in a lesson stays in minutes (a double runs to 90), so the number never stacks into hours
+  const h = mode === 'left' && minutes < 100 ? 0 : Math.floor(minutes / 60)
+  const m = minutes - h * 60
   const big = (n) => <Num wide className="now-count-n"><RollNum value={n} /></Num>
   const unit = (u) => <span className="now-count-unit">{u}</span>
   const last = (u) => (mode === 'left' ? <span className="now-count-stack"><span>{u}</span><span>left</span></span> : unit(u))
@@ -73,6 +74,8 @@ function Elapsed({ item, minutesLeft, progress }) {
         style={{ '--p': p }}
       >
         <span className="now-bar-fill" />
+        {/* A double period: a notch where one period hands over to the next, so the bell between them still shows */}
+        {item.periods?.slice(1).map((pd) => <span key={pd.start} className="now-bar-tick" style={{ '--at': (pd.startMin - item.startMin) / total }} />)}
       </span>
       <span className="now-elapsed-ends" aria-hidden="true"><Time value={item.start} /><Time value={item.end} /></span>
     </div>
@@ -247,7 +250,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
         {/* One band: the lesson on the left, its countdown on the right (the rail's filled stop already says now) */}
         <div className="now-rail-top">
           <div className="now-rail-name">
-            <p className="now-title">{shortTitle(item)}</p>
+            <p className="now-title">{shortTitle(item)}{item.double && <span className="now-double">Double</span>}</p>
             <p className="now-meta">{meta(item)}</p>
           </div>
           <Countdown minutes={model.minutes} mode="left" />
@@ -309,7 +312,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
       <div className="now-grid">
         <div className="now-main">
           {tag && <Tag tone="inverse">{tag}{starts && <> at <Time value={item.start} /></>}</Tag>}
-          <H className="now-title t-title-now" aria-label={item.title}>{shortTitle(item)}</H>
+          <H className="now-title t-title-now" aria-label={item.double ? `${item.title}, double lesson` : item.title}>{shortTitle(item)}{item.double && <span className="now-double" aria-hidden="true">Double</span>}</H>
           {!(isBreak && model.next) && (
             <p className="now-meta">{isBreak ? <>until <Time value={item.end} /></> : meta(item)}</p>
           )}

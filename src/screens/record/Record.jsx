@@ -21,7 +21,7 @@ function Lead({ s, onHow }) {
   const from = prev ? prev.points : 0
   const p = next ? Math.max(0, Math.min(1, (points - from) / (next.points - from))) : 0
   return (
-    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="award">
+    <section className="record-hero card" aria-labelledby="record-lead-title" data-tone="record">
       <h2 id="record-lead-title" className="record-hero-status">
         {next ? <><Num>{next.points - points}</Num> more for {next.name}</> : 'Total'}
       </h2>

@@ -6,8 +6,8 @@
 .cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
 .cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #2F7FB8; } /* school days that run as usual: a calm blue, never a disabled grey */
 .cal-row[data-cat='meeting'] { --cat: #5856D6; }
-.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 13px; }
-.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; border-radius: 2px; background: var(--cat); } /* as tall as the text it marks */
+.cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 12px; }
+.cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 3px; border-radius: 1.5px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
 .cal-row.is-today .lead-date .num { color: var(--brand); }
 .cal-week .section-head { position: sticky; top: calc(var(--header-h) + var(--safe-top)); z-index: 1; background: var(--paper); padding-block: var(--space-2); }
@@ -22,11 +22,11 @@
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
 .cal-grid-row > span { display: block; }
 .cal-cell {
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
   width: 100%; min-height: 50px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
-.cal-cell .num { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
 .cal-cell.is-off .num { color: var(--ink); }
 .cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
 .cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
@@ -38,6 +38,9 @@
 .cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 12px 16px; }
+/* A day with nothing on it is a quiet line under its date, never an empty white field */
+.list:has(> .cal-none:only-child) { background: none; box-shadow: none; }
+.list > .cal-none:only-child { padding: 0; }
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {

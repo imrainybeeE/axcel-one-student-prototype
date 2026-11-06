@@ -26,9 +26,9 @@ function useUnreadCount() {
 export function TabBar() {
   const { tab, route, loc } = useRoute()
   const unread = useUnreadCount()
-  // In a chat the bar rests as one circle and the composer takes the rest of the row, as Messages keeps one layer
+  // In a chat the bar steps away and the composer takes the whole row, as Messages keeps one floating layer
   const inThread = /^\/messages\/[^/]+/.test(loc.path)
-  const minimised = useScrolledDown() || inThread
+  const minimised = useScrolledDown()
   const nav = useRef(null)
   const fill = useRef(null)
   const press = useRef(null) // { at, x, captured }
@@ -93,6 +93,8 @@ export function TabBar() {
   }
 
   return (
+    <>
+    <span className="tabbar-shade" data-min={(minimised && pressAt == null) || undefined} data-away={inThread || undefined} aria-hidden="true" />
     <nav
       ref={nav}
       className="tabbar glass"
@@ -102,6 +104,8 @@ export function TabBar() {
       data-liquid-strength="14"
       data-liquid-frost="3"
       data-min={minimised || undefined}
+      data-away={inThread || undefined}
+      inert={inThread || undefined}
       data-pressing={pressAt != null || undefined}
       data-dragging={dragging || undefined}
       data-ready={ready || undefined}
@@ -138,6 +142,7 @@ export function TabBar() {
         )
       })}
     </nav>
+    </>
   )
 }
 

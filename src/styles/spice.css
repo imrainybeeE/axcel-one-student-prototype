@@ -85,14 +85,14 @@
 .day-strip-seg:not(.is-break) { align-self: stretch; }
 .day-strip-seg.is-done { background: color-mix(in srgb, var(--ink) 34%, transparent); }
 /* The lesson under the dot: the done part grey, the rest in its colour (a hard split, not a blend) */
-.day-strip-seg.is-now { background: var(--subj-mark); } /* the current lesson is one shape in its colour; the dot says how far in */
+/* The current lesson: solid up to the dot, a pale tint of its colour after it (a hard split) */
+.day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 28%, var(--paper)) 0); }
 /* Now: a small dot riding the bar (moved with transform, not left, so it never triggers layout) */
 .day-strip-now {
   position: absolute; top: 50%; left: 0;
   width: 10px; height: 10px; margin: -5px 0 0 -5px;
   border-radius: var(--radius-dot);
   background: var(--subj-mark, var(--ink));
-  box-shadow: 0 0 0 2px var(--paper);
   /* Segments are sized by minutes with 3px gaps between them, so the dot skips the gaps before its lesson */
   transform: translateX(calc((100cqw - var(--gn) * 3px) * var(--at) + var(--gi) * 3px));
   transition: transform 800ms var(--spring-smooth);
@@ -106,4 +106,4 @@
 [data-theme='dark'] .day-strip-seg { background: rgb(255 255 255 / 0.16); }
 [data-theme='dark'] .day-strip-seg.is-break { background: none; }
 [data-theme='dark'] .day-strip-seg.is-done { background: rgb(255 255 255 / 0.55); }
-[data-theme='dark'] .day-strip-seg.is-now { background: var(--subj-mark); }
+[data-theme='dark'] .day-strip-seg.is-now { background: linear-gradient(90deg, var(--subj-mark) calc(var(--cut, 0) * 100%), color-mix(in srgb, var(--subj-mark) 34%, var(--paper)) 0); }

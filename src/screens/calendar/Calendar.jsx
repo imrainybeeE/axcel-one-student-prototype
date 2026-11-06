@@ -30,10 +30,10 @@ function when(e) {
   return e.end && !e.end.includes('-') ? `${e.time} to ${e.end}` : e.time
 }
 
-/** The grey line, time first as Calendar: "10.50 to 11.35, 8 Orion", or "Public holiday, no school". */
+/** The grey line, time first as Calendar: "10.50 to 11.35 · 8 Orion", or "Public holiday · No school". */
 function meta(e) {
-  if (NO_SCHOOL.has(e.category)) return e.end && e.end !== e.start ? `${when(e)}, no school` : `${categories[e.category]?.label}, no school`
-  return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean).join(', ')
+  if (NO_SCHOOL.has(e.category)) return e.end && e.end !== e.start ? `${when(e)}\u00a0· No school` : `${categories[e.category]?.label}\u00a0· No school`
+  return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean).join('\u00a0· ')
 }
 
 function weekLabel(iso, today) {

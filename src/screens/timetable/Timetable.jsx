@@ -29,7 +29,7 @@ function joinWait(item, nowMs, offline) {
 
 function place(item) {
   if (item.kind === 'event') return 'School activity'
-  return item.online ? `${item.teacher}, online` : [item.teacher, item.room].filter(Boolean).join(', ')
+  return item.online ? `${item.teacher}\u00a0· Online` : [item.teacher, item.room].filter(Boolean).join('\u00a0· ')
 }
 
 function statusOf(item, iso, today, nowMs) {

@@ -5,17 +5,17 @@ const CUT = 'var(--icon-cut, var(--paper))'
 const paths = {
   // Today: the logo's three squares, monochrome like every tab icon (tinted by the tab's colour)
   today: (
-    <g transform="rotate(45 12 14)" strokeWidth="1.6">
-      <rect x="5.9" y="7.9" width="5.4" height="5.4" rx="0.8" />
-      <rect x="12.7" y="7.9" width="5.4" height="5.4" rx="0.8" />
-      <rect x="5.9" y="14.7" width="5.4" height="5.4" rx="0.8" />
+    <g transform="translate(0 0.8) rotate(45 12 14)" strokeWidth="1.8">
+      <rect x="5.4" y="7.4" width="5.2" height="5.2" rx="1" />
+      <rect x="13.4" y="7.4" width="5.2" height="5.2" rx="1" />
+      <rect x="5.4" y="15.4" width="5.2" height="5.2" rx="1" />
     </g>
   ),
   'today-fill': (
-    <g transform="rotate(45 12 14)" stroke="none" fill="currentColor">
-      <rect x="5.6" y="7.6" width="6" height="6" rx="0.8" />
-      <rect x="12.4" y="7.6" width="6" height="6" rx="0.8" opacity="0.7" />
-      <rect x="5.6" y="14.4" width="6" height="6" rx="0.8" opacity="0.45" />
+    <g transform="translate(0 0.8) rotate(45 12 14)" stroke="none" fill="currentColor">
+      <rect x="4.5" y="6.5" width="7" height="7" rx="1.4" />
+      <rect x="12.5" y="6.5" width="7" height="7" rx="1.4" />
+      <rect x="4.5" y="14.5" width="7" height="7" rx="1.4" />
     </g>
   ),
   timetable: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,

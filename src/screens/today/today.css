@@ -71,12 +71,12 @@
 .msg-card-text { margin-left: 54px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 
 /* Coming up: a big date, the event, its time */
-.event-card { display: flex; flex-direction: column; height: 100%; padding: 14px var(--space-4) var(--space-4); background: var(--card); border-radius: 18px; color: var(--ink); text-decoration: none; }
+.event-card { display: flex; flex-direction: column; height: 100%; padding: 14px var(--space-4); background: var(--card); border-radius: 18px; color: var(--ink); text-decoration: none; }
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
 .event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
-.event-card-title { margin-top: var(--space-3); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* last in the card: a wrap only changes the card's foot */
-.event-card-meta { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.event-card-title { margin-top: var(--space-2); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* date, then what, then the grey detail, as Calendar */
+.event-card-meta { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* You: Record and Attendance as two tiles, each a coloured title, a figure and one small mark */
 .stat-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3); }
@@ -128,7 +128,8 @@
 }
 .now-mini[data-min] .now-mini-in { padding-left: calc(var(--tabbar-h) + 8px + 11px); }
 .now-mini-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; height: 100%; padding: 0; border: 0; background: none; color: var(--ink); text-align: left; font: inherit; cursor: pointer; }
-.now-mini-tile { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: var(--subj-a); color: #FFFFFF; font-size: 1.0625rem; font-weight: var(--fw-heavy); transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
+.now-mini-tile { flex: none; display: grid; place-content: center; justify-items: center; line-height: 1; width: 38px; height: 38px; border-radius: 10px; background: var(--subj-a); color: #FFFFFF; font-size: 1.0625rem; font-weight: var(--fw-heavy); transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
+.now-mini-unit { margin-top: 1px; font-family: var(--font); font-stretch: normal; font-size: 0.625rem; font-weight: 600; opacity: 0.85; } /* 10: the countdown keeps its unit, as the block's does */
 .now-mini-text { display: flex; flex-direction: column; min-width: 0; }
 .now-mini-title { font-size: var(--fs-subhead); line-height: 1.1875rem; font-weight: var(--fw-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .now-mini-sub { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -143,9 +144,9 @@
   .today-strip { grid-column: 1; grid-row: 1; }
   .today-strip .day-strip { margin-top: 0; }
   .today-day { grid-column: 1; grid-row: 2; }
-  .today-side { grid-column: 2; grid-row: 1 / span 2; } /* both columns start on one line, under the title */
-  .today-updated { text-align: center; }
-  .today-side { margin-top: 0; }
+  /* Both columns' first cards start on one line: the Messages card level with the Now block, its heading above */
+  .today-side { grid-column: 2; grid-row: 2; margin-top: calc(-1 * (var(--lh-title-3) + var(--space-2) + 3px)); } /* 3: the shelf head's link box */
+  .today-updated { text-align: left; width: calc((100% - var(--space-8)) * 1.1 / 2.1); } /* under the day's column */
   /* On a laptop the block is wider than a phone: more room inside, and Join only as wide as it needs */
   .screen--today .now { padding: var(--space-6); }
   .screen--today .now-next { margin-inline: calc(-1 * var(--space-6)); padding-inline: var(--space-6); margin-bottom: calc(-1 * var(--space-4)); }

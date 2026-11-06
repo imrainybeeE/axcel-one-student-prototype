@@ -59,7 +59,7 @@ export function LessonShelf({ model, nowMs, offline }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {items.map((it) => {
           const open = it.meet && !offline && isJoinOpen(it, nowMs)
-          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join(', ')
+          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join('\u00a0· ')
           const away = Math.max(1, Math.ceil((it.startsAt - nowMs) / 60000))
           return (
             <li key={it.id} className="shelf-item">
@@ -145,8 +145,8 @@ function EventsShelf({ todayIso }) {
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
               </span>
-              <span className="event-card-meta">{eventWhen(e)}</span>
               <span className="event-card-title">{e.title.replace(/-/g, "\u2011") /* "Y7-Y10" never breaks at its hyphen */}</span>
+              <span className="event-card-meta">{eventWhen(e)}</span>
             </Link>
           </li>
         ))}

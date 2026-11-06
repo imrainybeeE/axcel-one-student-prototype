@@ -1,7 +1,8 @@
 /* Messages inbox and thread. */
 
 /* Inbox rows (Messages): the name, then the time and a small chevron; unread is a dot in the leading margin */
-.msg-row { padding-block: 2px; }
+.msg-row { padding-block: 0; }
+.msg-row .row-hit { padding-block: 8px; } /* 79: Messages' row, two preview lines and no air to spare */
 .msg-row-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
 .msg-row-name { flex: 1; min-width: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .msg-row-time { flex: none; color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 400; white-space: nowrap; }
@@ -38,11 +39,10 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: center; max-width: 19rem; min-height: 44px; text-wrap: balance; margin: 0 0 calc(-1 * var(--space-2)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
-  background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: left; cursor: pointer;
+  align-self: center; max-width: 20rem; min-height: 44px; text-wrap: balance; margin: calc(-1 * var(--space-2)) 0 calc(-1 * var(--space-3)); padding: var(--space-1) var(--space-2); border: 0; border-radius: 12px;
+  background: none; color: var(--ink-soft); font: inherit; font-size: var(--fs-footnote); line-height: var(--lh-footnote); text-align: center; cursor: pointer;
 }
-.thread-caption > span { display: grid; grid-template-columns: 16px minmax(0, 1fr); column-gap: 6px; align-items: start; } /* the shield in its own column beside the notice */
-.thread-caption .icon { margin-top: 2px; }
+.thread-caption .icon { display: inline-block; vertical-align: -2px; margin-right: 4px; } /* centred, as Messages centres its notices; the shield leads the first line */
 .thread-caption:active { background: var(--fill); }
 /* "Today 10.12": the day in semibold, the time regular, centred */
 .thread-sep { align-self: center; margin: var(--space-4) 0 var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
@@ -73,10 +73,10 @@
 .msg + .msg:not(.is-first) { margin-top: -10px; }
 /* The last bubble of a group gets Messages' tail: a curl in the bubble's colour, trimmed by a page-coloured cut */
 .msg.is-last .msg-bubble::before, .msg.is-last .msg-bubble::after { content: ''; position: absolute; z-index: -1; bottom: 0; height: 16px; pointer-events: none; }
-.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -6px; width: 16px; background: var(--bubble); }
-.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -8px; width: 8px; background: var(--paper); border-bottom-right-radius: 10px; }
-.msg--mine.is-last .msg-bubble::before { right: -6px; width: 16px; background: var(--bubble); } /* square inside (the bubble covers it); only the cut beside it shapes the curl */
-.msg--mine.is-last .msg-bubble::after { right: -8px; width: 8px; background: var(--paper); border-bottom-left-radius: 10px; }
+.msg.is-last:not(.msg--mine) .msg-bubble::before { left: -4px; width: 14px; background: var(--bubble); }
+.msg.is-last:not(.msg--mine) .msg-bubble::after { left: -7px; width: 7px; background: var(--paper); border-bottom-right-radius: 7px 9px; }
+.msg--mine.is-last .msg-bubble::before { right: -4px; width: 14px; background: var(--bubble); } /* square inside (the bubble covers it); only the cut beside it shapes the curl */
+.msg--mine.is-last .msg-bubble::after { right: -7px; width: 7px; background: var(--paper); border-bottom-left-radius: 7px 9px; }
 /* The tail side's bottom corner is tight, so the curl grows out of a straight edge: no notch, no square foot */
 .msg.is-last:not(.msg--mine) .msg-bubble { border-bottom-left-radius: 10px; }
 .msg--mine.is-last .msg-bubble { border-bottom-right-radius: 10px; }
@@ -106,13 +106,11 @@
 .thread-screen { display: flex; flex-direction: column; min-height: calc(100dvh - var(--tabbar-space) - var(--space-2)); margin-bottom: calc(var(--space-2) - var(--space-6)); }
 .thread-screen > .screen-body { flex: 1; display: flex; flex-direction: column; }
 .thread-screen .composer-wrap { margin-top: auto; }
-/* Phone: the composer shares the bottom row with the minimised tab bar's circle (one floating layer, not two) */
+/* Phone: the tab bar steps away in a conversation, so the composer rests on the bottom edge, full width */
 @media (max-width: 1023.98px) {
-  .thread-screen .composer-wrap {
-    bottom: calc(max(var(--safe-bottom), var(--space-2)) + (var(--tabbar-h) - 44px) / 2);
-    margin-left: calc(var(--tabbar-gap) + var(--tabbar-h) + var(--space-2) - var(--pad-l));
-  }
+  .thread-screen .composer-wrap { bottom: max(var(--safe-bottom), var(--space-2)); }
   .thread-screen { min-height: calc(100dvh - var(--space-2)); }
+  body:has(.thread-screen)::after { height: calc(max(var(--safe-bottom), var(--space-2)) + 44px + var(--space-4)); }
 }
 @media (min-width: 1024px) {
   /* No tab bar on a laptop: the composer rests near the bottom, and the chat keeps a readable width */
@@ -187,7 +185,7 @@
   .messages-list-pane { box-shadow: 0.5px 0 0 color-mix(in srgb, var(--divider) 55%, transparent); } /* a hairline, not a wall */
   .messages-list-pane .screen { --pad-l: var(--space-4); --pad-r: var(--space-4); }
   .messages-list-pane .bar-lead { display: none; }
-  .messages-list-pane .messages-inbox-heading { margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 8.5px); } /* the title sits where every other laptop title sits */
+  .messages-list-pane .messages-inbox-heading { min-height: 44px; margin-bottom: var(--space-3); margin-top: calc(var(--header-h) + var(--safe-top) - var(--space-3) + 14.5px); } /* the title sits where every other laptop title sits; search 16 under it */
   /* The 22rem column has no room for the word beside the title: compose is its icon alone, as on the Mac (the word stays for screen readers) */
   .messages-list-pane .messages-inbox-heading .icon-btn { background: var(--glass-solid); box-shadow: var(--glass-rim), 0 1px 3px rgb(0 0 0 / 0.06); color: var(--ink); } /* the same glass circle as the thread's … */
   .messages-list-pane .messages-inbox-heading .btn--plain { min-width: 44px; padding-inline: 0; justify-content: center; }

@@ -26,22 +26,21 @@
 @media (min-width: 1024px) {
   .main { margin-left: var(--sidebar-w); padding-bottom: var(--space-8); }
   .main--bare { margin-left: 0; }
-  /* One grid on every page: content starts 56px from the sidebar and runs to its measure, never centred in the
-     window, so moving between pages never shifts the left edge */
+  /* A wide page starts 56px from the sidebar and runs to its measure; a narrow page (one column of reading)
+     sits centred in the window, so it never leaves a third of the screen empty on one side */
   .screen--wide {
     --pad-l: var(--space-9);
     --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-wide))); /* vw, not %: the bar inherits this and must resolve it against the page, not itself */
   }
   .screen--narrow {
-    --pad-l: var(--space-9);
-    --pad-r: max(var(--space-8), calc(100vw - var(--sidebar-w) - var(--space-9) - var(--content-max)));
+    --pad-l: max(var(--space-9), calc((100vw - var(--sidebar-w) - var(--content-max)) / 2));
+    --pad-r: max(var(--space-8), calc((100vw - var(--sidebar-w) - var(--content-max)) / 2));
   }
 }
 
-/* Laptop: a root screen's actions (Week, Show, the account) sit on its large title's line, as a Mac toolbar's do,
-   and rise into the bar once the title has scrolled under it */
+/* Laptop: a root screen's actions (Week, Show, the account) sit on its large title's line at the content's right
+   edge, and rise into the bar once the title has scrolled under it */
 @media (min-width: 1024px) {
-  .screen > .bar { padding-inline-end: var(--space-7); } /* every trailing button at one spot, 32 from the window's edge */
   .screen[data-root] > .bar .bar-trail { transform: translateY(calc(var(--header-h) / 2 + var(--space-1) + var(--lh-title-l) / 2)); transition: transform var(--dur-spring-smooth) var(--spring-smooth); }
   .screen[data-root] > .bar[data-collapsed] .bar-trail { transform: none; }
 }
@@ -70,9 +69,10 @@
 }
 .bar::after {
   inset: 0 0 -6px 0;
-  background: color-mix(in srgb, var(--paper) 94%, transparent);
-  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
-  mask-image: linear-gradient(180deg, #000 55%, transparent);
+  /* solid behind the inline title and the trailing buttons, so nothing smears through; a short frosted fade below */
+  background: var(--paper);
+  -webkit-mask-image: linear-gradient(180deg, #000 84%, transparent);
+  mask-image: linear-gradient(180deg, #000 84%, transparent);
 }
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .bar::before { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
@@ -178,7 +178,7 @@
   border-radius: var(--radius-capsule);
   view-transition-name: tabbar;
   clip-path: inset(0 0 0 0 round 31px);
-  transition: clip-path var(--dur-spring-smooth) var(--spring-smooth);
+  transition: clip-path var(--dur-spring-smooth) var(--spring-smooth), transform var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease);
   touch-action: pan-y;
   -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   container-type: inline-size; /* 20cqw is one tab's cell */
@@ -192,6 +192,23 @@
 .tabbar[data-min]:not([data-pressing]) .tab:not([aria-current]) { opacity: 0; transform: scale(0.6); pointer-events: none; }
 .tabbar[data-min]:not([data-pressing]) .tab-label { opacity: 0; }
 .tabbar[data-min]:not([data-pressing]) .tab-plate { transform: translateY(7px); }
+/* The pill clips itself (clip-path), so its lift lives on a shadow-only twin underneath that closes with it */
+.tabbar-shade {
+  position: fixed; z-index: var(--z-tabbar); pointer-events: none;
+  bottom: max(var(--safe-bottom), var(--space-2)); height: var(--tabbar-h);
+  --w: min(calc(100% - 2 * var(--tabbar-gap) - var(--safe-left) - var(--safe-right)), 30rem);
+  left: calc((100% - var(--w)) / 2); width: var(--w);
+  border-radius: 31px; box-shadow: var(--tabbar-lift);
+  transition: width var(--dur-spring-smooth) var(--spring-smooth), transform var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease);
+}
+.tabbar-shade[data-min] { width: var(--tabbar-h); }
+/* In a conversation the bar slides away under the screen's edge; the composer is the only floating layer */
+.tabbar[data-away], .tabbar-shade[data-away] {
+  transform: translateY(calc(100% + var(--space-6))); opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform var(--dur-spring-smooth) var(--spring-smooth), opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-spring-smooth);
+}
+@media (min-width: 1024px) { .tabbar-shade { display: none; } }
+@media (max-height: 500px) { .tabbar-shade { display: none; } }
 .tab { transition: opacity var(--dur-2) var(--ease), transform var(--dur-spring-smooth) var(--spring-smooth), color var(--dur-2) var(--ease); }
 
 /* The lens: glass under the active tab. It lands on an overshooting spring and stretches the way it travels

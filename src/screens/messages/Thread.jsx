@@ -166,7 +166,7 @@ export default function Thread({ params }) {
     body = (
       <div className="thread-log" role="log" aria-label={`Messages with ${thread.title}`}>
         <button type="button" className="thread-caption" aria-haspopup="dialog" onClick={() => setShield(true)}>
-          <span><Icon name="shield" size={14} /><span>{MONITOR} {DEMO_NOTE}</span></span>
+          <Icon name="shield" size={14} />{MONITOR} {DEMO_NOTE}
         </button>
         {items.length === 0 && <p className="thread-empty">Say hello to {thread.title.split(' ').slice(0, 2).join(' ')}.</p>}
         {items.map((it) => {

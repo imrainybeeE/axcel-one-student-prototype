@@ -97,7 +97,7 @@
 .sheet-head .btn--plain:active { background: none; opacity: 0.35; transition-duration: 0s; }
 /* A word in the bar (Week, Show) is a glass capsule like the bar's glass circles: one material for every bar action */
 .bar .btn--plain, .bar .btn--plain.is-unavailable {
-  min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-capsule); color: var(--ink); font-weight: 500;
+  min-height: 44px; padding: 0 var(--space-4); border-radius: var(--radius-capsule); color: var(--ink); font-size: var(--fs-subhead); font-weight: 500;
   background: var(--glass-solid); box-shadow: var(--glass-rim), 0 1px 3px rgb(0 0 0 / 0.06);
   transition: transform var(--dur-spring-snappy) var(--spring-snappy);
 }
@@ -219,7 +219,7 @@
 .row-title { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: 400; }
 .row:has(.lead-time, .lead-date) .row-title { font-weight: var(--fw-head); }
 .row-meta { display: block; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); margin-top: 1px; }
-.row-chevron { color: var(--ink-tertiary); max-width: none; width: 20px; height: 20px; margin-right: -6px; stroke-width: 2.6; }
+.row-chevron { color: var(--ink-tertiary); max-width: none; width: 20px; height: 20px; margin-right: -6px; stroke-width: 2.2; }
 /* The highlight waits 70ms, so a row a finger lands on to start a scroll never flashes (UIKit's delaysContentTouches) */
 .row--link:has(.row-hit:active) { background: var(--fill); transition: background-color 0s linear 70ms; }
 @media (hover: hover) and (pointer: fine) {
@@ -328,7 +328,7 @@
   min-height: var(--tap); cursor: pointer; list-style: none; font-weight: var(--fw-strong); color: var(--brand);
 }
 .disclosure summary::-webkit-details-marker { display: none; }
-.disclosure-chevron { stroke-width: 2.6; transition: transform var(--dur-spring-snappy) var(--spring-snappy); } /* the same weight as every row chevron */
+.disclosure-chevron { stroke-width: 2.2; transition: transform var(--dur-spring-snappy) var(--spring-snappy); } /* the same weight as every row chevron */
 .disclosure[open] .disclosure-chevron { transform: rotate(180deg); }
 .disclosure-body { padding-bottom: var(--space-4); }
 .disclosure[open] .disclosure-body { animation: rise-in var(--dur-spring-smooth) var(--spring-smooth); }
@@ -395,8 +395,10 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .field-error .icon { margin-top: 2px; }
 
 .search { position: relative; }
-.search-icon { position: absolute; left: var(--space-3); top: 13px; width: 20px; height: 20px; color: var(--ink-soft); pointer-events: none; }
-.search-input { min-height: 46px; border-radius: var(--radius-control); padding-left: 42px; padding-right: var(--space-7); appearance: none; -webkit-appearance: none; }
+/* iOS's slim 38pt field, inside a 44pt hit area (a clear 3px border the fill doesn't paint) */
+.search-icon { position: absolute; left: 12px; top: 13.5px; width: 17px; height: 17px; color: var(--ink-soft); pointer-events: none; }
+.search-input { min-height: 44px; border: 3px solid transparent; background-clip: padding-box; border-radius: 15px; padding-left: 32px; padding-right: var(--space-7); appearance: none; -webkit-appearance: none; }
+@media (hover: hover), (pointer: fine) { .search-input:focus-visible { box-shadow: inset 0 0 0 2px var(--brand); } }
 .search-input::-webkit-search-cancel-button { display: none; }
 .search-clear { position: absolute; right: 1px; top: 1px; color: var(--ink-soft); }
 
@@ -424,7 +426,8 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .switch { position: relative; flex: none; width: 51px; height: 31px; }
 .switch input { position: absolute; inset: -7px; width: calc(100% + 14px); height: var(--tap); margin: 0; opacity: 0; cursor: pointer; z-index: 1; }
 .switch-track {
-  display: block; width: 51px; height: 31px; border-radius: var(--radius-capsule);
+  display: flow-root; /* a new block context, so the thumb's 2px margin can't collapse through the track's top */
+  width: 51px; height: 31px; border-radius: var(--radius-capsule);
   background: rgb(120 120 128 / 0.32);
   transition: background-color var(--dur-spring-snappy) var(--ease);
 }
@@ -810,10 +813,11 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .rail-start { font-weight: 600; }
 .rail-end { color: var(--ink-faint); font-family: var(--font); font-stretch: normal; font-size: var(--fs-footnote); font-weight: 400; }
 .rail-track { position: relative; }
-.rail-track::before { content: ""; position: absolute; left: calc(50% - 1px); top: 0; bottom: 0; width: 2px; border-radius: 2px; background: var(--subj-mark, var(--brand-line)); opacity: 0.35; }
-.rail-item.is-done .rail-track::before { background: var(--ink-faint); opacity: 0.25; }
-.rail-item.is-first .rail-track::before { top: 24px; }
-.rail-item.is-last .rail-track::before { bottom: auto; height: 24px; }
+/* One unbroken line: square, opaque segments that overlap by a pixel, so no row join shows a seam */
+.rail-track::before { content: ""; position: absolute; left: calc(50% - 1px); top: 0; bottom: -1px; width: 2px; background: color-mix(in srgb, var(--subj-mark, var(--brand-line)) 35%, var(--paper)); }
+.rail-item.is-done .rail-track::before { background: color-mix(in srgb, var(--ink-faint) 25%, var(--paper)); }
+.rail-item.is-first .rail-track::before { top: 24px; border-radius: 1px 1px 0 0; }
+.rail-item.is-last .rail-track::before { bottom: auto; height: 24px; border-radius: 0 0 1px 1px; }
 .rail-item--gap .rail-track::before { background: repeating-linear-gradient(to bottom, var(--ink-faint) 0 3px, transparent 3px 7px); opacity: 0.5; }
 .rail-stop {
   position: absolute; left: 50%; top: 24px; width: 10px; height: 10px; margin: -5px 0 0 -5px;
@@ -849,3 +853,6 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now--rail .now-elapsed + .now-details { margin-top: 0; }
 .now-elapsed-ends { display: none; } /* the rail's times, or the Next row's time, already say when it ends */
 .now--rail .now-elapsed { margin: var(--space-3) 0 var(--space-3); }
+
+/* A two-line switch label breaks evenly, never leaving one word behind */
+.choice-label { text-wrap: balance; }

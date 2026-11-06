@@ -80,7 +80,7 @@ export default function Messages({ params = {} }) {
     body = q ? (
       <EmptyState title={`No messages match ‘${q}’.`}>Try another word, or check the spelling.</EmptyState>
     ) : (
-      <EmptyState title={{ all: 'No messages yet.', unread: 'No unread messages.', groups: 'No group messages.', school: 'No school messages.' }[filter]}>{filter === 'unread' ? 'You are all caught up.' : null}</EmptyState>
+      <EmptyState mood={filter === 'unread' ? 'happy' : 'calm'} title={{ all: 'No messages yet.', unread: 'No unread messages.', groups: 'No group messages.', school: 'No school messages.' }[filter]}>{filter === 'unread' ? 'You are all caught up.' : null}</EmptyState>
     )
   } else {
     body = (

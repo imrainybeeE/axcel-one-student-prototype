@@ -1,5 +1,5 @@
 // Record: personal account totals, category breakdown and current award level.
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Screen, useDemo, useLaptop, SAVED_AT, Link } from '../../app'
 import {
   Segmented, Row, Group, Num, Icon, Sheet, Button, MeritDiamond,
@@ -54,11 +54,28 @@ function Measures({ s }) {
   )
 }
 
+// The award gets one burst per visit to the app, the first time its medal comes into view
+const cheered = { award: false }
+const cheer = (el) => import('../../ui/burst.js').then((m) => m.burst(el))
+
 function Ladder({ s }) {
+  const medal = useRef(null)
+  useEffect(() => {
+    const el = medal.current
+    if (!el || cheered.award) return
+    let t
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return clearTimeout(t)
+      t = setTimeout(() => { cheered.award = true; io.disconnect(); cheer(el) }, 500)
+    }, { threshold: 1 })
+    io.observe(el)
+    return () => { clearTimeout(t); io.disconnect() }
+  }, [])
   return (
     <Group title="Current award" className="record-current-award">
       <Row
-        lead={<span className="tile tile--award" data-award={s.currentAward.name.toLowerCase()}><Icon name="award" filled size={18} /></span>}
+        // The medal is a toy too: tap it for another burst (decorative; the row's text says the award)
+        lead={<span ref={medal} className="tile tile--award" data-award={s.currentAward.name.toLowerCase()} onPointerDown={() => cheer(medal.current)}><Icon name="award" filled size={18} /></span>}
         leadKind="icon"
         title={`${s.currentAward.name} Award`}
       />

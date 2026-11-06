@@ -6,6 +6,7 @@ import { zoomName } from '../../app/zoom.js'
 import { Time, Num } from '../../ui/Num.jsx'
 import { Icon } from '../../ui/Icon.jsx'
 import { Avatar } from '../../ui/Avatar.jsx'
+import { Dia } from '../../ui/Dia.jsx'
 import { laterItems, isJoinOpen } from '../../lib/schedule.js'
 import { formatMessageTime, formatWeekdayShort, formatDuration, isoToMs, schoolInstant } from '../../lib/time.js'
 import { threads } from '../../data/messages.js'
@@ -118,7 +119,7 @@ function MessagesShelf({ nowMs }) {
           })}
         </ul>
       ) : (
-        <p className="shelf-quiet">You’re all caught up.</p>
+        <div className="shelf-quiet"><Dia mood="happy" size={30} className="shelf-dia" /><p>You’re all caught up.</p></div>
       )}
     </section>
   )
@@ -165,7 +166,6 @@ function RecordTile() {
       to="/record"
       className="stat-tile card-link"
       data-tone="award"
-      data-award={record.currentAward?.name.toLowerCase()}
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

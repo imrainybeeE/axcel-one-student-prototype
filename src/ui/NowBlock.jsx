@@ -238,7 +238,7 @@ export function NowBlock({ model, offline = false, error = null, onJoin, joining
 
   if (state === 'noschool' || state === 'after') {
     const nd = model.nextDay
-    const skipped = state === 'noschool' && nd?.skipped?.length ? nd.skipped.filter((d) => d.iso !== model.iso) : []
+    const skipped = state === 'noschool' && nd?.skipped?.length ? nd.skipped.filter((d) => d.iso !== model.iso && d.reason !== model.reason) : [] // the break already named above isn't repeated day by day
     return (
       <section className="now now--quiet" aria-labelledby={nameId}>
         <span id={nameId} className="vh">{name}</span>

@@ -16,7 +16,7 @@
 }
 .msg-row.is-unread .row-meta { color: var(--ink); }
 .msg-row.is-unread .msg-row-name { font-weight: var(--fw-strong); }
-.msg-list .msg-row .row-meta { min-height: calc(2 * var(--lh-subhead)); } /* two preview lines always, as Messages: one row height */
+.msg-list .msg-row .row-hit { min-height: 76px; } /* one row height whatever the preview's length, as Messages, with the avatar centred on the text there is */
 .msg-row .row-body { min-width: 0; flex: 1; }
 .msg-list .msg-row .row-lead { align-self: center; }
 
@@ -41,7 +41,7 @@
 .thread-log { display: flex; flex-direction: column; gap: var(--space-1); padding-bottom: var(--space-4); }
 /* The start of the chat says who can read it, quietly, as Messages says what kind of chat it is */
 .thread-caption {
-  align-self: stretch; width: 100%; min-height: 44px; text-wrap: wrap; margin: calc(-1 * var(--space-2)) 0 0; padding: var(--space-1) 0; border: 0; border-radius: 12px;
+  align-self: stretch; width: 100%; min-height: 44px; text-wrap: balance; margin: calc(-1 * var(--space-3)) 0 calc(-1 * var(--space-2)); padding: 2px var(--space-4); border: 0; border-radius: 12px;
   background: none; color: var(--ink-soft); font: inherit; font-size: 0.75rem; line-height: 1rem; letter-spacing: -0.01em; text-align: center; cursor: pointer;
 }
 .thread-caption .icon { display: inline-block; vertical-align: -2px; margin-right: 4px; } /* centred, as Messages centres its notices; the shield leads the first line */
@@ -198,7 +198,6 @@
   .messages-list-pane .msg-row.is-selected { background: none; }
   .messages-list-pane .msg-row.is-selected::before { content: ''; position: absolute; z-index: 0; inset: 4px 8px; width: auto; height: auto; margin: 0; border-radius: 10px; background: var(--fill-strong); } /* inset, as a Mac list selects: a quiet plate, so the sent bubbles stay the one blue */
   .messages-list-pane .msg-row.is-selected .row-hit { position: relative; z-index: 1; }
-  .messages-list-pane .msg-row.is-selected .avatar { background: var(--card); }
   .messages-list-pane .msg-row.is-selected::after, .messages-list-pane .msg-row:has(+ .is-selected)::after { opacity: 0; }
   .messages-detail-pane { display: block; }
   .messages-detail-empty { height: 100%; display: grid; place-items: center; color: var(--ink-soft); }

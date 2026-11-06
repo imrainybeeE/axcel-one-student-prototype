@@ -131,7 +131,7 @@ function EventsShelf({ todayIso }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {upcoming.map((e) => (
           <li key={e.id} className="shelf-item">
-            <Link to={`/calendar?event=${e.id}`} className="event-card card-link">
+            <Link to={`/calendar?event=${e.id}`} className="event-card card-link" data-cat={e.category}>
               <span className="event-card-date">
                 <Num wide className="event-card-day">{Number(e.start.slice(8))}</Num>
                 <span className="event-card-wd">{formatWeekdayShort(isoToMs(e.start))}</span>
@@ -153,7 +153,7 @@ function RecordTile() {
     <ZoomLink
       to="/record"
       className="stat-tile card-link"
-      data-tone="award"
+      data-tone="record"
       aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>

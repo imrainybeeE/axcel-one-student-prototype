@@ -1,11 +1,11 @@
 /* Calendar. */
 /* Each event carries its category as a thin coloured bar before the title, as Calendar marks its calendars */
-.cal-row { --cat: var(--brand-solid); }
-.cal-row[data-cat='event'] { --cat: #2F9E45; }
-.cal-row[data-cat='exam'] { --cat: #E8920C; }
-.cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: #E5483D; }
-.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: #2F7FB8; } /* school days that run as usual: a calm blue, never a disabled grey */
-.cal-row[data-cat='meeting'] { --cat: #5856D6; }
+.cal-row { --cat: var(--cat-school); }
+.cal-row[data-cat='event'] { --cat: var(--cat-event); }
+.cal-row[data-cat='exam'] { --cat: var(--cat-exam); }
+.cal-row:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: var(--cat-holiday); }
+.cal-row:is([data-cat='assembly'], [data-cat='term']) { --cat: var(--cat-day); } /* school days that run as usual: a calm blue, never a disabled grey */
+.cal-row[data-cat='meeting'] { --cat: var(--cat-meeting); }
 .cal-row .row-body { position: relative; align-self: stretch; justify-content: center; padding-left: 11px; }
 .cal-row .row-body::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 2px; border-radius: 1px; background: var(--cat); } /* as tall as the text it marks */
 /* Today's date is blue, as Calendar marks it */
@@ -36,8 +36,8 @@
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
 .cal-cell.is-blank { min-height: 50px; }
-.cal-dots { display: flex; gap: 3px; height: 6px; }
-.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+.cal-dots { display: flex; gap: 2px; height: 4px; margin-top: -2px; }
+.cal-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-4); text-align: center; } /* an empty day: one quiet line, centred in its card */
 .cal-day > .list:has(> .cal-none:only-child) { border-radius: var(--radius-compact); }
@@ -58,6 +58,7 @@
 @media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: 0; } } /* the day's heading on the month name's line, its card close under it */
 
 .cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
+.cal-stack > .seg + * { margin-top: var(--space-4); } /* the first week's heading carries its own 8 of padding: 24 in all */
 @media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }
 
 /* Meta parts joined by a dot that only ever sits between two parts on one line: each part carries its dot in front,

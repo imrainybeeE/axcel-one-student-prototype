@@ -92,3 +92,5 @@
 
 .att-status-line { color: var(--ink-soft); } /* the same short label as Record's; green stays on the bar */
 .record-entries > .settings-note { padding-inline: 0; margin-top: 0 !important; } /* 8 under its heading, as every group's content */ /* under its heading, on the gutter */
+
+.att-hero .record-hero-unit { color: var(--tone); font-weight: var(--fw-strong); } /* Attendance's green, on the % beside the figure */

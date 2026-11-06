@@ -34,6 +34,7 @@
 /* The coloured text passes 4.5:1 on a white card; -solid is for marks (bars, dots) */
 [data-tone='award'] { --tone: #B25E00; --tone-solid: #E8920C; }
 [data-tone='good'] { --tone: #1E7A3C; --tone-solid: #2F9E45; }
+[data-tone='record'] { --tone: var(--brand); --tone-solid: var(--brand-solid); } /* Record is a place in the app's blue, as its tile in More */
 [data-theme='dark'] [data-tone='award'] { --tone: #FFB340; --tone-solid: #FF9F0A; }
 [data-theme='dark'] [data-tone='good'] { --tone: #4ED07A; --tone-solid: #30D158; }
 /* An award level wears its own metal, never the generic award orange: a Silver total in amber reads as the wrong medal */
@@ -44,7 +45,7 @@
 [data-theme='dark'] [data-tone='award'][data-award='gold'] { --tone: #F2C94C; --tone-solid: #E0B000; }
 [data-theme='dark'] [data-tone='award'][data-award='bronze'] { --tone: #E0A578; --tone-solid: #C98B5A; }
 .tile--award[data-award='silver'] { --tile-bg: #A2A7AF; }
-[data-theme='dark'] .tile--award[data-award='silver'] { --tile-bg: #48484A; }
+[data-theme='dark'] .tile--award[data-award='silver'] { --tile-bg: #A2A7AF; } /* metal is metal, in either theme */
 .tile--award[data-award='gold'] { --tile-bg: #D9A400; }
 .tile--award[data-award='bronze'] { --tile-bg: #B87A48; }
 
@@ -241,6 +242,11 @@
 .tile--absent { --tile-bg: #E5483D; }
 .tile--gear { --tile-bg: #8E8E93; }
 .tile--report { --tile-bg: #E0436B; } /* Report a problem: its own colour, not Settings' grey */
+/* The award is a medal, not a setting: a round metal disc with a bright rim, its ribbon in the glyph (the metal's
+   sheen is the one gradient a medal earns) */
+.tile--award { border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tile-bg) 45%, #FFFFFF), var(--tile-bg) 62%, color-mix(in srgb, var(--tile-bg) 78%, #000000));
+  box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.55), 0 0 0 1px color-mix(in srgb, var(--tile-bg) 70%, #000000), 0 1px 2px rgb(0 0 0 / 0.18); }
+.tile--award .icon { filter: drop-shadow(0 0.5px 0.5px rgb(0 0 0 / 0.35)); }
 .tile--book { --tile-bg: #5856D6; }
 
 /* Narrow containers (320px phones, 200% text): the time stacks above the title */
@@ -303,7 +309,7 @@
   --av: var(--brand-solid);
   background: color-mix(in srgb, var(--av) 15%, var(--card)); color: var(--av); font-weight: var(--fw-title); font-size: 0.9375rem; letter-spacing: 0.02em;
 }
-/* Initials in the deep colour on its own pale wash (6:1 or more); in dark, white on the full colour */
+/* Initials in the deep colour on its own pale wash (6:1 or more); in dark, a light tint of the colour on a dark wash */
 .avatar[data-hue='0'] { --av: var(--subj-physics); }
 .avatar[data-hue='1'] { --av: var(--subj-maths); }
 .avatar[data-hue='2'] { --av: var(--subj-esl); }
@@ -312,7 +318,7 @@
 .avatar[data-hue='5'] { --av: var(--subj-gp); }
 .avatar[data-hue='6'] { --av: var(--subj-art); }
 .avatar[data-hue='7'] { --av: var(--subj-english); }
-[data-theme='dark'] .avatar { background: var(--av); color: #FFFFFF; }
+[data-theme='dark'] .avatar { background: color-mix(in srgb, var(--av) 26%, var(--card)); color: color-mix(in srgb, var(--av) 40%, #FFFFFF); } /* a wash, as in light: never a heavy solid disc */
 .diamond { display: inline-block; flex: none; width: 12px; height: 12px; margin: 0 2px; border-radius: 2px; transform: rotate(45deg); }
 .diamond--attitude { background: var(--merit-attitude); }
 .diamond--skills { background: var(--merit-skills); }

@@ -2,13 +2,13 @@
    subject colours and the day strip live in src/styles/spice.css. */
 
 /* ============ The waves behind the title ============ */
-/* The header's own layer: from the top of the screen to just under the greeting, fading out before the first card */
+/* The header's own layer: the title, date and greeting only, gone before the day strip (and, on a laptop, before the side column's first heading) */
 .screen--today { isolation: isolate; }
 .waves {
-  position: absolute; z-index: -1; inset: 0 0 auto; height: var(--waves-h, 17rem); overflow: hidden; pointer-events: none;
+  position: absolute; z-index: -1; inset: 0 0 auto; height: var(--waves-h, 10.5rem); overflow: hidden; pointer-events: none;
   background: linear-gradient(180deg, var(--waves-wash), transparent);
-  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent);
-  mask-image: linear-gradient(180deg, #000 58%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 96%);
+  mask-image: linear-gradient(180deg, #000 55%, transparent 96%);
   --waves-dot: rgb(66 133 244 / 0.34);
   --waves-wash: #E8F2FD;
 }
@@ -36,9 +36,13 @@
 [data-theme='dark'] .waves-wave { opacity: 0.42; }
 [data-theme='dark'] .waves-sweep, [data-theme='dark'] .waves-soft { fill: #2F73DE; opacity: 0.16; }
 [data-theme='dark'] .waves-white { stroke-opacity: 0.3; }
-@media (min-width: 1024px) { .waves { --waves-h: 13rem; } }
+@media (min-width: 1024px) { .waves { --waves-h: 10rem; } }
 /* Phone: the corner sweeps a little stronger, as the wave is narrower there */
-@media (max-width: 1023px) { .waves-sweep { opacity: 0.32; } }
+@media (max-width: 1023px) {
+  .waves-sweep { opacity: 0.32; }
+  /* Phone: a taller band keeps the curve right of the greeting, and fades sooner so it is gone by the day strip */
+  .waves { --waves-h: 14rem; -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 70%); mask-image: linear-gradient(180deg, #000 40%, transparent 70%); }
+}
 
 .screen--today .large-title-sub { font-weight: 500; } /* the date leads; the greeting under it is the quieter line of one block */
 .today-greeting { margin-top: -6px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); max-width: 26rem; } /* one quiet block with the date above it */
@@ -115,7 +119,14 @@
 /* Coming up: a big date, the event, its time */
 .event-card { display: flex; flex-direction: column; height: 100%; padding: 14px var(--space-4); background: var(--card); border-radius: var(--radius-compact); color: var(--ink); text-decoration: none; }
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
-.event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
+.event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); color: color-mix(in srgb, var(--cat, var(--ink)) 82%, #000000); } /* the date in its calendar's colour, as Calendar marks it (large text, 3:1 or more) */
+.event-card { --cat: var(--cat-school); }
+.event-card[data-cat='event'] { --cat: var(--cat-event); }
+.event-card[data-cat='exam'] { --cat: var(--cat-exam); }
+.event-card:is([data-cat='holiday'], [data-cat='public-holiday']) { --cat: var(--cat-holiday); }
+.event-card:is([data-cat='assembly'], [data-cat='term']) { --cat: var(--cat-day); }
+.event-card[data-cat='meeting'] { --cat: var(--cat-meeting); }
+[data-theme='dark'] .event-card-day { color: color-mix(in srgb, var(--cat, var(--ink)) 70%, #FFFFFF); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
 .event-card-title { margin-top: var(--space-2); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: calc(2 * var(--lh-subhead)); } /* date, then what (two lines kept), then the grey detail on one line in every card */
 .event-card-meta { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }

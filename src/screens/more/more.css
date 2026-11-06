@@ -25,7 +25,11 @@
 .appear-phone i { position: absolute; left: 6px; right: 6px; display: block; border-radius: 3px; background: var(--ph-card); }
 .appear-phone i:nth-child(1) { top: 6px; height: 4px; left: 15px; right: 15px; border-radius: 2px; background: var(--ph-ink); } /* the island, centred */
 .appear-phone i:nth-child(2) { top: 19px; height: 19px; border-radius: 4px; background: var(--subj-physics); }
-.appear-phone i:nth-child(3) { top: 43px; height: 15px; border-radius: 4px; }
+.appear-phone i:nth-child(3) { top: 43px; height: 15px; border-radius: 4px; background: none; display: flex; gap: 3px; }
+.appear-phone i:nth-child(3)::before, .appear-phone i:nth-child(3)::after { content: ''; flex: 1; border-radius: 4px; background: color-mix(in srgb, var(--subj-maths) 22%, var(--ph-card)); }
+.appear-phone i:nth-child(3)::after { background: color-mix(in srgb, var(--subj-gp) 22%, var(--ph-card)); }
+/* The waves behind Today's title, in the corner: a blue sweep edged with the orange line */
+.appear-phone::before { content: ''; position: absolute; inset: 0 0 auto; height: 22px; background: radial-gradient(ellipse 85% 120% at 108% -20%, rgb(66 133 244 / 0.5) 0 55%, #FF7F2F 55% 59%, transparent 60%); }
 .appear-phone i:nth-child(4) { top: 76px; height: 6px; left: 7px; right: 7px; border-radius: 3px; background: var(--ph-bar); }
 .appear-name { font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
 .appear-check { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink-tertiary); color: #FFFFFF; transition: background-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease); }

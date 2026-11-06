@@ -138,3 +138,4 @@
   font-size: var(--fs-footnote); line-height: 1.25rem; font-weight: var(--fw-strong);
 }
 .is-done .tt-double, .tt-week-row.is-done .tt-double { background: var(--fill); color: var(--ink-soft); }
+.rail-item.is-done .tt-card .rail-title { color: color-mix(in srgb, var(--ink) 72%, var(--card)); }

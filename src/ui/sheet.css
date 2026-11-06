@@ -44,7 +44,7 @@
 .sheet-grabber:active span { width: 44px; background: var(--ink-faint); }
 .sheet-head {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content) minmax(0, 1fr);
-  align-items: center; gap: var(--space-2); min-height: 48px; padding: 4px calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
+  align-items: center; gap: var(--space-2); min-height: 44px; padding: 0 calc(var(--gutter-l) - 4px) 0 calc(var(--gutter-r) - 4px);
 } /* the close circle (inside its 4px clear ring) sits on the body's 16px edge */
 .sheet-head-lead { justify-self: start; }
 /* The close button: a 36px glass circle inside a 44px target with a dark cross, as iOS 26 sheets have it

@@ -149,17 +149,18 @@ function EventsShelf({ todayIso }) {
 function RecordTile() {
   const from = record.currentAward?.points || 0
   const toNext = record.nextAward ? Math.max(0, Math.min(1, (record.points - from) / (record.nextAward.points - from))) : 0
+  const level = record.currentAward?.name
   return (
     <ZoomLink
       to="/record"
       className="stat-tile card-link"
-      data-tone="record"
-      aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}` : `Record, ${record.points} points, ${record.currentAward.name} Award level`}
+      data-tone="award"
+      aria-label={record.nextAward ? `Record, ${record.points} points, ${record.toNext} more for ${record.nextAward.name}${level ? `, ${level} Award` : ''}` : `Record, ${record.points} points${level ? `, ${level} Award level` : ''}`}
     >
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>
       <span className="stat-fig"><Num wide className="stat-n">{record.points}</Num><span className="stat-unit">points</span></span>
       {record.nextAward && <span className="stat-bar" style={{ '--p': toNext }} aria-hidden="true"><i /></span>}
-      <span className="stat-sub">{record.nextAward ? <><Num>{record.toNext}</Num> more for {record.nextAward.name}</> : `${record.currentAward.name} Award level`}</span>
+      <span className="stat-sub">{record.nextAward ? <><Num className="stat-sub-n">{record.toNext}</Num> more for {record.nextAward.name}{level && <span className="stat-level">{` \u00b7 ${level}`}</span>}</> : `${level} Award level`}</span>
     </ZoomLink>
   )
 }

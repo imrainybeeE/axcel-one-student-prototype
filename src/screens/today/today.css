@@ -136,6 +136,7 @@
 .stat-tile {
   display: flex; flex-direction: column; padding: 12px 14px 14px var(--space-4);
   background: var(--card); border-radius: var(--radius-compact); color: var(--ink); text-decoration: none;
+  container: stat-tile / inline-size; /* its sub line drops the award level when narrow */
 }
 .stat-title { display: flex; align-items: center; justify-content: space-between; color: var(--tone, var(--ink-soft)); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); }
 .stat-chev { color: var(--ink-tertiary); }
@@ -143,6 +144,9 @@
 .stat-n { font-size: 2.125rem; line-height: 1; font-weight: var(--fw-heavy); letter-spacing: -0.01em; }
 .stat-fig--pc { gap: 3px; } /* % is a unit like points: the same grey, on the same baseline as Attendance's */
 .stat-unit { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: 500; } /* every unit: 15 medium, grey, on the figure's baseline, 4px from it */
+.stat-level { white-space: nowrap; }
+.stat-sub .num.stat-sub-n { color: var(--ink); font-weight: var(--fw-strong); } /* the points still to go read first */
+@container stat-tile (max-width: 13rem) { .stat-level { display: none; } } /* a phone tile has room for the goal only; the Record page names the level */
 .stat-sub { margin-top: 6px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 /* Progress to the next award: the now block's thin line, in the tile's colour */
 .stat-bar { display: block; height: 4px; margin-top: 10px; border-radius: var(--radius-capsule); background: var(--fill); overflow: hidden; }

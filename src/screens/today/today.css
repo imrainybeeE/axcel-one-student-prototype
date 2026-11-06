@@ -76,7 +76,7 @@
 .event-card-date { display: flex; align-items: last baseline; gap: 5px; }
 .event-card-day { font-size: 1.375rem; line-height: 1; font-weight: var(--fw-heavy); }
 .event-card-wd { color: var(--ink-soft); font-size: var(--fs-subhead); font-weight: var(--fw-strong); }
-.event-card-title { margin-top: var(--space-2); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; } /* date, then what, then the grey detail, as Calendar */
+.event-card-title { margin-top: var(--space-2); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: calc(2 * var(--lh-subhead)); } /* date, then what (two lines kept), then the grey detail on one line in every card */
 .event-card-meta { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 
 /* You: Record and Attendance as two tiles, each a coloured title, a figure and one small mark */

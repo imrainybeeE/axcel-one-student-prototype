@@ -155,7 +155,7 @@
 @media (max-width: 1023.98px) {
   body::after {
     content: ""; position: fixed; z-index: calc(var(--z-tabbar) - 1); inset: auto 0 0 0; pointer-events: none;
-    height: calc(var(--tabbar-space) + 10px); /* only the bar's own footprint: content above it stays fully legible */
+    height: calc(var(--tabbar-h) + max(var(--safe-bottom), var(--space-2)) + 6px); /* the dissolve starts at the bar's top edge: text above it stays sharp */
     background: color-mix(in srgb, var(--paper) 94%, transparent);
     -webkit-mask-image: linear-gradient(0deg, #000 70%, transparent);
     mask-image: linear-gradient(0deg, #000 70%, transparent);
@@ -257,7 +257,7 @@
 .tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: opacity var(--dur-2) var(--ease); }
 .tab[aria-current="page"] { color: var(--brand); font-weight: var(--fw-tab-active); --icon-cut: var(--glass-solid); }
 .tab:active .tab-plate { transform: scale(calc(1 - 0.08 * var(--motion))); transition-duration: 90ms; }
-.tab-badge { position: absolute; top: -4px; left: calc(50% + 6px); box-shadow: 0 0 0 2px var(--glass-solid); }
+.tab-badge { position: absolute; top: -3px; left: calc(50% + 6px); box-shadow: 0 0 0 1.5px var(--glass-solid); }
 @media (hover: hover) and (pointer: fine) {
   .tab:not([aria-current]):hover { color: var(--brand); }
 }

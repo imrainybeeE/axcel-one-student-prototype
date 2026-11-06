@@ -39,7 +39,7 @@ function bend(t) {
 }
 
 function buildMaps(w, h, r, bezel) {
-  const key = `${w}x${h}r${r}b${bezel}`
+  const key = `${w}x${h}r${r}b${bezel}${document.documentElement.dataset.theme === 'dark' ? 'd' : ''}`
   if (maps.has(key)) return maps.get(key)
   const dpr = Math.min(2, window.devicePixelRatio || 1)
   // Displacement at CSS resolution (it is interpolated); the rim at device resolution so it stays crisp
@@ -87,6 +87,8 @@ function buildMaps(w, h, r, bezel) {
       disp.data[i + 3] = 255
     }
   }
+  // On a dark page a white rim reads twice as bright: half the light there
+  const rimK = document.documentElement.dataset.theme === 'dark' ? 0.5 : 1
   for (let y = 0; y < sc.height; y++) {
     for (let x = 0; x < sc.width; x++) {
       const i = (y * sc.width + x) * 4
@@ -99,7 +101,7 @@ function buildMaps(w, h, r, bezel) {
       // Quiet: a hairline of light, not a bevel (about 12% peak once the tint is over it)
       const a = (line * 0.35 + sheen) * (Math.pow(Math.max(0, facing), 1.4) + 0.25 * Math.pow(Math.max(0, -facing), 1.6))
       spec.data[i] = 255; spec.data[i + 1] = 255; spec.data[i + 2] = 255
-      spec.data[i + 3] = Math.min(255, a * 255)
+      spec.data[i + 3] = Math.min(255, a * rimK * 255)
     }
   }
   dctx.putImageData(disp, 0, 0)
@@ -146,7 +148,7 @@ function attach(node) {
     const r = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, w / 2, h / 2)
     const bezel = Math.min(Number(node.dataset.liquidBezel) || 16, r || 16, Math.min(w, h) / 2)
     const strength = Number(node.dataset.liquidStrength) || 22
-    const key = `${w}|${h}|${r}|${bezel}|${strength}`
+    const key = `${w}|${h}|${r}|${bezel}|${strength}|${document.documentElement.dataset.theme || ''}`
     if (key !== last) {
       last = key
       const m = buildMaps(w, h, Math.round(r), Math.round(bezel))

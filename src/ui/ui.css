@@ -279,9 +279,9 @@
 .tag--danger { background: var(--danger-tint); color: var(--danger); }
 
 .badge {
-  display: inline-grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px;
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px;
   border-radius: var(--radius-capsule); background: var(--brand-solid); color: #FFFFFF;
-  font-size: 0.8125rem; line-height: 1; font-weight: 700;
+  font-size: 0.75rem; line-height: 1; font-weight: 700;
   animation: badge-pop var(--dur-spring-bouncy) var(--spring-bouncy);
 }
 @keyframes badge-pop { from { transform: scale(calc(1 - 0.5 * var(--motion))); } }
@@ -413,7 +413,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
   min-height: var(--row-min); padding-block: 11px; cursor: pointer;
 }
 .choice-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.choice-desc { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.choice-desc { color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 .choice-reason { color: var(--ink-faint); }
 .choice-meta { color: var(--ink-soft); }
 .choice-radio { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
@@ -560,7 +560,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .sheet-close:active { transform: scale(calc(1 - 0.08 * var(--motion))); background-color: var(--fill); transition-duration: 90ms; }
 @media (hover: hover) and (pointer: fine) { .sheet-close:hover { background-color: var(--fill); } }
 .sheet-head-trail { justify-self: end; }
-.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--fw-strong); }
+.sheet-title { text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: var(--fw-strong); } /* the sheet's kind, quieter than what it shows */
 .sheet-body {
   flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
   padding: var(--space-2) var(--gutter-r) var(--space-6) var(--gutter-l);
@@ -732,7 +732,7 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now-main .tag { margin-bottom: var(--space-2); white-space: normal; }
 .now-title { overflow-wrap: break-word; hyphens: manual; text-wrap: balance; }
 .now-meta { color: var(--on-now-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; margin-top: 2px; }
-.now-count { display: flex; flex-direction: column; align-items: flex-end; text-align: right; margin-top: 8px; }
+.now-count { display: flex; flex-direction: column; align-items: flex-end; text-align: right; margin-top: 18px; } /* the numeral sits on the subject's baseline */
 .now-count-line { display: flex; align-items: last baseline; gap: 3px; line-height: var(--lh-time-xl); }
 .now-count-n { font-size: var(--fs-time-xl); line-height: var(--lh-time-xl); font-weight: var(--fw-time-xl); letter-spacing: -0.02em; }
 .now-count-pre, .now-count-unit { font-size: var(--fs-body); line-height: var(--lh-body); font-weight: var(--fw-strong); }
@@ -802,8 +802,9 @@ textarea.input, .input--area { padding-block: var(--space-3); min-height: 96px; 
 .now-rail-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
 .now-rail-name { min-width: 0; }
 .now--rail .now-rail-name .now-title { font-family: var(--font-display); font-stretch: 104%; font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-heavy); }
-.now--rail .now-count { margin-top: 0; }
+.now--rail .now-count { margin-top: -12px; } /* the numeral shares the subject's baseline */
 .now--rail .now-count-n { font-size: 2rem; }
+
 .now--rail .now-elapsed { margin: var(--space-2) 0 var(--space-2); }
 .now--rail .now-elapsed:last-child { margin-bottom: 0; } /* no Join on campus: the card ends on the bar, padding even all round */
 

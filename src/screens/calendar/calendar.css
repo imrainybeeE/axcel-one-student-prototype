@@ -46,12 +46,12 @@
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
-  .cal-laptop .cal-cell { min-height: 68px; }
+  .cal-laptop .cal-cell { min-height: 56px; }
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
 @media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
-@media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: var(--space-2); } } /* the day's heading on the month name's line */
+@media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: 0; } } /* the day's heading on the month name's line, its card close under it */
 
 .cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
 @media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }

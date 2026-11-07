@@ -1,16 +1,12 @@
 # Axcel One student redesign prototype
 
-An interactive concept for the student side of Axcel One. This is a static demonstration personalized for Bentley, Year 7 Phoenix. It is not connected to the school's systems and does not provide real sign-in. Messages includes sample conversations and contacts; replies stay in the demo. Individual attendance/RISE entries are not included.
+An interactive concept for the student side of Axcel One. Its not connected to the school's systems and does not provide real sign-in. It's built in React like Axcel One, so most of it can be carried over directly.
 
 ## Preview
 
 The public preview is published with GitHub Pages: https://imrainybeee.github.io/axcel-one-student-prototype/
 
 ## Film
-
-<video controls width="100%" src="https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4">
-  <a href="https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4">Watch Draft 2</a>
-</video>
 
 [Open or download Draft 2](https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4)
 [Open or download Draft 3](https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-3.mp4)

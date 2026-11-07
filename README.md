@@ -6,13 +6,14 @@ An interactive concept for the student side of Axcel One. This is a static demon
 
 The public preview is published with GitHub Pages: https://imrainybeee.github.io/axcel-one-student-prototype/
 
-## Draft 2 film
+## Film
 
 <video controls width="100%" src="https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4">
   <a href="https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4">Watch Draft 2</a>
 </video>
 
 [Open or download Draft 2](https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-2.mp4)
+[Open or download Draft 3](https://imrainybeee.github.io/axcel-one-student-prototype/video/draft-3.mp4)
 
 ## Run locally
 

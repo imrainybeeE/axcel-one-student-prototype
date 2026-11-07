@@ -21,42 +21,74 @@
 .cal-month-bar + * { margin-top: -10px; } /* the month's name sits close over its weekdays */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
 .cal-grid { display: flex; flex-direction: column; gap: 2px; }
-.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); column-gap: 2px; }
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
-.cal-grid-row > span { display: block; }
+/* Each week is one grid: the days fill every row of it, the events sit in lanes over them (row 2 onwards) */
+.cal-grid-row { grid-template-rows: 40px repeat(var(--lanes), 4px) 1fr; row-gap: 2px; min-height: 52px; }
+.cal-slot { display: block; grid-row: 1 / -1; min-width: 0; }
 .cal-cell {
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
-  width: 100%; min-height: 46px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  width: 100%; height: 100%; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
 .cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
 .cal-cell.is-off .num { color: var(--ink); }
-.cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
-.cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
+.cal-cell.is-out .num { color: var(--ink-soft); } /* the neighbouring months: there, a step back (still 4.5:1) */
+.cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); opacity: 1; }
+.cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); opacity: 1; }
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 50px; }
-.cal-dots { display: flex; gap: 2px; height: 4px; margin-top: -2px; }
-.cal-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+/* Phone: a one-day event is a dot under its date; a run of days is a line that joins them, inset at its real ends */
+.cal-bar { position: relative; z-index: 1; height: 4px; align-self: center; border-radius: 2px; background: var(--cat); pointer-events: none; }
+i.cal-bar { margin-inline: 0 -2px; } /* across the 2px gaps, so the line never breaks between days */
+i.cal-bar.is-head { margin-left: 12px; }
+i.cal-bar.is-tail { margin-right: 12px; }
+i.cal-bar:not(.is-head) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+i.cal-bar:not(.is-tail) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+i.cal-bar.is-one { width: 4px; margin: 0; justify-self: center; border-radius: 50%; }
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-4); text-align: center; } /* an empty day: one quiet line, centred in its card */
 .cal-day > .list:has(> .cal-none:only-child) { border-radius: var(--radius-compact); }
 
-/* Laptop: grid left, day list right */
+/* Laptop: Calendar's month. Whole-width weeks with the date at the top right, events as titled bars, weekends shaded */
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
   .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
-  .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; column-gap: var(--space-7) !important; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
-  .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
-  .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
-  .cal-laptop .cal-cell { min-height: 56px; }
-  .screen--wide.screen--cal { --content-wide: 59rem; } /* 944: a 560 month, a 32 gutter and the 352 day; Show ends on the day's edge */
+  .cal-laptop .cal-month { gap: var(--space-2); }
+  .cal-laptop .cal-month-bar { padding-inline: 0; }
+  .cal-laptop .cal-month-bar + * { margin-top: 0; }
+  .cal-title { font-weight: var(--fw-display); }
+  .cal-title .cal-year { font-weight: 400; color: var(--ink-soft); }
+  .cal-nav { display: flex; align-items: center; gap: var(--space-1); }
+  .cal-laptop .cal-grid { gap: 0; background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 0 0 0.5px var(--divider); }
+  .cal-laptop .cal-grid-head, .cal-laptop .cal-grid-row { column-gap: 0; }
+  .cal-laptop .cal-grid-head span { text-align: right; padding: var(--space-2) var(--space-3) var(--space-1); }
+  .cal-laptop .cal-grid-head span:nth-child(n + 6) { color: var(--ink-faint); }
+  .cal-laptop .cal-grid-row { grid-template-rows: 36px repeat(var(--lanes), 22px) 1fr; row-gap: 3px; min-height: max(108px, calc((100vh - 300px) / 6)); border-top: 0.5px solid var(--divider); }
+  .cal-laptop .cal-slot + .cal-slot { box-shadow: inset 0.5px 0 0 var(--divider); }
+  .cal-laptop .cal-slot:has(.is-weekend) { background: var(--fill); background: color-mix(in srgb, var(--fill) 45%, transparent); }
+  .cal-laptop .cal-cell { align-items: flex-end; padding: 4px 6px 0; border-radius: 0; }
+  .cal-laptop .cal-cell .num { width: auto; min-width: 28px; height: 28px; padding-inline: 7px; border-radius: 14px; font-size: 1.0625rem; }
+  .cal-laptop .cal-cell.is-selected:not(.is-today) .num { background: var(--fill-strong); color: var(--ink); }
+  .cal-laptop .cal-cell.is-today .num { background: var(--brand-solid); color: #FFFFFF; }
+  .cal-laptop .cal-cell:hover { background: var(--fill); background: color-mix(in srgb, var(--fill) 50%, transparent); }
+  /* the bars: their calendar's colour as a wash, the title in a deep shade of it; a bar that runs on past the week is cut square */
+  .cal-laptop .cal-bar {
+    display: flex; align-items: center; min-width: 0; height: 22px; margin: 0 4px; padding: 0 8px; border: 0; border-radius: 6px;
+    background: color-mix(in srgb, var(--cat) 16%, var(--card)); color: color-mix(in srgb, var(--cat) 62%, var(--ink));
+    font: inherit; font-size: var(--fs-footnote); font-weight: 600; text-align: left; pointer-events: auto; cursor: pointer;
+  }
+  .cal-laptop .cal-bar > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .cal-laptop .cal-bar.is-head { box-shadow: inset 3px 0 0 var(--cat); }
+  .cal-laptop .cal-bar:not(.is-head) { margin-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  .cal-laptop .cal-bar:not(.is-tail) { margin-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
+  .cal-laptop .cal-bar:hover { background: color-mix(in srgb, var(--cat) 24%, var(--card)); }
+  .cal-laptop .cal-bar:active { background: color-mix(in srgb, var(--cat) 32%, var(--card)); }
+  .cal-laptop .cal-bar:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
-@media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
-@media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: 0; } } /* the day's heading on the month name's line, its card close under it */
 
 .cal-stack > .seg:first-child { margin-top: var(--space-1); } /* 16 under the large title, as Messages' search */
 .cal-stack > .seg + * { margin-top: var(--space-4); } /* the first week's heading carries its own 8 of padding: 24 in all */

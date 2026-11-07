@@ -30,10 +30,10 @@
 .cal-grid-row > span { display: block; }
 .cal-cell {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
-  width: 100%; min-height: 56px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  width: 100%; min-height: 64px; padding-top: 8px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
-.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 500; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
 .cal-cell.is-off .num { color: var(--ink); }
 .cal-cell.is-weekend .num,
 [data-theme='dark'] .screen--cal .cal-cell.is-weekend:not(.is-today):not(.is-selected) .num { color: var(--ink-soft); } /* weekends step back, as Calendar's */
@@ -42,7 +42,7 @@
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 56px; }
+.cal-cell.is-blank { min-height: 64px; }
 /* Calendar's Compact marks: a soft dot under every day an event covers, in a pastel of its calendar's colour,
    so a long holiday reads as a quiet run of dots rather than a red stripe; two colours share one capsule */
 .cal-dots { display: flex; height: 7px; margin-top: 4px; }
@@ -64,10 +64,10 @@
   .cal-grid-head ~ .cal-grid-row ~ .cal-grid-row > span:nth-child(7):not(.is-blank)::before { right: calc(-1 * var(--pad-r)); }
 }
 .cal-cell:active .num { opacity: 0.5; }
-.cal-none { list-style: none; color: var(--ink-soft); padding: 8px 0; font-size: var(--fs-subhead); line-height: var(--lh-subhead); } /* an empty day: one quiet line, no card */
+.cal-none { list-style: none; color: var(--ink-soft); padding: 0; font-size: 0.875rem; line-height: 1.25rem; } /* an empty day: one quiet line, no card */
 .cal-day > .list:has(> .cal-none:only-child) { background: transparent; box-shadow: none; border-radius: 0; }
 .cal-day > .section-head { margin-bottom: 8px; }
-.cal-day > .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 500; color: var(--ink-soft); } /* the chosen day names the list; it never rivals the month */
+.cal-day > .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 600; color: var(--ink); } /* the chosen day names the list in ink, at body size so it never rivals the month */
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
@@ -76,7 +76,8 @@
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; column-gap: var(--space-7) !important; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
-  .cal-laptop .cal-cell { min-height: 56px; }
+  .cal-laptop .cal-cell, .cal-laptop .cal-cell.is-blank { min-height: 72px; }
+  .cal-laptop .cal-cell { padding-top: 10px; }
   .screen--wide.screen--cal { --content-wide: 59rem; } /* 944: a 560 month, a 32 gutter and the 352 day; Show ends on the day's edge */
 }
 
@@ -94,7 +95,7 @@
 .meta-parts > span { display: block; margin-left: -0.9em; }
 .meta-parts > span > span { display: inline-block; max-width: calc(100% - 0.9em); vertical-align: top; }
 .meta-parts > span > span::before { content: '·'; display: inline-block; width: 0.9em; text-align: center; }
-.cal-row .row-meta { font-size: var(--fs-footnote); line-height: var(--lh-footnote); } /* No school, who it is for: under the event, a step smaller */
+.cal-row .row-meta { font-size: 0.875rem; line-height: 1.25rem; } /* No school, who it is for: 14, readable at a glance yet one line under the title */
 
 /* Easier on the eyes: Upcoming's dates read as plain numbers, titles a step lighter, one hierarchy in both views */
 .screen--cal .row.cal-row .lead-date :is(.num, .num-wide) { font-family: var(--font); font-stretch: normal; font-size: 1.25rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0; }
@@ -102,3 +103,5 @@
 .screen--cal .row.cal-row .row-title { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: 500; }
 /* Dark: ordinary dates and titles a touch under pure white, so the page does not glare */
 [data-theme='dark'] .screen--cal :is(.cal-cell:not(.is-today):not(.is-selected) .num, .row.cal-row .row-title, .row.cal-row .lead-date :is(.num, .num-wide)) { color: color-mix(in srgb, var(--ink) 90%, var(--paper)); }
+/* Dark: secondary text at iOS's secondary-label grey, so meta, week headings and weekends step back from titles */
+@media not (prefers-contrast: more) { [data-theme='dark'] .screen--cal { --ink-soft: #98989D; } }

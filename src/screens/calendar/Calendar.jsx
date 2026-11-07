@@ -1,5 +1,4 @@
-// Calendar: Upcoming (default) groups the next 60 days by week. Month is whole weeks: on a phone each event is a dot or,
-// for a run of days, a line under the dates, with the chosen day listed below; on a laptop, titled bars as Calendar's month.
+// Calendar: Upcoming (default) groups the next 60 days by week; Month is a grid with up to 3 dots per day.
 // One Show control replaces the old stack of filters. Category is a word on each row, never a colour.
 // URL: ?view=month, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
 import { useState } from 'react'
@@ -95,45 +94,21 @@ function Upcoming({ list, today, onOpen }) {
   ))
 }
 
-/** The last day an event covers. */
-const lastDay = (e) => (e.end && e.end.includes('-') ? e.end : e.start)
-
-/** One week's events as bars: each takes the first free lane, longer events first, so a holiday keeps one line across the week. */
-function weekBars(list, days) {
-  const w0 = days[0], w6 = days[6]
-  const bars = list
-    .filter((e) => e.start <= w6 && lastDay(e) >= w0)
-    .map((e) => {
-      const s = e.start < w0 ? w0 : e.start, t = lastDay(e) > w6 ? w6 : lastDay(e)
-      return { e, col: days.indexOf(s), span: days.indexOf(t) - days.indexOf(s) + 1, head: e.start >= w0, tail: lastDay(e) <= w6 }
-    })
-    .sort((a, b) => a.col - b.col || b.span - a.span)
-  const lanes = []
-  for (const bar of bars) {
-    let l = lanes.findIndex((end) => end < bar.col)
-    if (l < 0) { l = lanes.length; lanes.push(-1) }
-    lanes[l] = bar.col + bar.span - 1
-    bar.lane = l
-  }
-  return bars
-}
-
-function Month({ list, today, selected, month, laptop, onSelect, onMonth, onOpen }) {
+function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
   const [y, m] = month.split('-').map(Number)
   const first = `${month}-01`
+  const lead = (dayOfWeek(first) + 6) % 7
   const daysIn = new Date(Date.UTC(y, m, 0)).getUTCDate()
-  // whole weeks, Monday to Sunday: the days either side of the month fill the first and last rows, quietly
-  const start = addDays(first, -((dayOfWeek(first) + 6) % 7))
-  const last = `${month}-${String(daysIn).padStart(2, '0')}`
-  const weeks = []
-  for (let d = start; d <= last; d = addDays(d, 7)) weeks.push(Array.from({ length: 7 }, (_, i) => addDays(d, i)))
-  const on = (iso) => list.filter((e) => e.start <= iso && iso <= lastDay(e))
+  const cells = []
+  for (let i = 0; i < lead; i++) cells.push(null)
+  for (let d = 1; d <= daysIn; d++) cells.push(`${month}-${String(d).padStart(2, '0')}`)
+  const on = (iso) => list.filter((e) => e.start <= iso && iso <= (e.end && e.end.includes('-') ? e.end : e.start))
   const selEvents = on(selected)
   const move = (delta) => {
     const dt = new Date(Date.UTC(y, m - 1 + delta, 1))
     const targetMonth = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}`
-    const lastOf = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth() + 1, 0)).getUTCDate()
-    onMonth(`${targetMonth}-${String(Math.min(Number(selected.slice(8)), lastOf)).padStart(2, '0')}`)
+    const lastDay = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth() + 1, 0)).getUTCDate()
+    onMonth(`${targetMonth}-${String(Math.min(Number(selected.slice(8)), lastDay)).padStart(2, '0')}`)
   }
   const key = (e, iso) => {
     const steps = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key]
@@ -143,74 +118,48 @@ function Month({ list, today, selected, month, laptop, onSelect, onMonth, onOpen
     onSelect(next)
     requestAnimationFrame(() => document.querySelector(`[data-iso="${next}"]`)?.focus())
   }
-  const title = <h2 className={laptop ? 't-title-m cal-title' : 't-title-s'} aria-live="polite">{MONTHS[m - 1]} <Num className="cal-year">{y}</Num></h2>
   return (
     <div className="cal-month">
-      {laptop ? (
-        <div className="cal-month-bar">
-          {title}
-          <div className="cal-nav">
-            <IconButton icon="chevron-left" label="Previous month" onClick={() => move(-1)} />
-            <Button variant="secondary" size="compact" onClick={() => onMonth(today)}>Today</Button>
-            <IconButton icon="chevron-right" label="Next month" onClick={() => move(1)} />
-          </div>
-        </div>
-      ) : (
-        <div className="cal-month-bar">
-          <IconButton icon="chevron-left" label="Previous month" onClick={() => move(-1)} />
-          {title}
-          <IconButton icon="chevron-right" label="Next month" onClick={() => move(1)} />
-        </div>
-      )}
+      <div className="cal-month-bar">
+        <IconButton icon="chevron-left" label="Previous month" onClick={() => move(-1)} />
+        <h2 className="t-title-s" aria-live="polite">{MONTHS[m - 1]} <Num>{y}</Num></h2>
+        <IconButton icon="chevron-right" label="Next month" onClick={() => move(1)} />
+      </div>
       <div className="cal-grid" role="grid" aria-label={`${MONTHS[m - 1]} ${y}`}>
         <div role="row" className="cal-grid-head">
-          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => <span key={d} role="columnheader">{d}</span>)}
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => <span key={d} role="columnheader">{d}</span>)}
         </div>
-        {weeks.map((days) => {
-          const bars = weekBars(list, days)
-          return (
-            <div role="row" key={days[0]} className="cal-grid-row" style={{ '--lanes': Math.max(1, ...bars.map((b) => b.lane + 1)) }}>
-              {days.map((iso, i) => {
-                const evs = on(iso)
-                const out = iso.slice(0, 7) !== month
-                const off = evs.some((e) => NO_SCHOOL.has(e.category)) || [0, 6].includes(dayOfWeek(iso))
-                const isToday = iso === today
-                const isSel = iso === selected
-                const n = Number(iso.slice(8))
-                return (
-                  <span key={iso} role="gridcell" aria-selected={isSel} className="cal-slot" style={{ gridColumn: i + 1 }}>
-                    <button
-                      type="button"
-                      data-iso={iso}
-                      tabIndex={isSel ? 0 : -1}
-                      className={`cal-cell${isToday ? ' is-today' : ''}${isSel ? ' is-selected' : ''}${off ? ' is-off' : ''}${out ? ' is-out' : ''}${[0, 6].includes(dayOfWeek(iso)) ? ' is-weekend' : ''}`}
-                      aria-label={`${formatLongDate(isoToMs(iso))}${isToday ? ', today' : ''}, ${evs.length ? `${evs.length} event${evs.length > 1 ? 's' : ''}` : 'no events'}`}
-                      onClick={() => onSelect(iso)}
-                      onKeyDown={(e) => key(e, iso)}
-                    >
-                      <Num>{laptop && n === 1 ? `${n} ${MONTHS[Number(iso.slice(5, 7)) - 1].slice(0, 3)}` : n}</Num>
-                    </button>
-                  </span>
-                )
-              })}
-              {bars.map((b) => {
-                const cls = `cal-bar cal-row${b.head ? ' is-head' : ''}${b.tail ? ' is-tail' : ''}${b.span === 1 && b.head && b.tail ? ' is-one' : ''}`
-                const style = { gridColumn: `${b.col + 1} / span ${b.span}`, gridRow: b.lane + 2 }
-                return laptop ? (
-                  <button key={b.e.id} type="button" className={cls} data-cat={b.e.category} style={style} onClick={() => onOpen(b.e)} aria-label={`${b.e.title}, ${when(b.e)}`}>
-                    <span>{b.e.title}</span>
+        {Array.from({ length: Math.ceil(cells.length / 7) }, (_, r) => (
+          <div role="row" key={r} className="cal-grid-row">
+            {cells.slice(r * 7, r * 7 + 7).map((iso, i) => {
+              if (!iso) return <span key={`b${i}`} role="gridcell" className="cal-cell is-blank" />
+              const evs = on(iso)
+              const off = evs.some((e) => NO_SCHOOL.has(e.category)) || [0, 6].includes(dayOfWeek(iso))
+              const isToday = iso === today
+              const isSel = iso === selected
+              return (
+                <span key={iso} role="gridcell" aria-selected={isSel}>
+                  <button
+                    type="button"
+                    data-iso={iso}
+                    tabIndex={isSel ? 0 : -1}
+                    className={`cal-cell${isToday ? ' is-today' : ''}${isSel ? ' is-selected' : ''}${off ? ' is-off' : ''}`}
+                    aria-label={`${formatLongDate(isoToMs(iso))}${isToday ? ', today' : ''}, ${evs.length ? `${evs.length} event${evs.length > 1 ? 's' : ''}` : 'no events'}`}
+                    onClick={() => onSelect(iso)}
+                    onKeyDown={(e) => key(e, iso)}
+                  >
+                    <Num>{Number(iso.slice(8))}</Num>
+                    <span className="cal-dots" aria-hidden="true">{evs.filter((e) => e.start === iso).filter((e, n, a) => a.findIndex((o) => o.category === e.category) === n).slice(0, 3).map((e) => <i key={e.id} className="cal-row" data-cat={e.category} />)}</span>
                   </button>
-                ) : <i key={b.e.id} className={cls} data-cat={b.e.category} style={style} aria-hidden="true" />
-              })}
-            </div>
-          )
-        })}
+                </span>
+              )
+            })}
+          </div>
+        ))}
       </div>
-      {!laptop && (
-        <Group title={formatLongDate(isoToMs(selected))} className="cal-day">
-          {selEvents.length ? selEvents.map((e) => <EventRow key={e.id} e={e} onOpen={onOpen} noDate />) : <li className="cal-none">Nothing on this day.</li>}
-        </Group>
-      )}
+      <Group title={formatLongDate(isoToMs(selected))} className="cal-day">
+        {selEvents.length ? selEvents.map((e) => <EventRow key={e.id} e={e} onOpen={onOpen} noDate />) : <li className="cal-none">Nothing on this day.</li>}
+      </Group>
     </div>
   )
 }
@@ -285,7 +234,6 @@ export default function Calendar() {
         today={today}
         selected={selected}
         month={month}
-        laptop={laptop}
         onMonth={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
         onSelect={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
         onOpen={setOpen}

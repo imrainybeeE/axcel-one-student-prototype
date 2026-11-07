@@ -1,15 +1,14 @@
-// Timetable: the day as a rail (the lesson on now uses the now block), a Mon-Fri strip, and Week.
-// Phone: one day at a time, Week stacks the days. Laptop: Week is five columns.
+// Timetable: a Mon-Fri strip over the day as a time grid (Google Calendar's day), and Week as five columns of it.
 // URL: ?view=week, ?day=YYYY-MM-DD (plus the demo params ?t ?d ?state ?theme).
 import { useRef, useState } from 'react'
-import { Screen, useDemo, useRoute, updateQuery, useLaptop, useJoin, useTabRetap, SAVED_AT } from '../../app'
+import { Screen, useDemo, useRoute, updateQuery, useJoin, useTabRetap, SAVED_AT } from '../../app'
 import {
-  Rail, RailItem, NowBlock, Tag, Time, Num, Icon, Button, Sheet, Row,
+  Tag, Time, Num, Icon, Button, Sheet, Row,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
   LessonMini, lessonMiniActive, useOutOfView,
 } from '../../ui'
 import { getDay, nowModel, isJoinOpen, joinOpensAt, nextSchoolDay } from '../../lib/schedule.js'
-import { addDays, dayOfWeek, formatLongDate, formatWeekday, isoToMs } from '../../lib/time.js'
+import { addDays, dayOfWeek, formatLongDate, formatWeekday, isoToMs, schoolParts } from '../../lib/time.js'
 import './timetable.css'
 
 const SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
@@ -39,15 +38,6 @@ function statusOf(item, iso, today, nowMs) {
   if (nowMs >= item.endsAt) return 'done'
   if (nowMs >= item.startsAt) return 'now'
   return 'later'
-}
-
-function JoinSmall({ item, nowMs, offline, joiningId, onJoin }) {
-  if (!item.meet || joinWait(item, nowMs, offline)) return null
-  return (
-    <Button size="compact" loading={joiningId === item.id} loadingLabel="Joining" aria-label={`Join ${item.title}`} onClick={() => onJoin(item)}>
-      Join
-    </Button>
-  )
 }
 
 /**
@@ -97,97 +87,88 @@ function WeekStrip({ days, selected, today, onPick }) {
   )
 }
 
-/** One day as a rail. */
-function DayRail({ day, today, nowMs, model, offline, joinProps, onOpen }) {
-  const items = day.items
-  const nextId = day.iso === today ? items.find((it) => it.kind !== 'break' && statusOf(it, day.iso, today, nowMs) === 'later')?.id : null
-  return (
-    <Rail label={`Lessons on ${formatLongDate(isoToMs(day.iso))}`} className="tt-rail">
-      {items.map((it, i) => {
-        const status = statusOf(it, day.iso, today, nowMs)
-        const first = i === 0
-        const last = i === items.length - 1
-        if (it.kind === 'break') {
-          return <RailItem key={it.id} kind="gap" status={status === 'done' ? 'done' : 'later'} start={it.start} end={it.end} title={it.title} first={first} last={last} />
-        }
-        if (it.kind === 'lesson' && status === 'now' && model?.state === 'lesson' && model.item?.id === it.id) {
-          return (
-            <RailItem key={it.id} status="now" start={it.start} end={it.end} subject={it.subjectId} first={first} last={last}>
-              <div className="tt-now">
-                <NowBlock model={model} variant="rail" offline={offline} onJoin={joinProps.onJoin} joiningId={joinProps.joiningId} headingLevel={3} onDetails={() => onOpen(it)} />
-              </div>
-            </RailItem>
-          )
-        }
-        if (it.kind === 'event') {
-          return <RailItem key={it.id} status={status === 'now' ? 'later' : status} start={it.start} end={it.end} title={it.title} meta="School activity" first={first} last={last} />
-        }
-        const isNext = it.id === nextId
-        const wait = joinWait(it, nowMs, offline)
-        return (
-          <RailItem
-            key={it.id}
-            status={status}
-            start={it.start}
-            end={it.end}
-            subject={it.subjectId}
-            first={first}
-            last={last}
-          >
-            {/* One card per lesson, as tall as it is long, washed in its subject's colour. A double period is one card
-                with a quiet line where the bell goes between its periods. */}
-            <button type="button" className="rail-text tt-open tt-card" style={{ '--mins': it.endMin - it.startMin }} aria-haspopup="dialog" onClick={() => onOpen(it)}>
-              <span className="rail-title">{it.title}{it.double && <span className="tt-double">Double</span>}{isNext && <> <span className="tt-next">Next</span></>}</span>
-              <span className="rail-meta">{place(it)}</span>
-              {status !== 'done' && wait && <span className="rail-meta join-wait"><Icon name="clock" size={20} />{wait}</span>}
-              {it.periods?.slice(1).map((pd) => (
-                <span key={pd.start} className="tt-card-bell" style={{ '--at': (pd.startMin - it.startMin) / (it.endMin - it.startMin) }} aria-hidden="true"><Time value={pd.start} /></span>
-              ))}
-            </button>
-            {status === 'done' ? <span className="vh">, done</span> : <JoinSmall item={it} nowMs={nowMs} offline={offline} {...joinProps} />}
-          </RailItem>
-        )
-      })}
-    </Rail>
-  )
-}
+/** "9.00" for an hour mark, in the school's 12-hour style. */
+const hourLabel = (min) => `${(min / 60) % 12 || 12}.00`
 
-/** The week: stacked days on a phone, five columns on a laptop. */
-function Week({ days, today, nowMs, onOpen, laptop }) {
-  const starts = [...new Set(days.flatMap((day) => day.lessons.flatMap((item) => (item.periods || [item]).map((pd) => pd.startMin))))].sort((a, b) => a - b)
-  // On a laptop a double period fills the grid rows of both its periods, so every start time still lines up
-  const rows = (it) => `${starts.indexOf(it.startMin) + 2} / span ${Math.max(1, starts.filter((m) => m >= it.startMin && m < it.endMin).length)}`
+/**
+ * The day (or the week) as Google Calendar draws it: hours down the side with a line across each, every lesson a
+ * block in its subject's colour at its time and as tall as it is long, breaks left open with their name, and a red
+ * line at the time now. One column for a day, five for the week.
+ */
+function TimeGrid({ days, today, nowMs, onOpen, head = false }) {
+  const all = days.flatMap((d) => d.items)
+  const from = Math.floor(Math.min(8 * 60, ...all.map((i) => i.startMin)) / 60) * 60
+  const to = Math.ceil(Math.max(16 * 60, ...all.map((i) => i.endMin)) / 30) * 30
+  const hours = []
+  for (let h = from; h <= to; h += 60) hours.push(h)
+  const now = schoolParts(nowMs)
   return (
-    <div className={laptop ? 'tt-week-scroll' : undefined} data-scroll-x={laptop || undefined}>
-    <div className={laptop ? 'tt-week tt-week--grid' : 'tt-week'}>
-      {days.map((day, column) => (
-        <section key={day.iso} className="tt-week-day" aria-labelledby={`tt-w-${day.iso}`}>
-          <h2 id={`tt-w-${day.iso}`} className="tt-week-head t-title-s" style={laptop ? { gridColumn: column + 1, gridRow: 1 } : undefined}>
-            {formatWeekday(isoToMs(day.iso))} <Num>{Number(day.iso.slice(8))}</Num>
-            {day.iso === today && <Tag>Today</Tag>}
-          </h2>
-          {day.kind !== 'school' ? (
-            <p className="tt-week-off" style={laptop ? { gridColumn: column + 1, gridRow: 2 } : undefined}>{day.reason ? `No school: ${day.reason}` : 'No lessons'}</p>
-          ) : (
-            <ul className="list" role="list">
-              {day.lessons.map((it) => (
-                <Row
-                  key={it.id}
-                  data-subject={it.subjectId}
-                  className={`tt-week-row${statusOf(it, day.iso, today, nowMs) === 'done' ? ' is-done' : ''}`}
-                  style={laptop ? { gridColumn: column + 1, gridRow: rows(it) } : undefined}
-                  onClick={it.kind === 'event' ? undefined : () => onOpen(it)}
-                  lead={<span className="lead-time tt-week-time"><Time value={it.start} /><Time value={it.end} className="lead-time-end" /></span>}
-                  title={it.kind === 'event' ? it.title : laptop ? it.short : it.title}
-                  titleExtra={it.double ? <span className="tt-double">Double</span> : null}
-                  meta={it.kind === 'event' ? 'School activity' : laptop ? it.teacherShort : place(it)}
-                />
-              ))}
-            </ul>
-          )}
-        </section>
-      ))}
-    </div>
+    <div className={`tg${head ? ' tg--week' : ''}`} style={{ '--cols': days.length, '--span': to - from }}>
+      {head && (
+        <div className="tg-head" aria-hidden="true">
+          {days.map((d) => (
+            <span key={d.iso} className="tg-head-day" data-today={d.iso === today || undefined}>
+              <span className="tg-head-name">{SHORT[dayOfWeek(d.iso)]}</span>
+              <span className="tg-head-num">{Number(d.iso.slice(8))}</span>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="tg-body">
+        <div className="tg-hours" aria-hidden="true">
+          {hours.map((h) => <span key={h} style={{ '--at': h - from }}><Num>{hourLabel(h)}</Num></span>)}
+        </div>
+        {days.map((day) => {
+          const nextId = day.iso === today ? day.lessons.find((it) => statusOf(it, day.iso, today, nowMs) === 'later')?.id : null
+          const showNow = day.iso === today && now.minutes >= from && now.minutes <= to
+          return (
+            <div key={day.iso} className="tg-col" role="group" aria-label={`${formatLongDate(isoToMs(day.iso))}${day.iso === today ? ', today' : ''}`}>
+              {day.kind !== 'school' ? (
+                <p className="tg-off"><span>{day.reason ? 'No school' : 'No lessons'}</span>{day.reason && <span className="tg-off-why">{day.reason}</span>}</p>
+              ) : day.items.map((it, n) => {
+                // room: the minutes free below this block's start, so a short lesson can grow to a full tap target
+                const room = (day.items[n + 1]?.startMin ?? to + 30) - it.startMin
+                const pos = { '--top': it.startMin - from, '--len': it.endMin - it.startMin, '--room': room }
+                if (it.kind === 'break') return <span key={it.id} className="tg-gap" style={pos}>{it.title}</span>
+                const status = statusOf(it, day.iso, today, nowMs)
+                const short = it.endMin - it.startMin < 40
+                const isNext = it.id === nextId
+                const label = `${it.title}, ${it.start} to ${it.end}${it.kind === 'event' ? '' : `, ${place(it)}`}${it.double ? ', double period' : ''}${status === 'now' ? ', now' : status === 'done' ? ', done' : isNext ? ', next' : ''}`
+                const Tagname = it.kind === 'event' ? 'div' : 'button'
+                return (
+                  <Tagname
+                    key={it.id}
+                    type={it.kind === 'event' ? undefined : 'button'}
+                    className={`tg-ev is-${status}${short ? ' is-short' : ''}${isNext ? ' is-next' : ''}`}
+                    data-subject={it.kind === 'event' ? 'event' : it.subjectId}
+                    style={pos}
+                    aria-haspopup={it.kind === 'event' ? undefined : 'dialog'}
+                    aria-label={label}
+                    onClick={it.kind === 'event' ? undefined : () => onOpen(it)}
+                  >
+                    <span className="tg-ev-title" aria-hidden="true">
+                      <span className="tg-ev-name tg-ev-long">{it.title}</span><span className="tg-ev-name tg-ev-abbr">{it.short || it.title}</span>
+                      {it.double && <span className="tg-chip">Double</span>}
+                      {isNext && <span className="tg-chip">Next</span>}
+                      {short && <span className="tg-ev-time"><Time value={it.start} /></span>}
+                    </span>
+                    {!short && (
+                      <span className="tg-ev-meta" aria-hidden="true">
+                        <span className="tg-ev-when"><Time value={it.start} /><span className="tg-ev-end"> to <Time value={it.end} /></span></span>
+                        <span className="tg-ev-place">{it.kind === 'event' ? 'School activity' : place(it)}</span>
+                      </span>
+                    )}
+                    {it.periods?.slice(1).map((pd) => (
+                      <span key={pd.start} className="tg-bell" style={{ '--at': pd.startMin - it.startMin }} aria-hidden="true"><Time value={pd.start} /></span>
+                    ))}
+                  </Tagname>
+                )
+              })}
+              {showNow && <i className="tg-now" style={{ '--at': now.minutes - from }} aria-hidden="true" />}
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -233,7 +214,6 @@ function LessonSheet({ item, onClose, nowMs, offline, joinProps }) {
 export default function Timetable() {
   const { query } = useRoute()
   const { state, offline, now, today, retry, retrying, reconnect, reconnecting } = useDemo()
-  const laptop = useLaptop()
   const { joiningId, join } = useJoin()
   const [openItem, setOpenItem] = useState(null)
   const view = query.get('view') === 'week' ? 'week' : 'day'
@@ -243,11 +223,10 @@ export default function Timetable() {
   const monday = weekStart(selected)
   const weekDays = [0, 1, 2, 3, 4].map((n) => getDay(addDays(monday, n)))
   const day = getDay(selected)
-  const model = selected === today ? nowModel(now) : null
   const joinProps = { joiningId, onJoin: join }
 
   // Back to now: today's rail, scrolled to the lesson on now (or the next one)
-  const nowRow = () => document.querySelector('.tt-rail .rail-item.is-now') || document.querySelector('.tt-rail .tt-next')?.closest('.rail-item')
+  const nowRow = () => document.querySelector('.tg:not(.tg--week) .tg-ev.is-now') || document.querySelector('.tg:not(.tg--week) .tg-ev.is-next')
   const backToNow = () => {
     updateQuery({ day: null, view: null })
     requestAnimationFrame(() => nowRow()?.scrollIntoView({ block: 'center', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }))
@@ -255,7 +234,7 @@ export default function Timetable() {
   useTabRetap('timetable', backToNow)
 
   // The capsule carries today's lesson whenever its row is not on screen: scrolled past, not reached yet, or on another day
-  const todayModel = state === 'loading' || state === 'empty' ? null : (model || nowModel(now))
+  const todayModel = state === 'loading' || state === 'empty' ? null : nowModel(now)
   const onToday = view === 'day' && selected === today
   const rowAway = useOutOfView(nowRow, { both: true, enabled: onToday && lessonMiniActive(todayModel), key: `${view}${selected}${todayModel?.item?.id}` })
   const miniShown = lessonMiniActive(todayModel) && (!onToday || rowAway)
@@ -270,7 +249,7 @@ export default function Timetable() {
       </LoadingState>
     )
   } else if (view === 'week') {
-    body = <Week days={weekDays} today={today} nowMs={now} onOpen={setOpenItem} laptop={laptop} />
+    body = <TimeGrid days={weekDays} today={today} nowMs={now} onOpen={setOpenItem} head />
   } else if (day.kind !== 'school' || state === 'empty') {
     const next = nextSchoolDay(selected)
     body = (
@@ -289,7 +268,7 @@ export default function Timetable() {
           <h2 id="tt-day-head" className="t-title-s">{formatLongDate(isoToMs(selected))}</h2>
           {day.online && <Tag icon="laptop">Online</Tag>}
         </div>
-        <DayRail day={day} today={today} nowMs={now} model={model} offline={offline} joinProps={joinProps} onOpen={setOpenItem} />
+        <TimeGrid days={[day]} today={today} nowMs={now} onOpen={setOpenItem} />
       </section>
     )
   }

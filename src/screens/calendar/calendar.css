@@ -77,8 +77,8 @@
 .cal-row .row-meta { font-size: var(--fs-footnote); line-height: var(--lh-footnote); } /* No school, who it is for: under the event, a step smaller */
 
 /* Easier on the eyes: Upcoming's dates read as plain numbers, titles a step lighter, one hierarchy in both views */
-.screen--cal .row.cal-row .lead-date .num { font-family: var(--font); font-stretch: normal; font-size: 1.25rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0; }
+.screen--cal .row.cal-row .lead-date :is(.num, .num-wide) { font-family: var(--font); font-stretch: normal; font-size: 1.25rem; line-height: 1.5rem; font-weight: 500; letter-spacing: 0; }
 .screen--cal .row.cal-row .lead-date-label { font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
 .screen--cal .row.cal-row .row-title { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: 500; }
 /* Dark: ordinary dates and titles a touch under pure white, so the page does not glare */
-[data-theme='dark'] .screen--cal :is(.cal-cell:not(.is-today):not(.is-selected) .num, .row.cal-row .row-title, .row.cal-row .lead-date .num) { color: color-mix(in srgb, var(--ink) 90%, var(--paper)); }
+[data-theme='dark'] .screen--cal :is(.cal-cell:not(.is-today):not(.is-selected) .num, .row.cal-row .row-title, .row.cal-row .lead-date :is(.num, .num-wide)) { color: color-mix(in srgb, var(--ink) 90%, var(--paper)); }

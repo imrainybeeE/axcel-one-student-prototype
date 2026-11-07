@@ -121,9 +121,9 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
   return (
     <div className="cal-month">
       <div className="cal-month-bar">
-        <IconButton icon="chevron-left" label="Previous month" onClick={() => move(-1)} />
-        <h2 className="t-title-s" aria-live="polite">{MONTHS[m - 1]} <Num>{y}</Num></h2>
-        <IconButton icon="chevron-right" label="Next month" onClick={() => move(1)} />
+        <h2 className="cal-month-title" aria-live="polite">{MONTHS[m - 1]} <Num className="cal-year">{y}</Num></h2>
+        <IconButton icon="chevron-left" label="Previous month" size={18} onClick={() => move(-1)} />
+        <IconButton icon="chevron-right" label="Next month" size={18} onClick={() => move(1)} />
       </div>
       <div className="cal-grid" role="grid" aria-label={`${MONTHS[m - 1]} ${y}`}>
         <div role="row" className="cal-grid-head">

@@ -24,25 +24,45 @@
 .cal-month-title { font-size: 1.25rem; line-height: 1.5625rem; font-weight: 600; }
 .cal-month-title .cal-year { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 400; color: var(--ink-soft); }
 .cal-month-bar .icon-btn { width: 44px; height: 44px; color: var(--brand); }
-.cal-grid { display: flex; flex-direction: column; gap: 2px; }
-.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-grid { display: flex; flex-direction: column; }
+.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); }
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
 .cal-grid-row > span { display: block; }
 .cal-cell {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
-  width: 100%; min-height: 46px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  width: 100%; min-height: 56px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
-.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
+.cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 600; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
 .cal-cell.is-off .num { color: var(--ink); }
+.cal-cell.is-weekend .num,
+[data-theme='dark'] .screen--cal .cal-cell.is-weekend:not(.is-today):not(.is-selected) .num { color: var(--ink-soft); } /* weekends step back, as Calendar's */
 .cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
 .cal-cell.is-selected .num { background: var(--brand-solid); color: var(--on-brand); font-weight: var(--fw-strong); } /* one blue for choosing, never a white disc in the dark */
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 50px; }
-.cal-dots { display: flex; gap: 3px; height: 4px; margin-top: 1px; }
-.cal-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+.cal-cell.is-blank { min-height: 56px; }
+/* Calendar's Compact marks: a soft dot under every day an event covers, in a pastel of its calendar's colour,
+   so a long holiday reads as a quiet run of dots rather than a red stripe; two colours share one capsule */
+.cal-dots { display: flex; height: 7px; margin-top: 4px; }
+.cal-dots i { width: 7px; height: 7px; border-radius: 50%; background: color-mix(in srgb, var(--cat, var(--ink-soft)) 60%, white); }
+[data-theme='dark'] .cal-dots i { background: color-mix(in srgb, var(--cat, var(--ink-soft)) 78%, white); }
+.cal-dots.is-split { width: 14px; border-radius: 3.5px; overflow: hidden; }
+.cal-dots.is-split i { flex: 1; width: auto; border-radius: 0; }
+/* Calendar's rules: one full line under the weekday letters, then a fainter hairline over each later week,
+   only above real days; on a phone the lines run out to the screen's edges */
+.cal-grid-head { position: relative; }
+.cal-grid-head::after,
+.cal-grid-head ~ .cal-grid-row ~ .cal-grid-row > span:not(.is-blank)::before { content: ''; position: absolute; left: 0; right: 0; height: 0.5px; background: color-mix(in srgb, var(--divider) 65%, transparent); }
+.cal-grid-head::after { bottom: 0; }
+.cal-grid-row > span:not(.is-blank) { position: relative; }
+.cal-grid-head ~ .cal-grid-row ~ .cal-grid-row > span:not(.is-blank)::before { top: 0; }
+@media (max-width: 1023px) {
+  .cal-grid-head::after { left: calc(-1 * var(--pad-l)); right: calc(-1 * var(--pad-r)); }
+  .cal-grid-head ~ .cal-grid-row ~ .cal-grid-row > span:first-child:not(.is-blank)::before { left: calc(-1 * var(--pad-l)); }
+  .cal-grid-head ~ .cal-grid-row ~ .cal-grid-row > span:nth-child(7):not(.is-blank)::before { right: calc(-1 * var(--pad-r)); }
+}
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 8px 0; font-size: var(--fs-subhead); line-height: var(--lh-subhead); } /* an empty day: one quiet line, no card */
 .cal-day > .list:has(> .cal-none:only-child) { background: transparent; box-shadow: none; border-radius: 0; }

@@ -20,25 +20,31 @@
 .cal-month > .cal-day { margin-top: var(--space-3); } /* the chosen day stands apart from the grid */
 .cal-month-bar + * { margin-top: -10px; } /* the month's name sits close over its weekdays */
 .cal-month-bar { display: flex; align-items: center; justify-content: space-between; padding-inline: 3px; } /* the arrows centre on Monday's and Sunday's columns */
-.cal-grid { display: flex; flex-direction: column; gap: 2px; }
-.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-grid { display: flex; flex-direction: column; }
+.cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); }
+/* Calendar's Compact grid: a hairline over each week, drawn only above real days, so the first and last weeks step in */
+.cal-grid-row > span:not(.is-blank) { border-top: 0.5px solid var(--divider); }
 .cal-grid-head span { text-align: center; color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); font-weight: 500; padding-bottom: var(--space-1); }
 .cal-grid-row > span { display: block; }
 .cal-cell {
   display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 1px;
-  width: 100%; min-height: 46px; padding-top: 4px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
+  width: 100%; min-height: 54px; padding-top: 6px; border: 0; border-radius: 10px; background: none; color: var(--ink); font: inherit; cursor: pointer;
 }
 /* Calendar's circles: today's number blue; the chosen day filled (blue on today, ink on any other day) */
 .cal-cell .num { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; font-family: var(--font); font-stretch: normal; font-size: 1.1875rem; font-weight: 400; font-variant-numeric: tabular-nums; transition: background-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease); }
 .cal-cell.is-off .num { color: var(--ink); }
+.cal-cell.is-weekend .num { color: var(--ink-soft); } /* weekends step back, as Calendar's */
 .cal-cell.is-today .num { color: var(--brand); font-weight: var(--fw-strong); }
 .cal-cell.is-selected .num { background: var(--ink); color: var(--paper); font-weight: var(--fw-strong); }
 .cal-cell.is-today.is-selected .num { background: var(--brand-solid); color: #FFFFFF; }
 .cal-cell:focus-visible { outline: none; }
 .cal-cell:focus-visible .num { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--brand); }
-.cal-cell.is-blank { min-height: 50px; }
-.cal-dots { display: flex; gap: 2px; height: 4px; margin-top: -2px; }
-.cal-dots i { width: 4px; height: 4px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+.cal-cell.is-blank { min-height: 54px; }
+.cal-dots { display: flex; height: 6px; margin-top: 3px; }
+.cal-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--ink-soft)); } /* each dot in its calendar's colour */
+/* two colours on one day: one capsule, half each, as Calendar draws it */
+.cal-dots.is-split { width: 14px; border-radius: 3px; overflow: hidden; }
+.cal-dots.is-split i { flex: 1; width: auto; border-radius: 0; }
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: var(--space-4); text-align: center; } /* an empty day: one quiet line, centred in its card */
 .cal-day > .list:has(> .cal-none:only-child) { border-radius: var(--radius-compact); }

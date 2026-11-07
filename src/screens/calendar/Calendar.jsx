@@ -1,4 +1,4 @@
-// Calendar: Upcoming (default) groups the next 60 days by week; Month is Calendar's Compact grid: a dot under every day an event covers.
+// Calendar: Upcoming (default) groups the next 60 days by week; Month is a grid with up to 3 dots per day.
 // One Show control replaces the old stack of filters. Category is a word on each row, never a colour.
 // URL: ?view=month, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
 import { useState } from 'react'
@@ -22,10 +22,6 @@ function scopeOf(e) {
   return 'school'
 }
 const NO_SCHOOL = new Set(['holiday', 'public-holiday'])
-/** Categories that share a colour share one mark in the month: holidays are one red, term dates and assemblies one blue. */
-const TONE = { 'public-holiday': 'holiday', assembly: 'term' }
-/** The month's mark for a day, as Calendar's Compact style: one entry per colour among the events covering it, at most two. */
-const tones = (evs) => evs.filter((e, n, a) => a.findIndex((o) => (TONE[o.category] || o.category) === (TONE[e.category] || e.category)) === n).slice(0, 2)
 
 function when(e) {
   if (e.allDay) {
@@ -147,13 +143,13 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
                     type="button"
                     data-iso={iso}
                     tabIndex={isSel ? 0 : -1}
-                    className={`cal-cell${isToday ? ' is-today' : ''}${isSel ? ' is-selected' : ''}${off ? ' is-off' : ''}${[0, 6].includes(dayOfWeek(iso)) ? ' is-weekend' : ''}`}
+                    className={`cal-cell${isToday ? ' is-today' : ''}${isSel ? ' is-selected' : ''}${off ? ' is-off' : ''}`}
                     aria-label={`${formatLongDate(isoToMs(iso))}${isToday ? ', today' : ''}, ${evs.length ? `${evs.length} event${evs.length > 1 ? 's' : ''}` : 'no events'}`}
                     onClick={() => onSelect(iso)}
                     onKeyDown={(e) => key(e, iso)}
                   >
                     <Num>{Number(iso.slice(8))}</Num>
-                    <span className={`cal-dots${tones(evs).length > 1 ? ' is-split' : ''}`} aria-hidden="true">{tones(evs).map((e) => <i key={e.id} className="cal-row" data-cat={e.category} />)}</span>
+                    <span className="cal-dots" aria-hidden="true">{evs.filter((e) => e.start === iso).filter((e, n, a) => a.findIndex((o) => o.category === e.category) === n).slice(0, 3).map((e) => <i key={e.id} className="cal-row" data-cat={e.category} />)}</span>
                   </button>
                 </span>
               )

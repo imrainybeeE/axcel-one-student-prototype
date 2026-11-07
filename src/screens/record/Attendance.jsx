@@ -45,8 +45,9 @@ export default function Attendance() {
   const p = period(ids.has(query.get('period')) ? query.get('period') : nowId)
   const days = p.terms.flatMap(termDays)
   const s = summarise(days)
-  const months = [...new Set(days.map((d) => d.iso.slice(0, 7)))]
   const isTerm = p.terms.length === 1
+  // a term shows its own months; a year shows all twelve, the days outside its terms left plain
+  const months = isTerm ? [...new Set(days.map((d) => d.iso.slice(0, 7)))] : Array.from({ length: 12 }, (_, i) => `${p.year}-${String(i + 1).padStart(2, '0')}`)
   const miniShown = useOutOfView(() => document.querySelector('.att-hero'), { enabled: state !== 'loading', key: p.id })
   const pick = (id) => { updateQuery({ period: id === nowId ? null : id }); setPicking(false) }
 

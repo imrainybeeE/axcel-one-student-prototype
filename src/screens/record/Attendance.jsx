@@ -110,7 +110,6 @@ export default function Attendance() {
             <p>Every school day you are not in school counts as absent, whatever the reason. Lates count as present.</p>
           </Disclosure>
         </div>
-        <p className="t-faint settings-note att-foot">Daily records in this demo are sample data.</p>
       </div>
       <Sheet open={picking} onClose={() => setPicking(false)} title="Show attendance for" trailing={<Button variant="plain" size="compact" onClick={() => setPicking(false)}>Done</Button>}>
         <div className="att-sheet">

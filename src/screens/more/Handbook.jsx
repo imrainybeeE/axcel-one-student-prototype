@@ -1,61 +1,67 @@
-// Handbook, as Settings and Tips: search, then one list of topics with coloured tiles; each topic opens its own page.
-// A search shows the topics that match, with the sentence that matched as the grey line.
+// Handbook: the school's real Student Handbook. Search finds any words in it; without a search, the official PDF,
+// then the chapters as Settings rows with coloured tiles. A result opens its chapter at that clause.
 import { useState } from 'react'
-import { Screen } from '../../app'
-import { SearchField, Group, Row, Icon, EmptyState, useToast } from '../../ui'
-import { TOPICS } from './handbook.js'
+import { Screen, assetPath } from '../../app'
+import { SearchField, Group, Row, Icon, EmptyState } from '../../ui'
+import { chapters, handbook, searchHandbook } from './handbookIndex.js'
 import './more.css'
 import './help.css'
 
-/** The first sentence that holds the search, for the grey line under a topic. */
-function matchLine(t, q) {
-  const needle = q.toLowerCase()
-  return t.body.flatMap((p) => p.split(/(?<=\.)\s+/)).find((line) => line.toLowerCase().includes(needle)) || null
-}
-
-function TopicTile({ topic, size = 18 }) {
-  return <span className="tile" style={{ '--tile-bg': topic.tone }}><Icon name={topic.icon} filled size={size} /></span>
+export function ChapterTile({ chapter, size = 18 }) {
+  return <span className="tile" style={{ '--tile-bg': chapter.tone }}><Icon name={chapter.icon} filled size={size} /></span>
 }
 
 export default function Handbook() {
   const [q, setQ] = useState('')
-  const toast = useToast()
-  const hits = TOPICS.filter((t) => !q || (t.title + ' ' + t.body.join(' ')).toLowerCase().includes(q.toLowerCase()))
+  const needle = q.trim()
+  const hits = needle ? searchHandbook(needle) : []
   return (
     <Screen title="Handbook">
       <div className="stack">
-        {/* The school's own PDF lives in its app; the outward arrow says it leaves this one */}
-        <Group label="Official handbook">
-          <Row
-            onClick={() => toast.show({ message: 'Opens the school’s PDF. Not in this demo.' })}
-            leadKind="icon"
-            lead={<span className="tile tile--book"><Icon name="doc" size={18} /></span>}
-            title="Official handbook"
-            meta="Secondary 2026, PDF"
-            trailing={<Icon name="arrow-up-right" size={20} className="guide-out" />}
-          />
-        </Group>
         <SearchField label="Search the handbook" placeholder="Search the handbook" onSearch={setQ} />
-        {hits.length ? (
-          <div>
-            <Group label="Topics">
-              {hits.map((t) => (
+        {!needle ? (
+          <>
+            <Group label="Official handbook">
+              <Row
+                onClick={() => window.open(assetPath(handbook.pdf), '_blank', 'noopener')}
+                leadKind="icon"
+                lead={<span className="tile tile--book"><Icon name="doc" size={18} /></span>}
+                title="Student Handbook"
+                meta={`${handbook.version}, PDF, 5.9 MB`}
+                trailing={<Icon name="arrow-up-right" size={20} className="guide-out" />}
+              />
+            </Group>
+            <Group title="Contents">
+              {chapters.map((c) => (
                 <Row
-                  key={t.id}
-                  to={`/handbook/${t.id}`}
+                  key={c.id}
+                  to={`/handbook/${c.id}`}
                   zoom
                   leadKind="icon"
-                  lead={<TopicTile topic={t} />}
-                  title={t.title}
-                  meta={q ? matchLine(t, q) : null}
+                  lead={<ChapterTile chapter={c} />}
+                  title={c.title}
+                  meta={c.sections.length >= 3 ? `${c.sections.length} parts` : null}
                   chevron
                 />
               ))}
             </Group>
-            <p className="settings-note t-faint">Example guidance. Check the official handbook or ask a teacher.</p>
-          </div>
+          </>
+        ) : hits.length ? (
+          <Group title={hits.length >= 40 ? 'First 40 matches' : `${hits.length} ${hits.length === 1 ? 'match' : 'matches'}`}>
+            {hits.map((h, i) => (
+              <Row
+                key={`${h.chapter.id}-${h.id || i}-${i}`}
+                to={`/handbook/${h.chapter.id}${h.id ? `?at=${h.id}` : ''}`}
+                leadKind="icon"
+                lead={<ChapterTile chapter={h.chapter} />}
+                title={h.heading || h.chapter.title}
+                meta={<span className="clamp-2">{h.snippet}</span>}
+                chevron
+              />
+            ))}
+          </Group>
         ) : (
-          <EmptyState title={`Nothing in the handbook matches ‘${q}’.`}>Try another word, or ask your class teacher.</EmptyState>
+          <EmptyState title={`Nothing in the handbook matches ‘${needle}’.`}>Try another word, or ask your class teacher.</EmptyState>
         )}
       </div>
     </Screen>

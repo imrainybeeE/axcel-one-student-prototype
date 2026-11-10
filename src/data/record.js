@@ -1,4 +1,4 @@
-// Bentley's 2026 RISE record from his Axcel One account, entry by entry (copied on 10 November 2026).
+// Bentley's 2026 RISE record from the Axcel One account, entry by entry (copied on 10 November 2026).
 // Three entries worth 0 points are left out. Totals are worked out from the entries.
 // The award ladder: each level is reached at its points.
 export const awards = [

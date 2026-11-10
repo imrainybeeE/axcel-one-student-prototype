@@ -1,4 +1,4 @@
-// Bentley's 2026 attendance from his Axcel One account (copied on 10 November 2026): the school's term dates and
+// Bentley's 2026 attendance from the Axcel One account (copied on 10 November 2026): the school's term dates and
 // holidays (from the calendar's key dates), and every absence with the reason the school recorded. No lates.
 import { addDays, dayOfWeek } from '../lib/time.js'
 import { getNow, isoDate } from './clock.js'

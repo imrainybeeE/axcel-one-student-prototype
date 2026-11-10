@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Screen, Link, useRoute, updateQuery, assetPath } from '../../app'
 import { Group, Row, IconButton, useToast } from '../../ui'
-import { chapters } from './handbookIndex.js'
+import { chapters, rowId } from './handbookIndex.js'
 import { ChapterTile } from './Handbook.jsx'
 import './more.css'
 import './help.css'
@@ -29,6 +29,9 @@ async function copyText(text) {
   }
 }
 
+/** A table whose last column is marks (numbers only), set as a narrow right-aligned figure column. */
+const numericLast = (b) => b.rows.length > 0 && b.rows.every((r) => r.length > 1 && /^[\d\s+−-]*$/.test(r[r.length - 1]))
+
 const linkTo = (chapter, id) => `${window.location.origin}${window.location.pathname.replace(/\/handbook\/.*$/, '')}/handbook/${chapter}${id ? `?at=${id}` : ''}`
 
 function Block({ b, chapter, onCopy, lift }) {
@@ -42,11 +45,22 @@ function Block({ b, chapter, onCopy, lift }) {
     )
   }
   // A chapter with no parts of its own goes straight to small headings: they stand one level under the title
-  if (b.t === 'h4') return lift ? <h3 id={id} className="hbk-h4">{b.text}</h3> : <h4 id={id} className="hbk-h4">{b.text}</h4>
+  if (b.t === 'h4') {
+    const H = lift ? 'h3' : 'h4'
+    return (
+      <H id={id} className="hbk-h4">
+        <span>{b.text}</span>
+        {b.id && <IconButton icon="share" size={16} label={`Copy link to ${b.text}`} className="hbk-link" onClick={() => onCopy(linkTo(chapter, b.id))} />}
+      </H>
+    )
+  }
   if (b.t === 'clause') {
     return (
       <div id={id} className={`hbk-clause${b.num ? '' : ' is-bullet'}`} style={{ '--d': b.d || 1 }}>
-        <span className="hbk-num" aria-hidden={!b.num || undefined}>{b.num || '•'}</span>
+        {/* As the old handbook: every clause has its own link. The number (or bullet) copies it */}
+        {b.id ? (
+          <button type="button" className="hbk-num" title="Copy link" aria-label={`Copy link to ${b.num ? `clause ${b.num.replace(/\.$/, '')}` : 'this point'}`} onClick={() => onCopy(linkTo(chapter, b.id))}>{b.num || '•'}</button>
+        ) : <span className="hbk-num" aria-hidden={!b.num || undefined}>{b.num || '•'}</span>}
         <span className="hbk-ctext">{b.text}</span>
       </div>
     )
@@ -61,10 +75,10 @@ function Block({ b, chapter, onCopy, lift }) {
   }
   if (b.t === 'table') {
     return (
-      <div id={id} className="hbk-table" data-scroll-x="" tabIndex={0} role="region" aria-label="Table">
+      <div id={id} className={`hbk-table${numericLast(b) ? ' is-marks' : ''}`} data-scroll-x="" tabIndex={0} role="region" aria-label="Table">
         <table>
           {b.head?.length > 0 && <thead>{b.head.map((r, i) => <tr key={i}>{r.map((c, j) => <th key={j} scope="col">{c}</th>)}</tr>)}</thead>}
-          <tbody>{b.rows.map((r, i) => <tr key={i}>{r.map((c, j) => <td key={j}>{c}</td>)}</tr>)}</tbody>
+          <tbody>{b.rows.map((r, i) => <tr key={i} id={`hb-${rowId(b, i)}`}>{r.map((c, j) => <td key={j}>{c}</td>)}</tr>)}</tbody>
         </table>
       </div>
     )

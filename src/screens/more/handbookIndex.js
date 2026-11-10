@@ -11,8 +11,11 @@ const TILES = {
 
 export const chapters = handbook.chapters.map((c) => {
   const [icon, tone] = TILES[c.id] || ['book', '#5856D6']
-  return { ...c, icon, tone, sections: c.blocks.filter((b) => b.t === 'h3') }
+  // Every table gets an anchor, and each of its rows one under it, so search and links can land on a row
+  const blocks = c.blocks.map((b, n) => (b.t === 'table' && !b.id ? { ...b, id: `${c.id}-table-${n}` } : b))
+  return { ...c, blocks, icon, tone, sections: blocks.filter((b) => b.t === 'h3') }
 })
+export const rowId = (table, i) => `${table.id}-r${i + 1}`
 
 /** The text of a block, for search and snippets. */
 export function blockText(b) {
@@ -31,14 +34,18 @@ export function searchHandbook(q, limit = 40) {
     let anchor = null
     for (const b of c.blocks) {
       if (b.t === 'h3' || b.t === 'h4') { heading = b.text; anchor = b.id }
-      const text = blockText(b)
-      const low = text.toLowerCase()
-      if (!words.every((w) => low.includes(w) || c.title.toLowerCase().includes(w))) continue
-      if (!words.some((w) => low.includes(w))) continue
-      const at = Math.max(0, low.indexOf(words[0]) - 40)
-      const snippet = (at > 0 ? '…' : '') + text.slice(at, at + 140).replace(/\s+/g, ' ') + (text.length > at + 140 ? '…' : '')
-      out.push({ chapter: c, block: b, heading, id: b.id || anchor, snippet })
-      if (out.length >= limit) return out
+      // A table is searched row by row, and a hit lands on its row
+      const parts = b.t === 'table' ? b.rows.map((r, i) => ({ text: r.join(', '), id: rowId(b, i) })) : [{ text: blockText(b), id: b.id || anchor }]
+      for (const part of parts) {
+        const text = part.text
+        const low = text.toLowerCase()
+        if (!words.every((w) => low.includes(w) || c.title.toLowerCase().includes(w))) continue
+        if (!words.some((w) => low.includes(w))) continue
+        const at = Math.max(0, low.indexOf(words[0]) - 40)
+        const snippet = (at > 0 ? '…' : '') + text.slice(at, at + 140).replace(/\s+/g, ' ') + (text.length > at + 140 ? '…' : '')
+        out.push({ chapter: c, block: b, heading, id: part.id, snippet })
+        if (out.length >= limit) return out
+      }
     }
   }
   return out

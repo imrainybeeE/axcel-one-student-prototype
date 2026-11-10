@@ -4,7 +4,7 @@
 export const awards = [
   { name: 'Silver', points: 300 },
   { name: 'Gold', points: 400 },
-  { name: 'Star', points: 500 },
+  { name: 'Star', points: 501 }, // the handbook: over 500 points
 ]
 
 export const areas = {

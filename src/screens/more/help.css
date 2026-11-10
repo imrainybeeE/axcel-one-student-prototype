@@ -73,7 +73,7 @@ a.more-me:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0
 .hbk-clause { display: grid; grid-template-columns: 2.25em minmax(0, 1fr); margin-top: var(--space-2); padding-left: calc((var(--d, 1) - 1) * 1.5em);
   font-size: var(--fs-body); line-height: 1.625rem; scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 16px); border-radius: 8px; }
 .hbk-num { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-.hbk-clause.is-bullet .hbk-num { color: var(--ink-tertiary); padding-left: 0.4em; }
+.hbk-clause.is-bullet span.hbk-num { color: var(--ink-tertiary); padding-left: 0.4em; }
 .hbk-ctext { white-space: pre-line; overflow-wrap: anywhere; }
 .hbk-fig { margin: var(--space-4) 0 0; }
 .hbk-fig img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--fill); }
@@ -87,3 +87,17 @@ a.more-me:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0
 .hbk .is-flash { animation: hbk-flash 1.2s var(--ease) 1; }
 @keyframes hbk-flash { 0%, 40% { background: color-mix(in srgb, var(--brand) 16%, transparent); } 100% { background: transparent; } }
 @media (prefers-reduced-motion: reduce) { .hbk .is-flash { animation: none; } }
+.hbk-h4 { display: flex; align-items: center; gap: var(--space-1); }
+.hbk-h4 > span { flex: 1; min-width: 0; }
+button.hbk-num { align-self: start; justify-self: start; min-width: 44px; min-height: 26px; margin: -9px 0 -9px -10px; padding: 9px 10px; border: 0; border-radius: 8px; background: none;
+  font: inherit; line-height: inherit; text-align: left; color: var(--ink-soft); cursor: pointer; box-sizing: content-box; }
+button.hbk-num:active { background: var(--fill); }
+button.hbk-num:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.hbk-clause.is-bullet button.hbk-num { color: var(--ink-tertiary); }
+/* Marks tables: the behaviour takes the width, the marks sit in a narrow right-aligned column */
+.hbk-table.is-marks table { table-layout: auto; width: 100%; }
+.hbk-table.is-marks :is(th, td):not(:last-child) { min-width: 0; }
+.hbk-table.is-marks :is(th, td):last-child { width: 4.5rem; min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.hbk tr.is-flash td { animation: hbk-flash 1.2s var(--ease) 1; }
+/* On a laptop the chapter keeps its own title under the screen's: the bar alone says only Handbook */
+@media (min-width: 1024px) { .hbk .hb-title { display: block; } }

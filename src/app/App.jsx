@@ -1,7 +1,9 @@
-import { Component, Suspense, ViewTransition, lazy, useState } from 'react'
+import { Component, Suspense, ViewTransition, lazy, useEffect, useState } from 'react'
 import { RouterProvider } from './RouterProvider.jsx'
 import { useRoute, backTarget } from './router.js'
 import { useLaptop } from './hooks.js'
+import { useDemo } from './demo.js'
+import { flushQueued } from '../screens/messages/sentStore.js'
 import { routes } from './routes.js'
 import { Screen } from './Screen.jsx'
 import { TabBar, Sidebar } from './TabBar.jsx'
@@ -74,11 +76,19 @@ function Shell() {
   )
 }
 
+// Messages sent offline wait in the sent store; the moment the connection is back they go, whatever screen is open
+function SendQueue() {
+  const { offline } = useDemo()
+  useEffect(() => { if (!offline) flushQueued() }, [offline])
+  return null
+}
+
 export default function App() {
   return (
     <RouterProvider routes={routes}>
       <ToastProvider>
         <Shell />
+        <SendQueue />
       </ToastProvider>
     </RouterProvider>
   )

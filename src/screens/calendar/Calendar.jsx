@@ -297,7 +297,7 @@ export default function Calendar() {
       />
     )
   } else if (view === 'key-dates') {
-    body = <KeyDates today={today} year={shownKeyYear} years={keyDateYears} onYear={setKeyYear} onPick={pickKeyDate} />
+    body = <KeyDates today={today} year={shownKeyYear} years={keyDateYears} onYear={setKeyYear} onPick={pickKeyDate} shown={(cat) => show.school && kinds[cat] !== false} onShowAll={showAll} />
   } else {
     body = (
       <>

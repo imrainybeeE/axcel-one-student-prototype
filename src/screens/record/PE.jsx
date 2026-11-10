@@ -1,7 +1,7 @@
 // PE results: the PE Checkpoint tests taken each term, as the old My PE results listed them. One group a term,
 // newest first; each test's score is the row's figure, with how it moved since the term before.
 import { Screen, useDemo, SAVED_AT } from '../../app'
-import { Group, Row, Num, EmptyState, LoadingState, SkeletonRows, ErrorState, OfflineNotice } from '../../ui'
+import { Group, Row, Num, Button, EmptyState, LoadingState, SkeletonRows, ErrorState, OfflineNotice } from '../../ui'
 import { results } from '../../data/pe.js'
 import './record.css'
 
@@ -23,7 +23,7 @@ export default function PE() {
   return (
     <Screen title="PE results">
       <div className="stack att-column">
-        {offline && <OfflineNotice what="your PE results" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
+        {offline && list.length > 0 && <OfflineNotice what="your PE results" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && (
           <ErrorState onRetry={retry} retrying={retrying}>
             Your PE results did not load. Check that you are online, then try again.{list.length > 0 && <> Your results from <Num>{SAVED_AT}</Num> are below.</>}
@@ -46,7 +46,7 @@ export default function PE() {
             ))}
           </>
         ) : state === 'error' ? null : offline ? (
-          <EmptyState title="No PE results saved">Connect to the internet to check for new results.</EmptyState>
+          <EmptyState title="You are offline" action={<Button variant="secondary" onClick={() => reconnect()} loading={reconnecting} loadingLabel="Trying again">Try again</Button>}>No PE results are saved on this device. Connect to the internet to see them.</EmptyState>
         ) : (
           <EmptyState title="No PE results yet">Your PE Checkpoint results show here after each term's test.</EmptyState>
         )}

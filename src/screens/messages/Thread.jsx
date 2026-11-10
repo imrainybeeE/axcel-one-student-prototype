@@ -11,7 +11,7 @@ import { useBlocked, setBlockedPerson } from './blockedStore.js'
 import { useMuted, setMuted } from './mutedStore.js'
 import { useStarred, setStarred } from './starredStore.js'
 import { usePinned, setPins, MAX_PINS } from './pinnedStore.js'
-import { sentIn, keepSent } from './sentStore.js'
+import { useSentIn, updateSent } from './sentStore.js'
 import {
   threadFor, avatarKind, initialsOf, messageText, middleEllipsis, fileMeta, isDocument, MAX_FILE, FILE_ACCEPT,
 } from './messageParts.js'
@@ -163,7 +163,8 @@ export default function Thread({ params }) {
   const { query } = useRoute()
   const thread = threadFor(params.id)
   // What you sent here this session stays when you come back (nothing is really sent)
-  const [extra, setExtra] = useState(() => sentIn(params.id))
+  const extra = useSentIn(params.id)
+  const setExtra = (fn) => updateSent(params.id, fn)
   const [reactions, setReactions] = useState({})
   const [draft, setDraft] = useState('')
   const [reply, setReply] = useState(null)
@@ -187,15 +188,7 @@ export default function Thread({ params }) {
   const [unreadFrom] = useState(() => (thread?.unread ? thread.messages[thread.messages.length - thread.unread]?.id : null))
 
   useEffect(() => { if (thread) markThreadRead(thread.id) }, [thread])
-  useEffect(() => { keepSent(params.id, extra) }, [params.id, extra])
   useEffect(() => { endRef.current?.scrollIntoView({ block: 'end' }) }, [extra.length])
-  // Back online: what waited goes out, Sending for a moment, then sent
-  useEffect(() => {
-    if (offline) return
-    const go = setTimeout(() => setExtra((x) => (x.some((m) => m.status === 'queued') ? x.map((m) => (m.status === 'queued' ? { ...m, status: 'sending' } : m)) : x)), 0)
-    const done = setTimeout(() => setExtra((x) => (x.some((m) => m.status === 'sending') ? x.map((m) => (m.status === 'sending' ? { ...m, status: undefined, justSent: true } : m)) : x)), 900)
-    return () => { clearTimeout(go); clearTimeout(done) }
-  }, [offline])
 
   // Show one message in the chat: scroll it to the middle and pulse its bubble once (no pulse with reduced motion)
   const showMessage = useCallback((id, smooth = true) => {

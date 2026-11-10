@@ -1,7 +1,7 @@
 // Key dates: the school's year as Settings-style groups (terms, school holidays, festive breaks, public holidays,
 // assessments), under a year bar with arrows. Past dates step back; the term or break under way carries Now.
 // Tapping a row shows that date in Month.
-import { Group, Row, Tag, IconButton } from '../../ui'
+import { Group, Row, Tag, IconButton, Button, EmptyState } from '../../ui'
 import { daysBetween, formatLongDate, isoToMs } from '../../lib/time.js'
 import { keyDates } from '../../data/calendar.js'
 
@@ -49,10 +49,16 @@ function KeyRow({ k, today, onPick }) {
   )
 }
 
-export default function KeyDates({ today, year, years, onYear, onPick }) {
-  const inYear = keyDates.filter((k) => k.start.startsWith(String(year))).sort((a, b) => a.start.localeCompare(b.start))
+/** The calendar category each kind of key date belongs to, so Show hides it with its kind of date. */
+const CATEGORY = { term: 'term', holiday: 'holiday', festive: 'holiday', public: 'public-holiday' }
+
+/** shown(category): whether Show lets that kind of date through (key dates are all whole-school). onShowAll resets Show. */
+export default function KeyDates({ today, year, years, onYear, onPick, shown = () => true, onShowAll }) {
+  const all = keyDates.filter((k) => k.start.startsWith(String(year)))
+  const inYear = all.filter((k) => shown(CATEGORY[k.kind])).sort((a, b) => a.start.localeCompare(b.start))
   const i = years.indexOf(year)
-  const partial = !inYear.some((k) => k.kind === 'holiday')
+  const partial = !all.some((k) => k.kind === 'holiday')
+  const hiddenAll = all.length > 0 && !inYear.length
   return (
     <div className="cal-keys">
       <div className="cal-month-bar cal-year-bar">
@@ -60,6 +66,9 @@ export default function KeyDates({ today, year, years, onYear, onPick }) {
         <IconButton icon="chevron-left" label="Previous year" size={18} onClick={() => onYear(years[i - 1])} disabled={i <= 0} />
         <IconButton icon="chevron-right" label="Next year" size={18} onClick={() => onYear(years[i + 1])} disabled={i >= years.length - 1} />
       </div>
+      {hiddenAll && (
+        <EmptyState title="No key dates shown." action={<Button variant="secondary" onClick={onShowAll}>Show everything</Button>}>Show is hiding terms and holidays.</EmptyState>
+      )}
       {GROUPS.map((g) => {
         const rows = inYear.filter((k) => k.kind === g.kind)
         if (!rows.length) return null

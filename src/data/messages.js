@@ -74,7 +74,8 @@ export const threads = [
   },
 ]
 
-// People a student can start a chat with (search in New message).
+// People a student can start a chat with (search in New message). All made up; student IDs start 00 so they can
+// never be a real student's ID.
 export const contacts = {
   teachers: [
     { id: 'kavitha', name: 'Ms Kavitha Nair', detail: 'Homeroom teacher, English', initials: 'KN' },
@@ -84,11 +85,20 @@ export const contacts = {
     { id: 'arjun', name: 'Mr Arjun Pillai', detail: 'Global Perspectives', initials: 'AP' },
     { id: 'chloe', name: 'Ms Chloe Lim', detail: 'ICT', initials: 'CL' },
   ],
+  staff: [
+    { id: 'farah-c', name: 'Ms Farah Aziz', detail: 'School counsellor', initials: 'FA' },
+    { id: 'grace', name: 'Mrs Grace Tan', detail: 'Librarian', initials: 'GT' },
+    { id: 'hafiz', name: 'Mr Hafiz Rahman', detail: 'IT support', initials: 'HR' },
+  ],
   students: [
-    { id: 'junhao', name: 'Lee Jun Hao', detail: '7 Phoenix', initials: 'LJ' },
-    { id: 'priya', name: 'Priya Menon', detail: '7 Phoenix', initials: 'PM' },
-    { id: 'aina', name: 'Nur Aina Zulkifli', detail: '7 Phoenix', initials: 'NA' },
-    { id: 'ethan', name: 'Ethan Ong', detail: '7 Lyra', initials: 'EO' },
+    { id: 'junhao', name: 'Lee Jun Hao', detail: '7 Phoenix', studentId: '00BP101', initials: 'LJ' },
+    { id: 'priya', name: 'Priya Menon', detail: '7 Phoenix', studentId: '00BP102', initials: 'PM' },
+    { id: 'aina', name: 'Nur Aina Zulkifli', detail: '7 Phoenix', studentId: '00BP103', initials: 'NA' },
+    { id: 'ethan', name: 'Ethan Ong', detail: '7 Lyra', studentId: '00BP104', initials: 'EO' },
+    { id: 'aiden', name: 'Aiden Lau', detail: '8 Orion', studentId: '00BP105', initials: 'AL' },
+    { id: 'siti', name: 'Siti Hajar Ismail', detail: '8 Lyra', studentId: '00BP106', initials: 'SH' },
+    { id: 'marcus', name: 'Marcus Lim', detail: '9 Phoenix', studentId: '00BP107', initials: 'ML' },
+    { id: 'kavya', name: 'Kavya Raj', detail: '7 Orion', studentId: '00BP108', initials: 'KR' },
   ],
 }
 

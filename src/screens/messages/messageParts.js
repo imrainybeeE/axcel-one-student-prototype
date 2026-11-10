@@ -6,7 +6,7 @@ import { student } from '../../data/student.js'
 export function threadFor(id) {
   const t = threads.find((x) => x.id === id)
   if (t) return t
-  const c = [...contacts.teachers, ...contacts.students].find((x) => x.id === id)
+  const c = [...contacts.teachers, ...contacts.staff, ...contacts.students].find((x) => x.id === id)
   return c ? { id: c.id, kind: 'direct', title: c.name, subtitle: c.detail, initials: c.initials, messages: [] } : null
 }
 

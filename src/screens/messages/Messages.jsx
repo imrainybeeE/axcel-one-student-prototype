@@ -9,19 +9,26 @@ import {
   MiniBar, MiniTile, MiniAction, Badge, useOutOfView,
 } from '../../ui'
 import { threads, contacts } from '../../data/messages.js'
+import { student } from '../../data/student.js'
 import '../../data/messageHistory.js' // the threads' earlier messages
 import { kindWord, lastOf, whenLabel } from './messageTime.js'
 import Thread from './Thread.jsx'
 import Starred from './Starred.jsx'
+import { sentIn, sentThreads, useSent } from './sentStore.js'
+import { threadFor } from './messageParts.js'
 import './messages.css'
 
 function ComposeSheet({ open, onClose }) {
   const [q, setQ] = useState('')
-  const match = (c) => c.name.toLowerCase().includes(q.toLowerCase())
+  const needle = q.trim().toLowerCase()
+  const match = (c) => c.name.toLowerCase().includes(needle) || (c.studentId || '').toLowerCase().includes(needle)
   const teachers = contacts.teachers.filter(match)
-  const students = contacts.students.filter(match)
+  const staff = contacts.staff.filter(match)
+  // Before a search, only your class; a search finds any student in the school by name or student ID
+  const students = contacts.students.filter((c) => (needle ? match(c) : c.detail === student.className))
   const pick = (c) => { onClose(); navigate(`/messages/${c.id}`) }
   const nobody = !contacts.teachers.length && !contacts.students.length
+  const person = (c, meta = c.detail) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={meta} />
   return (
     <Sheet open={open} onClose={onClose} title="New message" detents={['large']} closeLabel="Cancel">
       <div className="compose">
@@ -29,23 +36,18 @@ function ComposeSheet({ open, onClose }) {
           <EmptyState title="No contacts available." />
         ) : (
           <>
-            <SearchField label="Search people" placeholder="Search teachers and classmates" onSearch={setQ} />
-            {q === '' && contacts.teachers.length > 0 && (
-              <Group title="Your teachers">
-                <Row onClick={() => pick(contacts.teachers[0])} lead={<Avatar initials={contacts.teachers[0].initials} />} leadKind="avatar" title={contacts.teachers[0].name} meta={contacts.teachers[0].detail} />
-              </Group>
+            <SearchField label="Search people" placeholder="Search names or student IDs" onSearch={setQ} />
+            {!needle && contacts.teachers.length > 0 && (
+              <Group title="Your teachers">{person(contacts.teachers[0])}</Group>
             )}
-            {teachers.length > 0 && (
-              <Group title="Teachers">
-                {teachers.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
-              </Group>
-            )}
+            {teachers.length > 0 && <Group title="Teachers">{teachers.map((c) => person(c))}</Group>}
+            {staff.length > 0 && <Group title="School staff">{staff.map((c) => person(c))}</Group>}
             {students.length > 0 && (
-              <Group title="Classmates">
-                {students.map((c) => <Row key={c.id} onClick={() => pick(c)} lead={<Avatar initials={c.initials} />} leadKind="avatar" title={c.name} meta={c.detail} />)}
-              </Group>
+              <Group title={needle ? 'Students' : 'Your class'}>{students.map((c) => person(c, needle ? `${c.detail}, ${c.studentId}` : c.detail))}</Group>
             )}
-            {!teachers.length && !students.length && <p className="t-faint">Nobody matches &lsquo;{q}&rsquo;. Check the spelling.</p>}
+            {needle && !teachers.length && !staff.length && !students.length && (
+              <EmptyState title={`Nobody matches ‘${q.trim()}’.`}>Check the spelling, or search a student ID such as 00BP105.</EmptyState>
+            )}
           </>
         )}
         <p className="compose-note"><Icon name="shield" size={20} />The school can read every message in Axcel One. Messages cannot be deleted.</p>
@@ -66,9 +68,14 @@ export default function Messages({ params = {} }) {
   const starredOpen = route.path === '/messages/starred'
   const selected = params.id
 
-  const list = threads
+  // Every chat with what you sent this session on the end, and chats you started from New message
+  useSent()
+  const chats = [...threads, ...sentThreads().filter((id) => !threads.some((t) => t.id === id)).map(threadFor).filter(Boolean)]
+    .map((t) => (sentIn(t.id).length ? { ...t, messages: [...t.messages, ...sentIn(t.id)] } : t))
+  const preview = (m) => (m.file ? `Document: ${m.file.name}` : m.text)
+  const list = chats
     .filter((t) => filter === 'all' || (filter === 'unread' ? unread.has(t.id) : filter === 'groups' ? t.kind === 'class' : t.kind === 'announcement'))
-    .filter((t) => !q || (t.title + ' ' + t.messages.map((m) => m.text).join(' ')).toLowerCase().includes(q.toLowerCase()))
+    .filter((t) => !q || (t.title + ' ' + t.messages.map(preview).join(' ')).toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => lastOf(b).at - lastOf(a).at)
 
   let body
@@ -102,14 +109,14 @@ export default function Messages({ params = {} }) {
               aria-current={selected === t.id ? 'page' : undefined}
               lead={<Avatar initials={t.initials} kind={t.kind === 'class' ? 'group' : t.kind === 'announcement' ? 'announcement' : 'person'} />}
               leadKind="avatar"
-              aria-label={`${t.title}, ${kindWord(t)}${isNew ? ', new message' : ''}, ${whenLabel(last.at, now)}: ${last.text}`}
+              aria-label={`${t.title}, ${kindWord(t)}${isNew ? ', new message' : ''}, ${whenLabel(last.at, now)}: ${preview(last)}`}
               title={
                 <span className="msg-row-top">
                   <span className="msg-row-name">{t.title}</span>
                   <span className="msg-row-time num">{whenLabel(last.at, now)}</span>
                 </span>
               }
-              meta={<span className="clamp-2">{sender}{last.text}</span>}
+              meta={<span className="clamp-2">{sender}{last.status === 'queued' ? 'Waiting to send: ' : ''}{preview(last)}</span>}
             />
           )
         })}

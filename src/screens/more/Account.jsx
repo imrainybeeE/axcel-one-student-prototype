@@ -41,11 +41,10 @@ export default function Account() {
           <span className="acct-avatar" aria-hidden="true">
             {photo ? <img src={photo} alt="" width="96" height="96" /> : student.initials}
           </span>
+          <button type="button" className="text-link acct-edit" aria-haspopup="dialog" onClick={() => setEdit(true)}>Edit photo</button>
+          <input ref={file} type="file" accept="image/jpeg,image/png,image/webp" className="vh" tabIndex={-1} aria-hidden="true" onChange={chosen} />
           <h2 className="acct-name">{student.fullName}</h2>
           <p className="acct-email">{student.email}</p>
-          <button type="button" className="text-link acct-edit" aria-label="Edit photo" onClick={() => setEdit(true)}>Edit</button>
-          <input ref={file} type="file" accept="image/jpeg,image/png,image/webp" className="vh" tabIndex={-1} aria-hidden="true" onChange={chosen} />
-          <p className="acct-foot">Saved on this device in this demo.</p>
         </section>
 
         <div className="group acct-details">

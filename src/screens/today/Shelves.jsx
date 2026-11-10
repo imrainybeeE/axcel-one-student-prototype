@@ -50,7 +50,7 @@ export function LessonShelf({ model, nowMs, offline }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {items.map((it) => {
           const open = it.meet && !offline && isJoinOpen(it, nowMs)
-          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join('\u00a0· ')
+          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join(', ')
           const away = Math.max(1, Math.ceil((it.startsAt - nowMs) / 60000))
           return (
             <li key={it.id} className="shelf-item">

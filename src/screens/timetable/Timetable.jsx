@@ -4,7 +4,7 @@
 import { useRef, useState } from 'react'
 import { Screen, useDemo, useRoute, updateQuery, useLaptop, useJoin, useTabRetap, SAVED_AT } from '../../app'
 import {
-  Rail, RailItem, NowBlock, Tag, Time, Num, Icon, Button, Sheet, Row,
+  Rail, RailItem, NowBlock, Tag, Time, Num, Icon, Button, IconButton, Sheet, Row,
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
   LessonMini, lessonMiniActive, useOutOfView,
 } from '../../ui'
@@ -15,6 +15,15 @@ import './timetable.css'
 const SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 /** Monday of the school week to show: this week on weekdays, next week at the weekend. */
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+/** "2 to 6 November", or "30 Nov to 4 Dec" across two months: Monday to Friday. */
+function weekRange(monday) {
+  const fri = addDays(monday, 4)
+  const [, m1, d1] = monday.split('-').map(Number)
+  const [, m2, d2] = fri.split('-').map(Number)
+  return m1 === m2 ? `${d1} to ${d2} ${MONTH_NAMES[m2 - 1]}` : `${d1} ${MONTH_NAMES[m1 - 1].slice(0, 3)} to ${d2} ${MONTH_NAMES[m2 - 1].slice(0, 3)}`
+}
+
 function weekStart(iso) {
   const dow = dayOfWeek(iso)
   if (dow === 0) return addDays(iso, 1)
@@ -30,7 +39,7 @@ function joinWait(item, nowMs, offline) {
 
 function place(item) {
   if (item.kind === 'event') return 'School activity'
-  return item.online ? `${item.teacher}\u00a0· Online` : [item.teacher, item.room].filter(Boolean).join('\u00a0· ')
+  return item.online ? `${item.teacher}, online` : [item.teacher, item.room].filter(Boolean).join(', ')
 }
 
 function statusOf(item, iso, today, nowMs) {
@@ -262,6 +271,24 @@ export default function Timetable() {
 
   const strip = <WeekStrip days={weekDays} selected={selected} today={today} onPick={(iso) => updateQuery({ day: iso === today ? null : iso })} />
 
+  // Weeks, as Calendar: the week's dates, Today when away from it, and arrows to the week before and after.
+  // Moving lands on the same weekday; the week holding today lands on today.
+  const thisMonday = weekStart(today)
+  const away = view === 'week' ? monday !== thisMonday : selected !== today
+  const goWeek = (n) => {
+    const m = addDays(monday, 7 * n)
+    const iso = m === thisMonday && isWeekday ? today : addDays(m, Math.min(4, Math.max(0, dayOfWeek(selected) - 1)))
+    updateQuery({ day: iso === today ? null : iso })
+  }
+  const weekBar = (
+    <div className="tt-weekbar">
+      <h2 className="tt-weekbar-title" aria-live="polite">{weekRange(monday)}</h2>
+      {away && <Button variant="plain" size="compact" className="tt-weekbar-today" onClick={() => updateQuery({ day: null })}>Today</Button>}
+      <IconButton icon="chevron-left" label="Previous week" size={18} onClick={() => goWeek(-1)} />
+      <IconButton icon="chevron-right" label="Next week" size={18} onClick={() => goWeek(1)} />
+    </div>
+  )
+
   let body
   if (state === 'loading') {
     body = (
@@ -306,6 +333,7 @@ export default function Timetable() {
       }
     >
       <div className="stack">
+        {weekBar}
         {view === 'day' && strip}
         {offline && <OfflineNotice what="your timetable" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && (

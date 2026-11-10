@@ -1,5 +1,6 @@
 // Report, as Mail compose: the text in one card, then screenshots as attachments (chosen or pasted, up to 5).
-// This prototype keeps the text as a draft for the current session; screenshots live only on this screen.
+// This prototype keeps the draft for the session: the text in sessionStorage, the screenshots in memory until it is
+// discarded or the page reloads.
 import { useEffect, useId, useRef, useState } from 'react'
 import { Screen, announce } from '../../app'
 import { Button, Group, Row, Icon, useToast } from '../../ui'
@@ -19,6 +20,8 @@ function saveDraft(value) {
 }
 
 let shotId = 0
+// The draft's screenshots outlive the screen, so leaving Report and coming back keeps them
+let draftShots = []
 
 export default function Report() {
   const fieldId = useId()
@@ -26,15 +29,14 @@ export default function Report() {
   const picker = useRef(null)
   const toast = useToast()
   const [text, setText] = useState(readDraft)
-  const [shots, setShots] = useState([]) // { id, url }
+  const [shots, setShots] = useState(() => draftShots) // { id, url }
   const [done, setDone] = useState(false)
   const empty = !text.trim()
   const full = shots.length >= MAX_SHOTS
 
-  // The thumbnails are object URLs: free them when the screen goes
+  // The thumbnails are object URLs, kept with the draft; they are freed when removed or discarded
   const live = useRef(shots)
-  useEffect(() => { live.current = shots }, [shots])
-  useEffect(() => () => live.current.forEach((s) => URL.revokeObjectURL(s.url)), [])
+  useEffect(() => { live.current = shots; draftShots = shots }, [shots])
 
   const addFiles = (files) => {
     const images = [...files].filter((f) => f.type.startsWith('image/'))

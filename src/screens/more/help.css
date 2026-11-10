@@ -23,15 +23,12 @@ a.more-me:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0
 /* Getting started (Apple's welcome screens): each part as its tile beside a bold line and a few short sentences */
 .gs { max-width: 36rem; padding: var(--space-2) 0 var(--space-2); }
 .gs-title { font-size: var(--fs-title-now); line-height: var(--lh-title-now); font-weight: var(--fw-title); text-wrap: balance; }
-.gs-intro { margin-top: var(--space-2); color: var(--ink-soft); }
+.gs-text { margin-top: 2px; }
+.gs-open { display: inline-flex; align-items: center; min-height: 44px; font-weight: var(--fw-strong); }
 .gs-part { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: var(--space-4); margin-top: var(--space-6); }
 .gs-tile { width: 44px; height: 44px; border-radius: 11px; }
 .gs-tile .icon { width: 25px; height: 25px; }
 .gs-head { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-strong); }
-.gs-lead { margin-top: 2px; }
-.gs-points { margin: var(--space-2) 0 0; padding-left: 1.1em; list-style: disc; color: var(--ink-soft); }
-.gs-points li + li { margin-top: var(--space-1); }
-.gs-points li::marker { color: var(--ink-tertiary); }
 .gs-more { max-width: 36rem; margin-top: var(--space-8, 40px); }
 @media (max-width: 1023px) {
   .gs-title { transition: opacity var(--dur-2) linear; }
@@ -39,7 +36,6 @@ a.more-me:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0
 }
 @media (min-width: 1024px) {
   .gs-title { display: none; } /* the screen's large title names the page */
-  .gs-intro { margin-top: 0; }
 }
 
 /* Report's screenshots (Mail's attachments): 64px thumbnails, each with a round remove button on its corner */

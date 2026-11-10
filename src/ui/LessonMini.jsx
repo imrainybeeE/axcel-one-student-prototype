@@ -24,7 +24,7 @@ export function LessonMini({ model, offline, joiningId, onJoin, shown, onOpen, o
       label={`${isBreak ? 'Break' : item.title}, ${model.minutes} minutes. ${openLabel}`}
       tile={<MiniTile subject={isBreak ? 'break' : item.subjectId} value={<Num wide><RollNum value={model.minutes} /></Num>} unit="min" />}
       title={isBreak ? 'Break' : shortTitle(item)}
-      sub={lead ? <>{lead} · {when}</> : when}
+      sub={lead ? <>{lead}, {when}</> : when}
       action={joinable && (
         <MiniAction icon="video" subject={item.subjectId} label={`Join ${item.title}`} onClick={() => onJoin(item)} disabled={joiningId === item.id} />
       )}

@@ -89,6 +89,8 @@
 }
 
 .cal-sheet { display: flex; flex-direction: column; gap: var(--space-3); padding-bottom: var(--space-2); }
+.cal-show-all { align-self: flex-start; }
+.cal-later { align-self: center; margin-top: var(--space-2); } /* Upcoming reaches further, as Calendar's list loads more */
 @media (min-width: 1024px) { .cal-laptop .cal-month > .cal-day { margin-top: 0; } }
 @media (min-width: 1024px) { .cal-laptop .cal-day > .section-head { min-height: 44px; align-items: center; margin-bottom: 0; } } /* the day's heading on the month name's line, its card close under it */
 
@@ -96,12 +98,6 @@
 .cal-stack > .seg + * { margin-top: var(--space-4); } /* the first week's heading carries its own 8 of padding: 24 in all */
 @media (min-width: 1024px) { .cal-stack > .seg:first-child { margin-top: var(--space-2); } }
 
-/* Meta parts joined by a dot that only ever sits between two parts on one line: each part carries its dot in front,
-   the line box is pulled left by one dot, and the overflow clip hides the dot of whichever part starts a line */
-.meta-parts { display: block; overflow: hidden; }
-.meta-parts > span { display: block; margin-left: -0.9em; }
-.meta-parts > span > span { display: inline-block; max-width: calc(100% - 0.9em); vertical-align: top; }
-.meta-parts > span > span::before { content: '·'; display: inline-block; width: 0.9em; text-align: center; }
 .cal-row .row-meta { font-size: 0.875rem; line-height: 1.25rem; } /* No school, who it is for: 14, readable at a glance yet one line under the title */
 
 /* Easier on the eyes: Upcoming's dates read as plain numbers, titles a step lighter, one hierarchy in both views */

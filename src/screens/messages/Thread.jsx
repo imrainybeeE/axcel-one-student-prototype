@@ -189,6 +189,13 @@ export default function Thread({ params }) {
   useEffect(() => { if (thread) markThreadRead(thread.id) }, [thread])
   useEffect(() => { keepSent(params.id, extra) }, [params.id, extra])
   useEffect(() => { endRef.current?.scrollIntoView({ block: 'end' }) }, [extra.length])
+  // Back online: what waited goes out, Sending for a moment, then sent
+  useEffect(() => {
+    if (offline) return
+    const go = setTimeout(() => setExtra((x) => (x.some((m) => m.status === 'queued') ? x.map((m) => (m.status === 'queued' ? { ...m, status: 'sending' } : m)) : x)), 0)
+    const done = setTimeout(() => setExtra((x) => (x.some((m) => m.status === 'sending') ? x.map((m) => (m.status === 'sending' ? { ...m, status: undefined, justSent: true } : m)) : x)), 900)
+    return () => { clearTimeout(go); clearTimeout(done) }
+  }, [offline])
 
   // Show one message in the chat: scroll it to the middle and pulse its bubble once (no pulse with reduced motion)
   const showMessage = useCallback((id, smooth = true) => {
@@ -226,7 +233,8 @@ export default function Thread({ params }) {
   const pins = (pinnedAll[thread.id] || []).map((id) => byId.get(id)).filter(Boolean)
 
   const send = (text, id = `x${Date.now()}`, file) => {
-    const m = { id, from: 'me', text, at: now, replyTo: reply, ...(file ? { file } : {}) }
+    // Offline, it waits: "Waiting to send" until the connection is back, then it sends
+    const m = { id, from: 'me', text, at: now, replyTo: reply, ...(file ? { file } : {}), ...(offline ? { status: 'queued' } : {}) }
     setExtra((x) => [...x.filter((y) => y.id !== id), m])
     if (!file) setDraft('')
     setReply(null)

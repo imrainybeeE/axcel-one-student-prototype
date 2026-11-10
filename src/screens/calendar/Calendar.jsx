@@ -24,6 +24,7 @@ function scopeOf(e) {
   if (e.audience === student.className || e.audience === `Year ${student.year}`) return 'class'
   return 'school'
 }
+const count = (n) => (n === 1 ? '1 event' : `${n} events`)
 const NO_SCHOOL = new Set(['holiday', 'public-holiday'])
 /** Categories that share a colour share one mark in the month: holidays are one red, term dates and assemblies one blue. */
 const TONE = { 'public-holiday': 'holiday', assembly: 'term' }
@@ -38,16 +39,14 @@ function when(e) {
   return e.end && !e.end.includes('-') ? `${e.time} to ${e.end}` : e.time
 }
 
-/** The grey line, time first as Calendar: "10.50 to 11.35 · 8 Orion", or "Public holiday · No school".
-    Each part is its own piece with the dot before it; a dot that would start a line is clipped away (see .meta-parts),
-    so a wrap never leaves a dot dangling at either end. */
+/** The grey line, time first as Calendar, joined with commas: "10.50 to 11.35, 8 Orion", or "Public holiday, no school". */
 function metaParts(e) {
-  if (NO_SCHOOL.has(e.category)) return [e.end && e.end !== e.start ? when(e) : categories[e.category]?.label, 'No school']
+  if (NO_SCHOOL.has(e.category)) return [e.end && e.end !== e.start ? when(e) : categories[e.category]?.label, 'no school']
   return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean)
 }
 function meta(e) {
-  const parts = metaParts(e)
-  return <span className="meta-parts" aria-label={parts.join(', ')}><span>{parts.map((p) => <span key={p}>{p}</span>)}</span></span>
+  const text = metaParts(e).join(', ')
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 /** The capsule's line: "Tomorrow, Sat 14 Nov", "In 8 days, Fri 14 Nov", or for one under way, "Now, until Tue 10 Nov". */
@@ -212,6 +211,8 @@ export default function Calendar() {
   const { state, offline, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const laptop = useLaptop()
   const [show, setShow] = usePref('calendarShow', { school: true, class: true })
+  const [kinds, setKinds] = usePref('calendarKinds', {}) // category -> false when hidden
+  const [horizon, setHorizon] = useState(60) // Upcoming's reach in days; Show the next 90 days adds 90
   const [showOpen, setShowOpen] = useState(false)
   const view = ['month', 'year', 'key-dates'].includes(query.get('view')) ? query.get('view') : 'upcoming'
   const selected = query.get('day') || today
@@ -247,9 +248,12 @@ export default function Calendar() {
   const open = events.find((e) => e.id === openId) || null
   const setOpen = (e) => updateQuery({ event: e ? e.id : null })
 
-  const visible = events.filter((e) => show[scopeOf(e)]).sort((a, b) => a.start.localeCompare(b.start) || (a.time || '').localeCompare(b.time || ''))
-  const upcoming = visible.filter((e) => (e.end && e.end.includes('-') ? e.end : e.start) >= today && e.start <= addDays(today, 60))
-  const hidden = Object.values(show).filter((v) => !v).length
+  const visible = events.filter((e) => show[scopeOf(e)] && kinds[e.category] !== false).sort((a, b) => a.start.localeCompare(b.start) || (a.time || '').localeCompare(b.time || ''))
+  const upcoming = visible.filter((e) => (e.end && e.end.includes('-') ? e.end : e.start) >= today && e.start <= addDays(today, horizon))
+  const later = visible.some((e) => e.start > addDays(today, horizon))
+  const showLater = () => setHorizon((h) => h + 90)
+  const hidden = Object.values(show).filter((v) => !v).length + Object.values(kinds).filter((v) => v === false).length
+  const showAll = () => { setShow({ school: true, class: true }); setKinds({}) }
 
   let body
   if (state === 'loading') {
@@ -257,9 +261,11 @@ export default function Calendar() {
   } else if (view === 'upcoming' && (state === 'empty' || !upcoming.length)) {
     body = (
       <EmptyState
-        title="Nothing coming up in the next 60 days."
-        action={hidden
-          ? <Button variant="secondary" onClick={() => setShow({ school: true, class: true })}>Show everything</Button>
+        title={`Nothing coming up in the next ${horizon} days.`}
+        action={later && state !== 'empty'
+          ? <Button variant="secondary" onClick={showLater}>Show the next 90 days</Button>
+          : hidden
+          ? <Button variant="secondary" onClick={showAll}>Show everything</Button>
           : <Button variant="secondary" onClick={() => updateQuery({ view: 'month' })}>See the month</Button>}
       >
         {hidden ? 'Some events are hidden by Show.' : 'School events and holidays will show here. The month view shows every day.'}
@@ -293,7 +299,12 @@ export default function Calendar() {
   } else if (view === 'key-dates') {
     body = <KeyDates today={today} year={shownKeyYear} years={keyDateYears} onYear={setKeyYear} onPick={pickKeyDate} />
   } else {
-    body = <Upcoming list={upcoming} today={today} onOpen={setOpen} />
+    body = (
+      <>
+        <Upcoming list={upcoming} today={today} onOpen={setOpen} />
+        {later && <Button variant="plain" className="cal-later" onClick={showLater}>Show the next 90 days</Button>}
+      </>
+    )
   }
 
   // The capsule: the next event, once the first one (or the month grid) has scrolled away
@@ -339,9 +350,15 @@ export default function Calendar() {
       <Sheet open={showOpen} onClose={() => setShowOpen(false)} title="Show" trailing={<Button variant="plain" size="compact" onClick={() => setShowOpen(false)}>Done</Button>}>
         <div className="cal-sheet">
           <ul className="list" role="list">
-            <CheckRow label="School events and holidays" meta={`${events.filter((e) => scopeOf(e) === 'school').length} events`} checked={show.school} onChange={(v) => setShow({ ...show, school: v })} />
-            <CheckRow label={`${student.className} and Year ${student.year}`} meta={`${events.filter((e) => scopeOf(e) === 'class').length} events`} checked={show.class} onChange={(v) => setShow({ ...show, class: v })} />
+            <CheckRow label="School events and holidays" meta={count(events.filter((e) => scopeOf(e) === 'school').length)} checked={show.school} onChange={(v) => setShow({ ...show, school: v })} />
+            <CheckRow label={`${student.className} and Year ${student.year}`} meta={count(events.filter((e) => scopeOf(e) === 'class').length)} checked={show.class} onChange={(v) => setShow({ ...show, class: v })} />
           </ul>
+          <Group title="Kinds of date">
+            {Object.entries(categories).filter(([k]) => events.some((e) => e.category === k)).map(([k, c]) => (
+              <CheckRow key={k} label={c.label} meta={count(events.filter((e) => e.category === k).length)} checked={kinds[k] !== false} onChange={(v) => setKinds({ ...kinds, [k]: v })} />
+            ))}
+          </Group>
+          {hidden > 0 && <Button variant="plain" className="cal-show-all" onClick={showAll}>Show everything</Button>}
           <p className="t-soft">Saved on this phone.</p>
         </div>
       </Sheet>

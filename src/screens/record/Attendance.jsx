@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Screen, useDemo, useRoute, updateQuery, SAVED_AT } from '../../app'
 import { Group, Row, Num, Icon, Button, Sheet, Disclosure, SkeletonRows, LoadingState, ErrorState, OfflineNotice, MiniBar, MiniTile, useOutOfView } from '../../ui'
 import { years, terms, termDays, summarise, period, currentTermId } from '../../data/attendance.js'
-import { dayOfWeek } from '../../lib/time.js'
+import { dayOfWeek, formatLongDate, isoToMs } from '../../lib/time.js'
 import './record.css'
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -46,6 +46,7 @@ export default function Attendance() {
   const days = p.terms.flatMap(termDays)
   const s = summarise(days)
   const isTerm = p.terms.length === 1
+  const missed = days.filter((d) => d.status === 'absent' || d.status === 'late').reverse()
   // a term shows its own months; a year shows all twelve, the days outside its terms left plain
   const months = isTerm ? [...new Set(days.map((d) => d.iso.slice(0, 7)))] : Array.from({ length: 12 }, (_, i) => `${p.year}-${String(i + 1).padStart(2, '0')}`)
   const miniShown = useOutOfView(() => document.querySelector('.att-hero'), { enabled: state !== 'loading', key: p.id })
@@ -92,9 +93,21 @@ export default function Attendance() {
             </p>
           </Disclosure>
         </div>
+        {/* Every absent or late day with its recorded reason, newest first, as the old My Attendance listed them */}
+        <Group title="Absences and lates" className="att-abs">
+          {missed.length ? missed.map((d) => (
+            <Row
+              key={d.iso}
+              title={formatLongDate(isoToMs(d.iso))}
+              meta={d.reason}
+              trailing={<span className="att-abs-status"><i className={`att-cell is-${d.status}`} aria-hidden="true" />{STATUS[d.status]}</span>}
+            />
+          )) : <li className="att-abs-none">{isTerm ? 'No absences this term.' : 'No absences this year.'}</li>}
+        </Group>
+        <p className="t-faint settings-note att-abs-note">Medical certificates and planned absences still count as absent.</p>
         <div className="card att-how">
           <Disclosure summary="How absences are counted">
-            <p>Every day you are not in school counts as absent, including days with a medical certificate or a planned absence. Lates count as present.</p>
+            <p>Every school day you are not in school counts as absent, whatever the reason. Lates count as present.</p>
           </Disclosure>
         </div>
         <p className="t-faint settings-note att-foot">Daily records in this demo are sample data.</p>

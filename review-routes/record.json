@@ -1,11 +1,13 @@
 [
-  { "id": "record-main", "label": "Record", "path": "/record" },
-  { "id": "record-dark", "label": "Record, dark", "path": "/record?theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "record-how", "label": "How points work", "path": "/record", "phoneOnly": true, "actions": [{ "click": "text=How points work" }, { "wait": 700 }] },
-  { "id": "record-loading", "label": "Loading", "path": "/record?state=loading", "phoneOnly": true },
-  { "id": "record-error", "label": "Error", "path": "/record?state=error", "phoneOnly": true },
-  { "id": "record-empty", "label": "Empty", "path": "/record?state=empty", "phoneOnly": true },
-  { "id": "record-attendance", "label": "Attendance", "path": "/attendance" },
-  { "id": "record-attendance-dark", "label": "Attendance, dark", "path": "/attendance?theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "record-attendance-offline", "label": "Attendance, offline", "path": "/attendance?state=offline", "phoneOnly": true }
+  {"id": "record-main", "label": "Record", "path": "/record"},
+  {"id": "record-dark", "label": "Record, dark", "path": "/record?theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "record-how", "label": "How points work", "path": "/record", "phoneOnly": true, "actions": [{"click": "text=How points work"}, {"wait": 700}]},
+  {"id": "record-loading", "label": "Loading", "path": "/record?state=loading", "phoneOnly": true},
+  {"id": "record-error", "label": "Error", "path": "/record?state=error", "phoneOnly": true},
+  {"id": "record-empty", "label": "Empty", "path": "/record?state=empty", "phoneOnly": true},
+  {"id": "record-attendance", "label": "Attendance", "path": "/attendance"},
+  {"id": "record-attendance-dark", "label": "Attendance, dark", "path": "/attendance?theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "record-attendance-offline", "label": "Attendance, offline", "path": "/attendance?state=offline", "phoneOnly": true},
+  {"id": "rec-pe", "label": "PE results", "path": "/pe"},
+  {"id": "rec-pe-dark", "label": "PE results, dark", "path": "/pe?theme=dark", "theme": "dark", "phoneOnly": true}
 ]

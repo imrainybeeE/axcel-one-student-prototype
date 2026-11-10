@@ -7,6 +7,7 @@ export const student = {
   className: '7 Phoenix',
   house: 'Blue',
   studentId: '21BP707',
+  email: '21bp707@axcel.edu.my',
 }
 
 export const school = {

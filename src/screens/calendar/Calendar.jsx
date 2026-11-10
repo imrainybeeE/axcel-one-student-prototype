@@ -1,6 +1,7 @@
 // Calendar: Upcoming (default) groups the next 60 days by week; Month is Calendar's Compact grid: a soft dot under every day an event covers.
 // One Show control replaces the old stack of filters. Category is a word on each row, never a colour.
-// URL: ?view=month, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
+// Key dates lists the school's terms and holidays; the year in Month's bar opens the year view, as Calendar's.
+// URL: ?view=month|year|key-dates, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
 import { useState } from 'react'
 import { Screen, useDemo, useRoute, updateQuery, useLaptop, usePref, SAVED_AT } from '../../app'
 import {
@@ -8,7 +9,9 @@ import {
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
   MiniBar, MiniTile, useOutOfView,
 } from '../../ui'
-import { events, categories } from '../../data/calendar.js'
+import { events, categories, keyDateYears } from '../../data/calendar.js'
+import KeyDates from './KeyDates.jsx'
+import YearView from './YearView.jsx'
 import { addDays, dayOfWeek, daysBetween, formatLongDate, isoToMs } from '../../lib/time.js'
 import { student } from '../../data/student.js'
 import './calendar.css'
@@ -98,7 +101,8 @@ function Upcoming({ list, today, onOpen }) {
   ))
 }
 
-function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
+/** origin: set when the month was opened from the year view, so it grows out of its small month there. */
+function Month({ list, today, selected, month, onSelect, onMonth, onOpen, onYear, origin }) {
   const [y, m] = month.split('-').map(Number)
   const first = `${month}-01`
   const lead = (dayOfWeek(first) + 6) % 7
@@ -123,9 +127,12 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
     requestAnimationFrame(() => document.querySelector(`[data-iso="${next}"]`)?.focus())
   }
   return (
-    <div className="cal-month">
+    <div className={`cal-month${origin ? ' is-entering' : ''}`} style={origin ? { '--cal-origin': origin } : undefined}>
       <div className="cal-month-bar">
-        <h2 className="cal-month-title" aria-live="polite">{MONTHS[m - 1]} <Num className="cal-year">{y}</Num></h2>
+        <h2 className="cal-month-title" aria-live="polite">
+          {MONTHS[m - 1]}{' '}
+          <button type="button" className="cal-year" aria-label={`${y}, show the year`} onClick={onYear}><Num>{y}</Num></button>
+        </h2>
         <IconButton icon="chevron-left" label="Previous month" size={18} onClick={() => move(-1)} />
         <IconButton icon="chevron-right" label="Next month" size={18} onClick={() => move(1)} />
       </div>
@@ -206,9 +213,36 @@ export default function Calendar() {
   const laptop = useLaptop()
   const [show, setShow] = usePref('calendarShow', { school: true, class: true })
   const [showOpen, setShowOpen] = useState(false)
-  const view = query.get('view') === 'month' ? 'month' : 'upcoming'
+  const view = ['month', 'year', 'key-dates'].includes(query.get('view')) ? query.get('view') : 'upcoming'
   const selected = query.get('day') || today
   const [month, setMonth] = useState(selected.slice(0, 7))
+  // The year view's year (it starts on the month's), Key dates' year (this year, or the nearest one published),
+  // and where the next view grows from: the zoom between Month and Year, as Calendar's
+  const [yearShown, setYearShown] = useState(null)
+  const year = yearShown ?? Number(month.slice(0, 4))
+  const thisYear = Number(today.slice(0, 4))
+  const [keyYear, setKeyYear] = useState(null)
+  const shownKeyYear = keyYear ?? (keyDateYears.includes(thisYear) ? thisYear : keyDateYears.reduce((a, b) => (Math.abs(b - thisYear) < Math.abs(a - thisYear) ? b : a)))
+  const [zoom, setZoom] = useState(null)
+  const choose = (iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }
+  const openYear = () => {
+    const [, mo] = month.split('-').map(Number)
+    const cols = laptop ? 4 : 3
+    setYearShown(null)
+    setZoom({ to: 'year', origin: `${(((mo - 1) % cols) + 0.5) / cols * 100}% ${(Math.floor((mo - 1) / cols) + 0.5) / (12 / cols) * 100}%` })
+    updateQuery({ view: 'year' })
+  }
+  const openMonth = (mo, origin) => {
+    setZoom({ to: 'month', origin })
+    updateQuery({ view: 'month', day: today.startsWith(mo) ? null : `${mo}-01` })
+    setMonth(mo)
+  }
+  const pickKeyDate = (iso) => {
+    setZoom(null)
+    updateQuery({ view: 'month', day: iso === today ? null : iso })
+    setMonth(iso.slice(0, 7))
+    window.scrollTo(0, 0)
+  }
   const openId = query.get('event')
   const open = events.find((e) => e.id === openId) || null
   const setOpen = (e) => updateQuery({ event: e ? e.id : null })
@@ -238,11 +272,26 @@ export default function Calendar() {
         today={today}
         selected={selected}
         month={month}
-        onMonth={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
-        onSelect={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
+        onMonth={choose}
+        onSelect={choose}
         onOpen={setOpen}
+        onYear={openYear}
+        origin={zoom?.to === 'month' ? zoom.origin : null}
       />
     )
+  } else if (view === 'year') {
+    body = (
+      <YearView
+        year={year}
+        list={state === 'empty' ? [] : visible}
+        today={today}
+        onYear={setYearShown}
+        onOpen={openMonth}
+        origin={zoom?.to === 'year' ? zoom.origin : null}
+      />
+    )
+  } else if (view === 'key-dates') {
+    body = <KeyDates today={today} year={shownKeyYear} years={keyDateYears} onYear={setKeyYear} onPick={pickKeyDate} />
   } else {
     body = <Upcoming list={upcoming} today={today} onOpen={setOpen} />
   }
@@ -250,7 +299,7 @@ export default function Calendar() {
   // The capsule: the next event, once the first one (or the month grid) has scrolled away
   const next = state === 'loading' || state === 'empty' ? null : upcoming[0]
   const miniShown = useOutOfView(
-    () => document.querySelector(view === 'month' ? '.screen--cal .cal-grid' : '.screen--cal .cal-week .cal-row'),
+    () => document.querySelector({ month: '.screen--cal .cal-grid', year: '.screen--cal .cal-year-grid', 'key-dates': '.screen--cal .cal-key-group' }[view] || '.screen--cal .cal-week .cal-row'),
     { enabled: Boolean(next), key: view },
   )
 
@@ -267,9 +316,9 @@ export default function Calendar() {
       <div className={`stack cal-stack${laptop && view === 'month' ? ' cal-laptop' : ''}`}>
         <Segmented
           legend="View"
-          value={view}
-          onChange={(v) => updateQuery({ view: v === 'month' ? 'month' : null })}
-          options={[{ value: 'upcoming', label: 'Upcoming' }, { value: 'month', label: 'Month' }]}
+          value={view === 'year' ? 'month' : view}
+          onChange={(v) => { setZoom(null); updateQuery({ view: v === 'upcoming' ? null : v }) }}
+          options={[{ value: 'upcoming', label: 'Upcoming' }, { value: 'month', label: 'Month' }, { value: 'key-dates', label: 'Key dates' }]}
         />
         {offline && <OfflineNotice what="events" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>New events did not load. Check that you are online, then try again. Events saved at <Num>{SAVED_AT}</Num> are below.</ErrorState>}

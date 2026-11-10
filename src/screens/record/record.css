@@ -125,3 +125,13 @@
 .att-cell.is-weekend, .att-cell.is-outside { color: var(--ink-soft); opacity: 0.55; }
 .att-every .att-key { margin-top: var(--space-4); font-size: var(--fs-footnote); }
 .att-every .att-key i { width: 12px; height: 12px; aspect-ratio: auto; }
+
+/* Absences and lates: one row a day, its reason under the date, the status as the day grid's square and a word */
+.att-abs-status { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); white-space: nowrap; }
+.att-abs-status .att-cell { width: 12px; height: 12px; aspect-ratio: auto; }
+.att-abs-none { list-style: none; padding: 0; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.att-abs > .list:has(> .att-abs-none:only-child) { background: transparent; box-shadow: none; border-radius: 0; } /* nothing missed: one quiet line, no card */
+.att-abs-note { padding-inline: 0; }
+
+/* PE results */
+.pe-intro { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }

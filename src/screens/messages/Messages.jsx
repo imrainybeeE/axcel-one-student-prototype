@@ -1,7 +1,7 @@
 // Messages inbox, as Apple Messages: search, one filter row, then one list newest first.
 // Unread is a leading blue dot and a darker preview. New message opens the compose sheet.
 import { useState } from 'react'
-import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT, useLaptop } from '../../app'
+import { Screen, useDemo, useUnreadThreads, navigate, SAVED_AT, useLaptop, useRoute } from '../../app'
 import {
   IconButton,
   Segmented, SearchField, Row, Group, Avatar, Num, Button, Sheet, Icon,
@@ -12,6 +12,7 @@ import { threads, contacts } from '../../data/messages.js'
 import '../../data/messageHistory.js' // the threads' earlier messages
 import { kindWord, lastOf, whenLabel } from './messageTime.js'
 import Thread from './Thread.jsx'
+import Starred from './Starred.jsx'
 import './messages.css'
 
 function ComposeSheet({ open, onClose }) {
@@ -61,6 +62,8 @@ export default function Messages({ params = {} }) {
   const [q, setQ] = useState('')
   const [compose, setCompose] = useState(false)
   const canCompose = contacts.teachers.length + contacts.students.length > 0
+  const { route } = useRoute()
+  const starredOpen = route.path === '/messages/starred'
   const selected = params.id
 
   const list = threads
@@ -139,7 +142,7 @@ export default function Messages({ params = {} }) {
     </>
   )
   // The capsule, once the search and filters have scrolled away: the newest unread conversation, or New message
-  const ready = state !== 'loading' && state !== 'empty' && !selected
+  const ready = state !== 'loading' && state !== 'empty' && !selected && !starredOpen
   const miniShown = useOutOfView(() => document.querySelector('.messages-inbox-screen .seg'), { enabled: ready })
   const newest = threads.filter((t) => unread.has(t.id)).sort((a, b) => lastOf(b).at - lastOf(a).at)[0]
   let mini = null
@@ -175,20 +178,27 @@ export default function Messages({ params = {} }) {
       />
     )
   }
-  // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers)
-  const composeAction = canCompose ? <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" /> : null
+  // Compose is its glass icon in the bar, as Messages draws it (the name stays for screen readers); Starred sits before it
+  const composeAction = (
+    <>
+      <IconButton icon="star" label="Starred messages" onClick={() => navigate('/messages/starred')} data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" />
+      {canCompose && <IconButton icon="pen" label="New message" onClick={() => setCompose(true)} aria-haspopup="dialog" data-liquid="" data-liquid-bezel="12" data-liquid-strength="10" />}
+    </>
+  )
+  // Starred is a pushed screen: on a phone it is the whole page; on a laptop it takes the list column, as a thread takes the other
+  if (starredOpen && !wide) return <Starred />
   return (
     <div className={`messages-split${selected ? ' has-thread' : ''}`}>
     <div className="messages-list-pane">
-      {selected ? (
+      {starredOpen ? <Starred /> : selected ? (
         <div className="screen messages-inbox-screen">
-          <div className="messages-inbox-heading"><h2 className="t-title-l">Messages</h2>{composeAction}</div>
+          <div className="messages-inbox-heading"><h2 className="t-title-l">Messages</h2><span className="messages-inbox-actions">{composeAction}</span></div>
           <div className="screen-body">{inbox}</div>
         </div>
       ) : <Screen title="Messages" width="narrow" className="messages-inbox-screen" action={composeAction}>{inbox}{mini}</Screen>}
     </div>
     <div className="messages-detail-pane">
-      {selected ? <Thread key={selected} params={params} /> : <div className="messages-detail-empty">Select a conversation</div>}
+      {selected ? <Thread key={selected} params={params} /> : <div className="messages-detail-empty">{starredOpen ? 'Choose a starred message to see it in its chat' : 'Select a conversation'}</div>}
     </div>
     </div>
   )

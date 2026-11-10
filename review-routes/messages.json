@@ -1,7 +1,9 @@
 [
-  { "id": "messages-inbox", "label": "Inbox", "path": "/messages?t=10.40" },
-  { "id": "messages-inbox-dark", "label": "Inbox, dark", "path": "/messages?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "messages-loading", "label": "Loading", "path": "/messages?state=loading", "phoneOnly": true },
-  { "id": "messages-empty", "label": "Empty", "path": "/messages?state=empty", "phoneOnly": true },
-  { "id": "messages-error", "label": "Error", "path": "/messages?t=10.40&state=error", "phoneOnly": true }
+  {"id": "messages-inbox", "label": "Inbox", "path": "/messages?t=10.40"},
+  {"id": "messages-inbox-dark", "label": "Inbox, dark", "path": "/messages?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "messages-loading", "label": "Loading", "path": "/messages?state=loading", "phoneOnly": true},
+  {"id": "messages-empty", "label": "Empty", "path": "/messages?state=empty", "phoneOnly": true},
+  {"id": "messages-error", "label": "Error", "path": "/messages?t=10.40&state=error", "phoneOnly": true},
+  {"id": "msg-starred", "label": "Starred", "path": "/messages/starred?t=10.40"},
+  {"id": "msg-starred-dark", "label": "Starred, dark", "path": "/messages/starred?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true}
 ]

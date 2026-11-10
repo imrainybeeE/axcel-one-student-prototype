@@ -24,15 +24,21 @@ const OFF = [
 ]
 const offOn = (iso) => OFF.find(([a, b]) => a <= iso && iso <= b)?.[2] || null
 
-// Made-up absences and lates. Term 2 2026 keeps the account's 3 absences and no lates.
-const ABSENT = new Set(['2025-02-19', '2025-07-23', '2025-07-24', '2025-10-08', '2026-04-14', '2026-04-15', '2026-07-21', '2026-09-08', '2026-09-09'])
-const LATE = new Set(['2025-03-11', '2025-09-24', '2026-01-27', '2026-05-12'])
+// Made-up absences and lates, each with the reason the school recorded (the old app's codes: planned absence,
+// medical, bereavement, no reason given). Term 2 2026 keeps the account's 3 absences and no lates.
+const ABSENT = new Map([
+  ['2025-02-19', 'Medical, with a certificate'], ['2025-07-23', 'Planned absence'], ['2025-07-24', 'Planned absence'],
+  ['2025-10-08', 'Bereavement'], ['2026-04-14', 'Medical, with a certificate'], ['2026-04-15', 'Medical, with a certificate'],
+  ['2026-07-21', 'No reason given'], ['2026-09-08', 'Planned absence'], ['2026-09-09', 'Planned absence'],
+])
+// Lates: the time the student signed in
+const LATE = new Map([['2025-03-11', '8.32'], ['2025-09-24', '8.26'], ['2026-01-27', '8.41'], ['2026-05-12', '8.32']])
 
 const today = () => isoDate(getNow())
 
 /**
- * Every date of a term: { iso, status } where status is 'present' | 'late' | 'absent' | 'off' (a holiday or break,
- * with reason) | 'weekend' | 'later' (a school day still to come). Today counts once it is a school day.
+ * Every date of a term: { iso, status, reason? } where status is 'present' | 'late' | 'absent' (with the recorded
+ * reason) | 'off' (a holiday or break, with reason) | 'weekend' | 'later' (a school day still to come). Today counts once it is a school day.
  */
 export function termDays(t) {
   const now = today()
@@ -43,7 +49,9 @@ export function termDays(t) {
     if (dow === 0 || dow === 6) out.push({ iso, status: 'weekend' })
     else if (reason) out.push({ iso, status: 'off', reason })
     else if (iso > now) out.push({ iso, status: 'later' })
-    else out.push({ iso, status: ABSENT.has(iso) ? 'absent' : LATE.has(iso) ? 'late' : 'present' })
+    else if (ABSENT.has(iso)) out.push({ iso, status: 'absent', reason: ABSENT.get(iso) })
+    else if (LATE.has(iso)) out.push({ iso, status: 'late', reason: `Late, arrived ${LATE.get(iso)}` })
+    else out.push({ iso, status: 'present' })
   }
   return out
 }

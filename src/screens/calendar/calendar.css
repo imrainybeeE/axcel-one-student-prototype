@@ -22,7 +22,14 @@
 /* The month leads on the left, as Calendar's; both arrows sit together at the right */
 .cal-month-bar { display: grid; grid-template-columns: minmax(0, 1fr) 44px 44px; align-items: center; }
 .cal-month-title { font-size: 1.25rem; line-height: 1.5625rem; font-weight: 600; }
-.cal-month-title .cal-year { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 400; color: var(--ink-soft); }
+/* The year after the month's name is a button, as Calendar's: blue, and it opens the year view (a 44 target round the text) */
+.cal-month-title .cal-year {
+  display: inline-block; min-height: 44px; margin: -10px -8px -9px -8px; padding: 10px 8px 9px; border: 0; border-radius: 10px; background: none;
+  color: var(--brand); font: inherit; font-size: var(--fs-subhead); font-weight: 400; vertical-align: baseline; cursor: pointer;
+  transition: opacity var(--dur-1) var(--ease);
+}
+.cal-month-title .cal-year:active { opacity: 0.5; transition-duration: 0s; }
+.cal-month-title .cal-year:focus-visible { outline: 2px solid var(--brand); outline-offset: -4px; }
 .cal-month-bar .icon-btn { width: 44px; height: 44px; color: var(--brand); }
 .cal-grid { display: flex; flex-direction: column; }
 .cal-grid-head, .cal-grid-row { display: grid; grid-template-columns: repeat(7, 1fr); }
@@ -65,14 +72,14 @@
 }
 .cal-cell:active .num { opacity: 0.5; }
 .cal-none { list-style: none; color: var(--ink-soft); padding: 0; font-size: 0.875rem; line-height: 1.25rem; } /* an empty day: one quiet line, no card */
-.cal-day > .list:has(> .cal-none:only-child) { background: transparent; box-shadow: none; border-radius: 0; }
+:is(.cal-day, .cal-key-group) > .list:has(> .cal-none:only-child) { background: transparent; box-shadow: none; border-radius: 0; }
 .cal-day > .section-head { margin-bottom: 8px; }
 .cal-day > .section-head > h2 { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 600; color: var(--ink); } /* the chosen day names the list in ink, at body size so it never rivals the month */
 
 /* Laptop: grid left, day list right */
 @media (min-width: 1024px) {
   .cal-stack:not(.cal-laptop) { max-width: 46rem; }
-  .cal-stack > .seg { max-width: 17.5rem; } /* 280 */ /* two choices never stretch across a laptop */
+  .cal-stack > .seg { max-width: 21rem; } /* 336: three choices never stretch across a laptop */
   .cal-laptop .cal-month { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; column-gap: var(--space-7) !important; /* the day is a 352 card at the content's right edge, under Show */ column-gap: var(--space-8, 40px); align-items: start; }
   .cal-laptop .cal-month-bar, .cal-laptop .cal-grid { grid-column: 1; }
   .cal-laptop .cal-day { grid-column: 2; grid-row: 1 / span 2; }
@@ -105,3 +112,57 @@
 [data-theme='dark'] .screen--cal :is(.cal-cell:not(.is-today):not(.is-selected) .num, .row.cal-row .row-title, .row.cal-row .lead-date :is(.num, .num-wide)) { color: color-mix(in srgb, var(--ink) 90%, var(--paper)); }
 /* Dark: secondary text at iOS's secondary-label grey, so meta, week headings and weekends step back from titles */
 @media not (prefers-contrast: more) { [data-theme='dark'] .screen--cal { --ink-soft: #98989D; } }
+
+/* Month and Year zoom into each other, as Calendar's: the year arrives from the month it was opened on, slightly
+   magnified; a month grows out of the small month that was tapped. Reduced motion keeps only the fade. */
+@media (prefers-reduced-motion: no-preference) {
+  .cal-year.is-entering { transform-origin: var(--cal-origin, 50% 0); animation: cal-year-in var(--dur-spring-smooth) var(--spring-smooth) both; }
+  .cal-month.is-entering { transform-origin: var(--cal-origin, 50% 0); animation: cal-month-in var(--dur-spring-smooth) var(--spring-smooth) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cal-year.is-entering, .cal-month.is-entering { animation: cal-fade var(--dur-2) var(--ease) both; }
+}
+@keyframes cal-year-in { from { opacity: 0; transform: scale(calc(1 + 0.18 * var(--motion))); } }
+@keyframes cal-month-in { from { opacity: 0; transform: scale(calc(1 - 0.55 * var(--motion))); } 45% { opacity: 1; } }
+@keyframes cal-fade { from { opacity: 0; } }
+
+/* Year: twelve small months, three across on a phone and four on a laptop */
+.cal-year { display: flex; flex-direction: column; gap: var(--space-3); }
+.cal-year-bar + * { margin-top: -4px; }
+.cal-year-bar .icon-btn:disabled { color: var(--ink-tertiary); background: none; cursor: default; }
+.cal-year-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5, 20px) var(--space-3); }
+.cal-mini {
+  display: flex; flex-direction: column; gap: 4px; min-width: 0; margin: -6px; padding: 6px; border: 0; border-radius: 12px;
+  background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+  transition: background-color var(--dur-1) var(--ease);
+}
+.cal-mini:active { background: var(--fill); transition-duration: 0s; }
+.cal-mini:focus-visible { outline: 2px solid var(--brand); outline-offset: 0; }
+.cal-mini-name { font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 600; }
+.cal-mini.is-current .cal-mini-name { color: var(--brand); }
+.cal-mini-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 1px; }
+.cal-mini-day {
+  display: grid; place-items: center; aspect-ratio: 1; min-width: 0; border-radius: 50%;
+  font-size: 0.5625rem; line-height: 1; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+}
+.cal-mini-day.is-weekend { color: var(--ink-soft); }
+.cal-mini-day.is-holiday { background: color-mix(in srgb, var(--cat-holiday) 16%, transparent); }
+[data-theme='dark'] .cal-mini-day.is-holiday { background: color-mix(in srgb, var(--cat-holiday) 30%, transparent); color: var(--ink); } /* grey numbers fail contrast on the dark tint */
+.cal-mini-day.is-today { background: var(--brand-solid); color: #FFFFFF; font-weight: 700; }
+.cal-year-key { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.cal-year-key i { width: 12px; height: 12px; border-radius: 50%; background: color-mix(in srgb, var(--cat-holiday) 16%, transparent); }
+[data-theme='dark'] .cal-year-key i { background: color-mix(in srgb, var(--cat-holiday) 30%, transparent); }
+@media (min-width: 390px) { .cal-mini-day { font-size: 0.625rem; } }
+@media (min-width: 1024px) {
+  .cal-year-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6, 24px) var(--space-5, 20px); }
+  .cal-mini-day { font-size: 0.6875rem; }
+}
+
+/* Key dates: Settings-style groups under the year; what has passed steps back, what is under way says Now */
+.cal-keys { display: flex; flex-direction: column; }
+.cal-keys > .cal-year-bar + .group { margin-top: var(--space-1); }
+.cal-key-when { white-space: nowrap; font-size: var(--fs-subhead); line-height: var(--lh-subhead); color: var(--ink-soft); }
+.cal-key .row-title { font-size: var(--fs-body, 1.0625rem); }
+.cal-key.is-past .row-title { color: var(--ink-soft); }
+.cal-key-now.tag { min-height: 20px; margin-left: var(--space-2); padding: 0 6px; font-size: 0.75rem; line-height: 1rem; vertical-align: 2px; }
+.cal-key-note { margin-top: var(--space-3); padding-inline: 0; }

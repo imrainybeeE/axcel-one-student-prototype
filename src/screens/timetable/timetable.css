@@ -139,3 +139,11 @@
 }
 .is-done .tt-double, .tt-week-row.is-done .tt-double { background: var(--fill); color: var(--ink-soft); }
 .rail-item.is-done .tt-card .rail-title { color: color-mix(in srgb, var(--ink) 72%, var(--card)); }
+
+/* The week bar, as Calendar's month bar: the week's name on the left, Today when away, both arrows at the right */
+.tt-weekbar { display: grid; grid-template-columns: minmax(0, 1fr) auto 44px 44px; align-items: center; }
+.tt-weekbar-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1.25rem; line-height: 1.5625rem; font-weight: 600; }
+.tt-weekbar .icon-btn { width: 44px; height: 44px; color: var(--brand); }
+.tt-weekbar-today { grid-column: 2; }
+.tt-weekbar .icon-btn:nth-last-child(2) { grid-column: 3; }
+.tt-weekbar .icon-btn:last-child { grid-column: 4; }

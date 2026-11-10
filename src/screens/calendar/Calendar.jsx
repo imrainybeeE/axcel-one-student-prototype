@@ -1,6 +1,7 @@
 // Calendar: Upcoming (default) groups the next 60 days by week; Month is Calendar's Compact grid: a soft dot under every day an event covers.
 // One Show control replaces the old stack of filters. Category is a word on each row, never a colour.
-// URL: ?view=month, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
+// Key dates lists the school's terms and holidays; the year in Month's bar opens the year view, as Calendar's.
+// URL: ?view=month|year|key-dates, ?day=YYYY-MM-DD (selected day in Month), ?event=<id> (event sheet).
 import { useState } from 'react'
 import { Screen, useDemo, useRoute, updateQuery, useLaptop, usePref, SAVED_AT } from '../../app'
 import {
@@ -8,7 +9,9 @@ import {
   SkeletonRows, LoadingState, EmptyState, ErrorState, OfflineNotice,
   MiniBar, MiniTile, useOutOfView,
 } from '../../ui'
-import { events, categories } from '../../data/calendar.js'
+import { events, categories, keyDateYears } from '../../data/calendar.js'
+import KeyDates from './KeyDates.jsx'
+import YearView from './YearView.jsx'
 import { addDays, dayOfWeek, daysBetween, formatLongDate, isoToMs } from '../../lib/time.js'
 import { student } from '../../data/student.js'
 import './calendar.css'
@@ -21,6 +24,7 @@ function scopeOf(e) {
   if (e.audience === student.className || e.audience === `Year ${student.year}`) return 'class'
   return 'school'
 }
+const count = (n) => (n === 1 ? '1 event' : `${n} events`)
 const NO_SCHOOL = new Set(['holiday', 'public-holiday'])
 /** Categories that share a colour share one mark in the month: holidays are one red, term dates and assemblies one blue. */
 const TONE = { 'public-holiday': 'holiday', assembly: 'term' }
@@ -35,16 +39,14 @@ function when(e) {
   return e.end && !e.end.includes('-') ? `${e.time} to ${e.end}` : e.time
 }
 
-/** The grey line, time first as Calendar: "10.50 to 11.35 · 8 Orion", or "Public holiday · No school".
-    Each part is its own piece with the dot before it; a dot that would start a line is clipped away (see .meta-parts),
-    so a wrap never leaves a dot dangling at either end. */
+/** The grey line, time first as Calendar, joined with commas: "10.50 to 11.35, 8 Orion", or "Public holiday, no school". */
 function metaParts(e) {
-  if (NO_SCHOOL.has(e.category)) return [e.end && e.end !== e.start ? when(e) : categories[e.category]?.label, 'No school']
+  if (NO_SCHOOL.has(e.category)) return [e.end && e.end !== e.start ? when(e) : categories[e.category]?.label, 'no school']
   return [when(e), ['class', 'event'].includes(e.category) ? null : categories[e.category]?.label, e.audience].filter(Boolean)
 }
 function meta(e) {
-  const parts = metaParts(e)
-  return <span className="meta-parts" aria-label={parts.join(', ')}><span>{parts.map((p) => <span key={p}>{p}</span>)}</span></span>
+  const text = metaParts(e).join(', ')
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
 /** The capsule's line: "Tomorrow, Sat 14 Nov", "In 8 days, Fri 14 Nov", or for one under way, "Now, until Tue 10 Nov". */
@@ -98,7 +100,8 @@ function Upcoming({ list, today, onOpen }) {
   ))
 }
 
-function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
+/** origin: set when the month was opened from the year view, so it grows out of its small month there. */
+function Month({ list, today, selected, month, onSelect, onMonth, onOpen, onYear, origin }) {
   const [y, m] = month.split('-').map(Number)
   const first = `${month}-01`
   const lead = (dayOfWeek(first) + 6) % 7
@@ -123,9 +126,12 @@ function Month({ list, today, selected, month, onSelect, onMonth, onOpen }) {
     requestAnimationFrame(() => document.querySelector(`[data-iso="${next}"]`)?.focus())
   }
   return (
-    <div className="cal-month">
+    <div className={`cal-month${origin ? ' is-entering' : ''}`} style={origin ? { '--cal-origin': origin } : undefined}>
       <div className="cal-month-bar">
-        <h2 className="cal-month-title" aria-live="polite">{MONTHS[m - 1]} <Num className="cal-year">{y}</Num></h2>
+        <h2 className="cal-month-title" aria-live="polite">
+          {MONTHS[m - 1]}{' '}
+          <button type="button" className="cal-year" aria-label={`${y}, show the year`} onClick={onYear}><Num>{y}</Num></button>
+        </h2>
         <IconButton icon="chevron-left" label="Previous month" size={18} onClick={() => move(-1)} />
         <IconButton icon="chevron-right" label="Next month" size={18} onClick={() => move(1)} />
       </div>
@@ -205,17 +211,49 @@ export default function Calendar() {
   const { state, offline, today, retry, retrying, reconnect, reconnecting } = useDemo()
   const laptop = useLaptop()
   const [show, setShow] = usePref('calendarShow', { school: true, class: true })
+  const [kinds, setKinds] = usePref('calendarKinds', {}) // category -> false when hidden
+  const [horizon, setHorizon] = useState(60) // Upcoming's reach in days; Show the next 90 days adds 90
   const [showOpen, setShowOpen] = useState(false)
-  const view = query.get('view') === 'month' ? 'month' : 'upcoming'
+  const view = ['month', 'year', 'key-dates'].includes(query.get('view')) ? query.get('view') : 'upcoming'
   const selected = query.get('day') || today
   const [month, setMonth] = useState(selected.slice(0, 7))
+  // The year view's year (it starts on the month's), Key dates' year (this year, or the nearest one published),
+  // and where the next view grows from: the zoom between Month and Year, as Calendar's
+  const [yearShown, setYearShown] = useState(null)
+  const year = yearShown ?? Number(month.slice(0, 4))
+  const thisYear = Number(today.slice(0, 4))
+  const [keyYear, setKeyYear] = useState(null)
+  const shownKeyYear = keyYear ?? (keyDateYears.includes(thisYear) ? thisYear : keyDateYears.reduce((a, b) => (Math.abs(b - thisYear) < Math.abs(a - thisYear) ? b : a)))
+  const [zoom, setZoom] = useState(null)
+  const choose = (iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }
+  const openYear = () => {
+    const [, mo] = month.split('-').map(Number)
+    const cols = laptop ? 4 : 3
+    setYearShown(null)
+    setZoom({ to: 'year', origin: `${(((mo - 1) % cols) + 0.5) / cols * 100}% ${(Math.floor((mo - 1) / cols) + 0.5) / (12 / cols) * 100}%` })
+    updateQuery({ view: 'year' })
+  }
+  const openMonth = (mo, origin) => {
+    setZoom({ to: 'month', origin })
+    updateQuery({ view: 'month', day: today.startsWith(mo) ? null : `${mo}-01` })
+    setMonth(mo)
+  }
+  const pickKeyDate = (iso) => {
+    setZoom(null)
+    updateQuery({ view: 'month', day: iso === today ? null : iso })
+    setMonth(iso.slice(0, 7))
+    window.scrollTo(0, 0)
+  }
   const openId = query.get('event')
   const open = events.find((e) => e.id === openId) || null
   const setOpen = (e) => updateQuery({ event: e ? e.id : null })
 
-  const visible = events.filter((e) => show[scopeOf(e)]).sort((a, b) => a.start.localeCompare(b.start) || (a.time || '').localeCompare(b.time || ''))
-  const upcoming = visible.filter((e) => (e.end && e.end.includes('-') ? e.end : e.start) >= today && e.start <= addDays(today, 60))
-  const hidden = Object.values(show).filter((v) => !v).length
+  const visible = events.filter((e) => show[scopeOf(e)] && kinds[e.category] !== false).sort((a, b) => a.start.localeCompare(b.start) || (a.time || '').localeCompare(b.time || ''))
+  const upcoming = visible.filter((e) => (e.end && e.end.includes('-') ? e.end : e.start) >= today && e.start <= addDays(today, horizon))
+  const later = visible.some((e) => e.start > addDays(today, horizon))
+  const showLater = () => setHorizon((h) => h + 90)
+  const hidden = Object.values(show).filter((v) => !v).length + Object.values(kinds).filter((v) => v === false).length
+  const showAll = () => { setShow({ school: true, class: true }); setKinds({}) }
 
   let body
   if (state === 'loading') {
@@ -223,9 +261,11 @@ export default function Calendar() {
   } else if (view === 'upcoming' && (state === 'empty' || !upcoming.length)) {
     body = (
       <EmptyState
-        title="Nothing coming up in the next 60 days."
-        action={hidden
-          ? <Button variant="secondary" onClick={() => setShow({ school: true, class: true })}>Show everything</Button>
+        title={`Nothing coming up in the next ${horizon} days.`}
+        action={later && state !== 'empty'
+          ? <Button variant="secondary" onClick={showLater}>Show the next 90 days</Button>
+          : hidden
+          ? <Button variant="secondary" onClick={showAll}>Show everything</Button>
           : <Button variant="secondary" onClick={() => updateQuery({ view: 'month' })}>See the month</Button>}
       >
         {hidden ? 'Some events are hidden by Show.' : 'School events and holidays will show here. The month view shows every day.'}
@@ -238,19 +278,39 @@ export default function Calendar() {
         today={today}
         selected={selected}
         month={month}
-        onMonth={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
-        onSelect={(iso) => { updateQuery({ day: iso === today ? null : iso }); setMonth(iso.slice(0, 7)) }}
+        onMonth={choose}
+        onSelect={choose}
         onOpen={setOpen}
+        onYear={openYear}
+        origin={zoom?.to === 'month' ? zoom.origin : null}
       />
     )
+  } else if (view === 'year') {
+    body = (
+      <YearView
+        year={year}
+        list={state === 'empty' ? [] : visible}
+        today={today}
+        onYear={setYearShown}
+        onOpen={openMonth}
+        origin={zoom?.to === 'year' ? zoom.origin : null}
+      />
+    )
+  } else if (view === 'key-dates') {
+    body = <KeyDates today={today} year={shownKeyYear} years={keyDateYears} onYear={setKeyYear} onPick={pickKeyDate} shown={(cat) => show.school && kinds[cat] !== false} onShowAll={showAll} />
   } else {
-    body = <Upcoming list={upcoming} today={today} onOpen={setOpen} />
+    body = (
+      <>
+        <Upcoming list={upcoming} today={today} onOpen={setOpen} />
+        {later && <Button variant="plain" className="cal-later" onClick={showLater}>Show the next 90 days</Button>}
+      </>
+    )
   }
 
   // The capsule: the next event, once the first one (or the month grid) has scrolled away
   const next = state === 'loading' || state === 'empty' ? null : upcoming[0]
   const miniShown = useOutOfView(
-    () => document.querySelector(view === 'month' ? '.screen--cal .cal-grid' : '.screen--cal .cal-week .cal-row'),
+    () => document.querySelector({ month: '.screen--cal .cal-grid', year: '.screen--cal .cal-year-grid', 'key-dates': '.screen--cal .cal-key-group' }[view] || '.screen--cal .cal-week .cal-row'),
     { enabled: Boolean(next), key: view },
   )
 
@@ -267,9 +327,9 @@ export default function Calendar() {
       <div className={`stack cal-stack${laptop && view === 'month' ? ' cal-laptop' : ''}`}>
         <Segmented
           legend="View"
-          value={view}
-          onChange={(v) => updateQuery({ view: v === 'month' ? 'month' : null })}
-          options={[{ value: 'upcoming', label: 'Upcoming' }, { value: 'month', label: 'Month' }]}
+          value={view === 'year' ? 'month' : view}
+          onChange={(v) => { setZoom(null); updateQuery({ view: v === 'upcoming' ? null : v }) }}
+          options={[{ value: 'upcoming', label: 'Upcoming' }, { value: 'month', label: 'Month' }, { value: 'key-dates', label: 'Key dates' }]}
         />
         {offline && <OfflineNotice what="events" savedAt={SAVED_AT} onRetry={reconnect} retrying={reconnecting} />}
         {state === 'error' && <ErrorState onRetry={retry} retrying={retrying}>New events did not load. Check that you are online, then try again. Events saved at <Num>{SAVED_AT}</Num> are below.</ErrorState>}
@@ -290,9 +350,15 @@ export default function Calendar() {
       <Sheet open={showOpen} onClose={() => setShowOpen(false)} title="Show" trailing={<Button variant="plain" size="compact" onClick={() => setShowOpen(false)}>Done</Button>}>
         <div className="cal-sheet">
           <ul className="list" role="list">
-            <CheckRow label="School events and holidays" meta={`${events.filter((e) => scopeOf(e) === 'school').length} events`} checked={show.school} onChange={(v) => setShow({ ...show, school: v })} />
-            <CheckRow label={`${student.className} and Year ${student.year}`} meta={`${events.filter((e) => scopeOf(e) === 'class').length} events`} checked={show.class} onChange={(v) => setShow({ ...show, class: v })} />
+            <CheckRow label="School events and holidays" meta={count(events.filter((e) => scopeOf(e) === 'school').length)} checked={show.school} onChange={(v) => setShow({ ...show, school: v })} />
+            <CheckRow label={`${student.className} and Year ${student.year}`} meta={count(events.filter((e) => scopeOf(e) === 'class').length)} checked={show.class} onChange={(v) => setShow({ ...show, class: v })} />
           </ul>
+          <Group title="Kinds of date">
+            {Object.entries(categories).filter(([k]) => events.some((e) => e.category === k)).map(([k, c]) => (
+              <CheckRow key={k} label={c.label} meta={count(events.filter((e) => e.category === k).length)} checked={kinds[k] !== false} onChange={(v) => setKinds({ ...kinds, [k]: v })} />
+            ))}
+          </Group>
+          {hidden > 0 && <Button variant="plain" className="cal-show-all" onClick={showAll}>Show everything</Button>}
           <p className="t-soft">Saved on this phone.</p>
         </div>
       </Sheet>

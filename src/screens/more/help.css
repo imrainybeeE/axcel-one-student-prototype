@@ -1,0 +1,103 @@
+/* Help and More: the profile card, PE results and User guides rows, User guides, Getting started, Report's screenshots.
+   Its own file (loaded after more.css by the screens that use it), so the More area's other work never collides with it. */
+/* The profile card is one link to Account, its chevron where every row's chevron sits */
+a.more-me { color: inherit; text-decoration: none; }
+a.more-me:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0 0 0 3px var(--focus-inner); }
+.more-me .more-me-text { flex: 1; }
+.more-me-photo { object-fit: cover; background: var(--fill); }
+.more-me-chevron { flex: none; }
+.tile--pe { --tile-bg: #0B9C8C; }
+.tile--guides { --tile-bg: #1A93D6; }
+/* A file in the school's app: an outward arrow, quiet as a chevron, so it never promises a page here */
+.guide-out { color: var(--ink-tertiary); stroke-width: 2.2; margin-right: -4px; }
+
+/* User guides (Tips): the Getting started card, the tiles of what it covers across its top */
+.guide-hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'tiles tiles' 'text chev'; row-gap: var(--space-3); column-gap: var(--space-2); align-items: center; padding: var(--space-4); color: inherit; text-decoration: none; }
+.guide-hero:focus-visible { outline: none; box-shadow: var(--shadow-card), inset 0 0 0 3px var(--focus-inner); }
+.guide-hero-tiles { grid-area: tiles; display: flex; flex-wrap: wrap; gap: 6px; }
+.guide-hero-text { grid-area: text; display: flex; flex-direction: column; min-width: 0; }
+.guide-hero-title { font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-strong); text-wrap: balance; }
+.guide-hero-sub { margin-top: 2px; color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.guide-hero-chevron { grid-area: chev; }
+
+/* Getting started (Apple's welcome screens): each part as its tile beside a bold line and a few short sentences */
+.gs { max-width: 36rem; padding: var(--space-2) 0 var(--space-2); }
+.gs-title { font-size: var(--fs-title-now); line-height: var(--lh-title-now); font-weight: var(--fw-title); text-wrap: balance; }
+.gs-text { margin-top: 2px; }
+.gs-open { display: inline-flex; align-items: center; min-height: 44px; font-weight: var(--fw-strong); }
+.gs-part { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: var(--space-4); margin-top: var(--space-6); }
+.gs-tile { width: 44px; height: 44px; border-radius: 11px; }
+.gs-tile .icon { width: 25px; height: 25px; }
+.gs-head { font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-strong); }
+.gs-more { max-width: 36rem; margin-top: var(--space-8, 40px); }
+@media (max-width: 1023px) {
+  .gs-title { transition: opacity var(--dur-2) linear; }
+  .screen:has(.bar-title[data-shown]) .gs-title { opacity: 0; }
+}
+@media (min-width: 1024px) {
+  .gs-title { display: none; } /* the screen's large title names the page */
+}
+
+/* Report's screenshots (Mail's attachments): 64px thumbnails, each with a round remove button on its corner */
+.report-shots-group { margin-top: 28px; }
+.report-shots { padding: var(--space-4) var(--space-4) var(--space-3); }
+.report-shot-list { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.report-shot { position: relative; width: 64px; height: 64px; }
+.report-shot img { display: block; width: 64px; height: 64px; border-radius: 10px; object-fit: cover; object-position: top; box-shadow: 0 0 0 0.5px var(--divider); }
+/* 44px to tap, 22px to see: the circle is drawn inside a transparent target centred on the thumbnail's corner */
+.report-shot-remove { position: absolute; top: -15px; right: -15px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; color: #FFFFFF; cursor: pointer; }
+.report-shot-remove::before { content: ''; position: absolute; inset: 11px; border-radius: 50%; background: #3A3A3C; box-shadow: 0 0 0 2px var(--card); transition: transform var(--dur-spring-snappy) var(--spring-snappy); }
+.report-shot-remove:active::before { transform: scale(calc(1 - 0.12 * var(--motion))); transition-duration: 90ms; }
+.report-shot-remove .icon { position: relative; stroke-width: 2.6; }
+.report-shot-remove:focus-visible { outline: none; }
+.report-shot-remove:focus-visible::before { box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--brand); }
+[data-theme='dark'] .report-shot-remove::before { background: #8E8E93; }
+/* Add screenshot is an action, in the app's blue; at 5 it greys and says why */
+.report-shots-group .row--link .row-title, .report-shots-group .row--link .row-lead > .icon { color: var(--brand); }
+.row--off .row-title, .row--off .row-lead > .icon { color: var(--ink-faint); }
+.report-form > .btn--plain { margin-top: var(--space-3); }
+.report-field:focus-visible { box-shadow: none; } /* the card draws the ring; the page-wide inner ring showed as a black box in dark */
+
+/* The real handbook's reading page: Books-like text at body size, numbered clauses hanging on their numbers,
+   pictures full width with a grey caption, tables that scroll sideways on a phone */
+.hbk { display: flex; flex-direction: column; align-items: stretch; padding: var(--space-2) 0 var(--space-6); max-width: 40rem; }
+.hbk > .hb-tile { align-self: flex-start; }
+.hbk-toc { margin-top: var(--space-5); }
+.hbk-body { margin-top: var(--space-2); }
+.hbk-h3 { display: flex; align-items: center; gap: var(--space-1); margin-top: var(--space-7, 32px); scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 16px);
+  font-size: var(--fs-title-s); line-height: var(--lh-title-s); font-weight: var(--fw-strong); }
+.hbk-h3 > span { flex: 1; min-width: 0; }
+.hbk-link { flex: none; width: 44px; height: 44px; margin-block: -8px; color: var(--ink-tertiary); }
+.hbk-h4 { margin-top: var(--space-5); font-size: var(--fs-body); line-height: 1.5rem; font-weight: var(--fw-strong); scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 16px); }
+.hbk-p { margin-top: var(--space-3); font-size: var(--fs-body); line-height: 1.625rem; white-space: pre-line; overflow-wrap: anywhere; }
+.hbk-clause { display: grid; grid-template-columns: 2.25em minmax(0, 1fr); margin-top: var(--space-2); padding-left: calc((var(--d, 1) - 1) * 1.5em);
+  font-size: var(--fs-body); line-height: 1.625rem; scroll-margin-top: calc(var(--header-h) + var(--safe-top) + 16px); border-radius: 8px; }
+.hbk-num { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.hbk-clause.is-bullet span.hbk-num { color: var(--ink-tertiary); padding-left: 0.4em; }
+.hbk-ctext { white-space: pre-line; overflow-wrap: anywhere; }
+.hbk-fig { margin: var(--space-4) 0 0; }
+.hbk-fig img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--fill); }
+.hbk-fig figcaption { margin-top: var(--space-2); color: var(--ink-soft); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.hbk-table { margin-top: var(--space-3); overflow-x: auto; border-radius: 14px; background: var(--card); box-shadow: var(--card-shadow, none); }
+.hbk-table table { border-collapse: collapse; min-width: 100%; font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.hbk-table th, .hbk-table td { padding: 10px 14px; text-align: left; vertical-align: top; white-space: pre-line; min-width: 7rem; }
+.hbk-table th { font-weight: var(--fw-strong); color: var(--ink-soft); }
+.hbk-table tr + tr td, .hbk-table tbody tr:first-child td { border-top: 0.5px solid var(--divider); }
+.hbk-table:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.hbk .is-flash { animation: hbk-flash 1.2s var(--ease) 1; }
+@keyframes hbk-flash { 0%, 40% { background: color-mix(in srgb, var(--brand) 16%, transparent); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .hbk .is-flash { animation: none; } }
+.hbk-h4 { display: flex; align-items: center; gap: var(--space-1); }
+.hbk-h4 > span { flex: 1; min-width: 0; }
+button.hbk-num { align-self: start; justify-self: start; min-width: 44px; min-height: 26px; margin: -9px 0 -9px -10px; padding: 9px 10px; border: 0; border-radius: 8px; background: none;
+  font: inherit; line-height: inherit; text-align: left; color: var(--ink-soft); cursor: pointer; box-sizing: content-box; }
+button.hbk-num:active { background: var(--fill); }
+button.hbk-num:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.hbk-clause.is-bullet button.hbk-num { color: var(--ink-tertiary); }
+/* Marks tables: the behaviour takes the width, the marks sit in a narrow right-aligned column */
+.hbk-table.is-marks table { table-layout: auto; width: 100%; }
+.hbk-table.is-marks :is(th, td):not(:last-child) { min-width: 0; }
+.hbk-table.is-marks :is(th, td):last-child { width: 4.5rem; min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.hbk tr.is-flash td { animation: hbk-flash 1.2s var(--ease) 1; }
+/* On a laptop the chapter keeps its own title under the screen's: the bar alone says only Handbook */
+@media (min-width: 1024px) { .hbk .hb-title { display: block; } }

@@ -19,7 +19,7 @@ function shortTitle(item) {
 function meta(item) {
   if (!item) return ''
   if (item.kind === 'event') return item.place === 'online' ? 'Online' : 'At school'
-  return `${item.teacher}\u00a0· ${item.place}`
+  return `${item.teacher}, ${item.place}`
 }
 
 // Today's one first-paint moment, once per session: the lesson bar fills to the minute (the number is never faked)

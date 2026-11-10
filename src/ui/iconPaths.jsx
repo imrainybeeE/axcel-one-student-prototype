@@ -57,4 +57,7 @@ export const paths = {
   'wifi-off': <path d="M3 3l18 18M8.5 16.3a5 5 0 0 1 7 0M5 12.6a10 10 0 0 1 4.6-2.4M14.2 10.2A10 10 0 0 1 19 12.6M2 9a15 15 0 0 1 4.4-2.8M11 5.6a15 15 0 0 1 11 3.4M12 20v.01" />,
   refresh: <path d="M20 11a8 8 0 0 0-14.6-4.5M4 4v4.5h4.5M4 13a8 8 0 0 0 14.6 4.5M20 20v-4.5h-4.5" />,
   swap: <path d="M7 4 3.5 7.5 7 11M3.5 7.5h13M17 13l3.5 3.5L17 20M20.5 16.5h-13" />,
+  // The laptop sidebar's PE results and User guides rows (the sidebar shows on the first screen)
+  'figure-run': <><circle cx="14.6" cy="4.6" r="1.9" /><path d="M13.4 8.6 11.4 14M13.4 8.6l-3.8 1.3-1.6 2.8M13.4 8.6l2.5 2.8 3.2.5M11.4 14l3 2.6-.7 4.4M11.4 14l-2 3.6-4 .9" /></>,
+  lightbulb: <path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z" />,
 }

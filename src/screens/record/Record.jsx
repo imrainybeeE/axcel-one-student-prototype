@@ -111,7 +111,7 @@ function EntrySheet({ entry, onClose }) {
           {entry.note && <p className="record-sheet-note">{entry.note}</p>}
           {entry.type === 'demerit' && (
             <p className="record-sheet-help">
-              Think this is wrong? Talk to {entry.teacher} or your class teacher. <Link to="/handbook">Read the rules in the Handbook</Link>
+              Think this is wrong? Talk to {entry.teacher} or your class teacher. <Link to="/handbook/merit-and-demerit-system?at=violations-values-and-consequences">Read the rules in the Handbook</Link>
             </p>
           )}
         </div>
@@ -126,8 +126,9 @@ function HowSheet({ open, onClose }) {
       <div className="record-sheet">
         <p>Teachers give merits for good work and good behaviour. Each merit counts towards Attitude, Skills or Knowledge.</p>
         <p>Demerits take points away. Your points are your merits minus your demerits.</p>
-        <p>Award thresholds are not shown in this demo.</p>
+        <p>At the end of the year, 300 points earns a Silver Student Award, 400 a Gold Student Award, and over 500 a Star Student Certificate.</p>
         <p>Points start again each school year.</p>
+        <p><Link to="/handbook/merit-and-demerit-system" onClick={onClose}>Read the merit and demerit system in the Handbook</Link></p>
       </div>
     </Sheet>
   )
@@ -212,7 +213,7 @@ export default function Record() {
         <Button variant="secondary" onClick={() => setShowAll(true)}>Show earlier entries</Button>
       )}
       {!entries.length ? (
-        <p className="t-faint settings-note">Individual RISE entries are hidden in this demo.</p>
+        <p className="t-faint settings-note">No entries yet this year.</p>
       ) : !shown.length && (
         <div className="record-empty">
           <p>No {filter} yet.</p>

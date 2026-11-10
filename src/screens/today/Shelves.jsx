@@ -50,7 +50,7 @@ export function LessonShelf({ model, nowMs, offline }) {
       <ul className="shelf-row" role="list" data-scroll-x="">
         {items.map((it) => {
           const open = it.meet && !offline && isJoinOpen(it, nowMs)
-          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join('\u00a0· ')
+          const who = it.kind !== 'lesson' ? (it.place === 'online' ? 'Online' : 'At school') : it.online ? it.teacherShort : [it.teacherShort, it.room].filter(Boolean).join(', ')
           const away = Math.max(1, Math.ceil((it.startsAt - nowMs) / 60000))
           return (
             <li key={it.id} className="shelf-item">
@@ -160,7 +160,7 @@ function RecordTile() {
       <span className="stat-title">Record<Icon name="chevron-right" size={16} className="stat-chev" /></span>
       <span className="stat-fig"><Num wide className="stat-n">{record.points}</Num><span className="stat-unit">points</span></span>
       {record.nextAward && <span className="stat-bar" style={{ '--p': toNext }} aria-hidden="true"><i /></span>}
-      <span className="stat-sub">{record.nextAward ? <><Num className="stat-sub-n">{record.toNext}</Num> more for {record.nextAward.name}{level && <span className="stat-level">{` \u00b7 ${level}`}</span>}</> : `${level} Award level`}</span>
+      <span className="stat-sub">{record.nextAward ? <><Num className="stat-sub-n">{record.toNext}</Num> more for {record.nextAward.name}{level && <span className="stat-level">{`, ${level}`}</span>}</> : `${level} Award level`}</span>
     </ZoomLink>
   )
 }

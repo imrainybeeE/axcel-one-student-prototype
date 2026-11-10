@@ -14,7 +14,7 @@ export function messageAt(m) {
 
 export function lastOf(thread) {
   const m = thread.messages[thread.messages.length - 1]
-  return { ...m, at: messageAt(m) }
+  return { ...m, at: m.at ?? messageAt(m) } // sent this session: a time in ms
 }
 
 const dayStart = (ms) => schoolInstant(new Date(ms + 8 * 3600000).toISOString().slice(0, 10), 0)

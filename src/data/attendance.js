@@ -1,38 +1,33 @@
-// Attendance as daily records for 2025 and 2026. The Term 2 2026 totals match Bentley's account (94 days, 3 absent);
-// every date and every other term is made-up sample data, so no real absence dates or reasons are published.
+// Bentley's 2026 attendance from the Axcel One account (copied on 10 November 2026): the school's term dates and
+// holidays (from the calendar's key dates), and every absence with the reason the school recorded. No lates.
 import { addDays, dayOfWeek } from '../lib/time.js'
 import { getNow, isoDate } from './clock.js'
+import { keyDates } from './calendar.js'
 
-export const terms = [
-  { id: '2026-2', year: 2026, name: 'Term 2', start: '2026-06-15', end: '2026-11-20' },
-  { id: '2026-1', year: 2026, name: 'Term 1', start: '2026-01-07', end: '2026-06-05' },
-  { id: '2025-2', year: 2025, name: 'Term 2', start: '2025-06-16', end: '2025-11-21' },
-  { id: '2025-1', year: 2025, name: 'Term 1', start: '2025-01-08', end: '2025-06-06' },
-]
-export const years = [2026, 2025]
+export const terms = keyDates
+  .filter((k) => k.kind === 'term' && k.end)
+  .map((k) => ({ id: `${k.start.slice(0, 4)}-${k.title.slice(-1)}`, year: Number(k.start.slice(0, 4)), name: k.title, start: k.start, end: k.end }))
+  .reverse()
+export const years = [...new Set(terms.map((t) => t.year))]
 
-// Days with no school inside a term: public holidays and the school's breaks (inclusive ranges)
-const OFF = [
-  ['2025-01-28', '2025-01-31', 'Chinese New Year'], ['2025-03-31', '2025-04-04', 'Hari Raya break'], ['2025-05-01', '2025-05-01', 'Labour Day'],
-  ['2025-05-12', '2025-05-12', 'Wesak Day'], ['2025-06-02', '2025-06-02', "Agong's Birthday"], ['2025-06-27', '2025-06-27', 'Awal Muharram'],
-  ['2025-08-25', '2025-09-01', 'Mid-term break'], ['2025-09-05', '2025-09-05', 'Maulidur Rasul'], ['2025-09-16', '2025-09-16', 'Malaysia Day'],
-  ['2025-10-20', '2025-10-20', 'Deepavali'],
-  ['2026-02-16', '2026-02-20', 'Chinese New Year'], ['2026-03-20', '2026-03-24', 'Hari Raya break'], ['2026-05-01', '2026-05-01', 'Labour Day'],
-  ['2026-05-27', '2026-05-27', 'Hari Raya Haji'], ['2026-06-01', '2026-06-01', "Agong's Birthday"], ['2026-06-16', '2026-06-16', 'Awal Muharram'],
-  ['2026-08-26', '2026-08-28', 'Mid-term break'], ['2026-08-31', '2026-08-31', 'Merdeka Day'], ['2026-09-16', '2026-09-16', 'Malaysia Day'], ['2026-10-26', '2026-10-26', 'Replacement holiday'],
-  ['2026-11-06', '2026-11-10', 'Deepavali break'],
-]
+// Days with no school inside a term: the school's breaks and the public holidays (inclusive ranges)
+const OFF = keyDates.filter((k) => k.kind !== 'term').map((k) => [k.start, k.end || k.start, k.title])
 const offOn = (iso) => OFF.find(([a, b]) => a <= iso && iso <= b)?.[2] || null
 
-// Made-up absences and lates. Term 2 2026 keeps the account's 3 absences and no lates.
-const ABSENT = new Set(['2025-02-19', '2025-07-23', '2025-07-24', '2025-10-08', '2026-04-14', '2026-04-15', '2026-07-21', '2026-09-08', '2026-09-09'])
-const LATE = new Set(['2025-03-11', '2025-09-24', '2026-01-27', '2026-05-12'])
+// Every absence, with the reason the school recorded
+const ABSENT = new Map([
+  ['2026-01-29', 'Medical'], ['2026-03-04', 'Medical'], ['2026-04-17', 'Medical'],
+  ['2026-05-20', 'Planned absence'], ['2026-05-21', 'Planned absence'], ['2026-05-22', 'Planned absence'],
+  ['2026-08-13', 'Medical'], ['2026-08-14', 'Medical'], ['2026-10-15', 'Planned absence'],
+])
+// Lates: the time the student signed in (none this year)
+const LATE = new Map()
 
 const today = () => isoDate(getNow())
 
 /**
- * Every date of a term: { iso, status } where status is 'present' | 'late' | 'absent' | 'off' (a holiday or break,
- * with reason) | 'weekend' | 'later' (a school day still to come). Today counts once it is a school day.
+ * Every date of a term: { iso, status, reason? } where status is 'present' | 'late' | 'absent' (with the recorded
+ * reason) | 'off' (a holiday or break, with reason) | 'weekend' | 'later' (a school day still to come). Today counts once it is a school day.
  */
 export function termDays(t) {
   const now = today()
@@ -43,7 +38,9 @@ export function termDays(t) {
     if (dow === 0 || dow === 6) out.push({ iso, status: 'weekend' })
     else if (reason) out.push({ iso, status: 'off', reason })
     else if (iso > now) out.push({ iso, status: 'later' })
-    else out.push({ iso, status: ABSENT.has(iso) ? 'absent' : LATE.has(iso) ? 'late' : 'present' })
+    else if (ABSENT.has(iso)) out.push({ iso, status: 'absent', reason: ABSENT.get(iso) })
+    else if (LATE.has(iso)) out.push({ iso, status: 'late', reason: `Late, arrived ${LATE.get(iso)}` })
+    else out.push({ iso, status: 'present' })
   }
   return out
 }

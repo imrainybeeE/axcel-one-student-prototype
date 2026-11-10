@@ -1,13 +1,17 @@
 [
-  { "id": "calendar-upcoming", "label": "Upcoming", "path": "/calendar?t=10.40" },
-  { "id": "calendar-upcoming-dark", "label": "Upcoming, dark", "path": "/calendar?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "calendar-month", "label": "Month", "path": "/calendar?t=10.40&view=month" },
-  { "id": "calendar-month-dark", "label": "Month, dark", "path": "/calendar?t=10.40&view=month&theme=dark", "theme": "dark", "phoneOnly": true },
-  { "id": "calendar-month-day", "label": "Month, Fun Run selected", "path": "/calendar?t=10.40&view=month&day=2027-01-30", "phoneOnly": true },
-  { "id": "calendar-event", "label": "Event sheet, Fun Run", "path": "/calendar?t=10.40&event=e16", "phoneOnly": true },
-  { "id": "calendar-show", "label": "Show sheet", "path": "/calendar?t=10.40", "phoneOnly": true, "actions": [{ "click": "button:has-text('Show')" }, { "wait": 700 }] },
-  { "id": "calendar-loading", "label": "Loading", "path": "/calendar?state=loading", "phoneOnly": true },
-  { "id": "calendar-empty", "label": "Empty", "path": "/calendar?state=empty", "phoneOnly": true },
-  { "id": "calendar-error", "label": "Error", "path": "/calendar?t=10.40&state=error", "phoneOnly": true },
-  { "id": "calendar-offline", "label": "Offline", "path": "/calendar?t=10.40&state=offline", "phoneOnly": true }
+  {"id": "calendar-upcoming", "label": "Upcoming", "path": "/calendar?t=10.40"},
+  {"id": "calendar-upcoming-dark", "label": "Upcoming, dark", "path": "/calendar?t=10.40&theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "calendar-month", "label": "Month", "path": "/calendar?t=10.40&view=month"},
+  {"id": "calendar-month-dark", "label": "Month, dark", "path": "/calendar?t=10.40&view=month&theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "calendar-month-day", "label": "Month, Fun Run selected", "path": "/calendar?t=10.40&view=month&day=2027-01-30", "phoneOnly": true},
+  {"id": "calendar-event", "label": "Event sheet, Fun Run", "path": "/calendar?t=10.40&event=e16", "phoneOnly": true},
+  {"id": "calendar-show", "label": "Show sheet", "path": "/calendar?t=10.40", "phoneOnly": true, "actions": [{"click": "button:has-text('Show')"}, {"wait": 700}]},
+  {"id": "calendar-loading", "label": "Loading", "path": "/calendar?state=loading", "phoneOnly": true},
+  {"id": "calendar-empty", "label": "Empty", "path": "/calendar?state=empty", "phoneOnly": true},
+  {"id": "calendar-error", "label": "Error", "path": "/calendar?t=10.40&state=error", "phoneOnly": true},
+  {"id": "calendar-offline", "label": "Offline", "path": "/calendar?t=10.40&state=offline", "phoneOnly": true},
+  {"id": "cal-key", "label": "Key dates", "path": "/calendar?t=10.40&view=key-dates"},
+  {"id": "cal-key-dark", "label": "Key dates, dark", "path": "/calendar?t=10.40&view=key-dates&theme=dark", "theme": "dark", "phoneOnly": true},
+  {"id": "cal-year", "label": "Year", "path": "/calendar?t=10.40&view=year"},
+  {"id": "cal-year-dark", "label": "Year, dark", "path": "/calendar?t=10.40&view=year&theme=dark", "theme": "dark", "phoneOnly": true}
 ]

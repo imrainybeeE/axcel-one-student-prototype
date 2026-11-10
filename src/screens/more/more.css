@@ -103,3 +103,39 @@
 /* Today's title and its day strip, over the blue lesson card */
 .appear-phone::after { content: ''; position: absolute; top: 13px; left: 6px; right: 6px; height: 10px;
   background: linear-gradient(var(--ph-ink), var(--ph-ink)) 0 0 / 17px 4px no-repeat, linear-gradient(90deg, color-mix(in srgb, var(--ph-ink) 30%, transparent) 0 40%, var(--subj-physics) 40% 52%, color-mix(in srgb, var(--ph-ink) 14%, transparent) 52%) 0 8px / 100% 2px no-repeat; }
+
+/* ===== Account and Settings: Account, Password, quiet hours, muted chats, calendar reminders ===== */
+/* Account (Apple Account): the photo centred, the name and email under it, Edit under them */
+.acct-head { display: flex; flex-direction: column; align-items: center; text-align: center; padding: var(--space-2) 0 var(--space-1); }
+.acct-avatar { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 50%; overflow: hidden; background: var(--brand-solid); color: #FFFFFF; font-size: 2.5rem; font-weight: var(--fw-strong); }
+.acct-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.acct-name { margin-top: var(--space-2); font-size: var(--fs-title-3); line-height: var(--lh-title-3); font-weight: var(--fw-strong); }
+.acct-email { color: var(--ink-soft); font-size: var(--fs-subhead); line-height: var(--lh-subhead); }
+.acct-edit { min-height: 44px; padding-inline: var(--space-3); margin-top: var(--space-1); border: 0; background: none; font: inherit; color: var(--brand); font-weight: var(--fw-strong); cursor: pointer; }
+.acct-foot { color: var(--ink-faint); font-size: var(--fs-footnote); line-height: var(--lh-footnote); }
+.acct-details .row-trail, .screen-account .row-trail { min-width: 0; text-align: right; }
+.acct-ext { color: var(--ink-tertiary); }
+.screen-account .list:has(> .row:only-child) { border-radius: var(--radius-btn); } /* a group of one row is a button: 14px */
+
+/* Change password: three fields in one card, each with a 44px eye at its trailing edge */
+.pw-card { padding: var(--space-4); }
+.pw-field .input { padding-right: 52px; }
+.pw-eye { position: absolute; right: 3px; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: var(--tap); height: var(--tap); padding: 0; border: 0; border-radius: var(--radius-control); background: none; color: var(--ink-soft); cursor: pointer; }
+.pw-eye:active { opacity: 0.5; }
+.pw-forgot { margin-top: var(--space-3); }
+.pw-form { display: flex; flex-direction: column; align-items: flex-start; }
+.pw-form .pw-card { align-self: stretch; }
+
+/* Quiet hours: From and To, the time in an iOS time chip at the trailing edge */
+.time-row .choice-hit { padding-block: 0; }
+.time-chip {
+  position: relative; flex: none; display: grid; place-items: center; min-width: 7.25rem; min-height: var(--tap); padding: 0 12px; margin-right: -6px;
+  border: 6px solid transparent; background: var(--fill) padding-box; border-radius: 14px; /* 8px visible corners inside the clear 6px hit border */
+  color: var(--ink); font-variant-numeric: tabular-nums;
+}
+/* The real time field lies over the chip, invisible: a tap opens the system picker, keys change the time */
+.time-chip input { position: absolute; inset: -6px; width: calc(100% + 12px); height: calc(100% + 12px); margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font: inherit; }
+.time-chip input::-webkit-calendar-picker-indicator { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.time-chip:has(input:focus-visible) { outline: 2px solid var(--brand); outline-offset: -4px; }
+.choice-hit:active .time-chip { background-color: var(--fill-strong); }
+.time-row .choice-hit:has(input:focus-visible) { outline: none; box-shadow: none; } /* the chip draws the ring */
